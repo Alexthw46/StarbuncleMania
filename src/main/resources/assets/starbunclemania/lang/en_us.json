@@ -1,0 +1,28 @@
+{
+	"starbunclemania.glyph_desc.glyph_test": "This is my test!",
+	"starbunclemania.glyph_name.glyph_test": "Test",
+
+	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",
+
+	"item.starbunclemania.star_hat": "Example hat",
+	"item.starbunclemania.star_battery": "StarbAttery",
+	"item.starbunclemania.star_bucket": "Starbucket",
+
+	"item.starbunclemania.fluid_jar": "Fluid Jar",
+	"item.starbunclemania.source_fluid_bucket": "Liquefied Source Bucket",
+
+	"fluid_type.starbunclemania.source_fluid": "Liquefied Source",
+	"ars_nouveau.starbuncle.default_behavior": "Defaulted to item transportation",
+	"ars_nouveau.starbuncle.energy_to": "Starbuncle will store energy here",
+	"ars_nouveau.starbuncle.energy_from": "Starbuncle will take energy from this battery",
+
+	"starbunclemania.tooltip.fluid_jar": "Stored %d mb of ",
+	"ars_nouveau.starbuncle.fluid_to": "Starbuncle will store fluids here",
+	"ars_nouveau.starbuncle.fluid_from": "Starbuncle will take fluids from this tank",
+
+	"ars_nouveau.starbuncle.storing_energy": "Storing energy at %d locations",
+	"ars_nouveau.starbuncle.taking_energy": "Taking energy from %d locations",
+
+	"ars_nouveau.starbuncle.storing_fluid": "Storing fluids at %d locations",
+	"ars_nouveau.starbuncle.taking_fluid": "Taking fluids from %d locations"
+}

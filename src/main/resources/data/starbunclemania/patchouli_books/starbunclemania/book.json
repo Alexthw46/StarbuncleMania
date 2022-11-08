@@ -1,0 +1,7 @@
+
+{
+  "name": "Starbuncle Manual",
+  "landing_text": "Guide for Starbuncle world domination",
+  "version": 1,
+  "extend": "ars_nouveau:worn_notebook"
+}

@@ -1,0 +1,71 @@
+{
+  "parent": "starbunclemania:block/fluid_jar/fluid_jar0",
+  "overrides": [
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.01
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar_sliver"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.10
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar10"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.20
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar20"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.30
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar30"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.40
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar40"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.50
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar50"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.60
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar60"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.70
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar80"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.80
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar80"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 0.90
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar90"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:source": 1.00
+      },
+      "model": "starbunclemania:block/fluid_jar/fluid_jar100"
+    }
+  ]
+}

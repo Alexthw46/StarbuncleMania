@@ -1,5 +1,7 @@
 package alexthw.starbunclemania.starbuncle.energy;
 
+import alexthw.starbunclemania.common.item.DirectionScroll;
+import alexthw.starbunclemania.starbuncle.StarHelper;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyListBehavior;
@@ -9,11 +11,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -36,9 +39,11 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
     }
 
     private int energy = 0;
+    public int side = -1;
 
     public StarbyEnergyBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
+        if (tag.contains("Direction")) side = tag.getInt("Direction");
         if (tag.contains("battery")){
             energy = tag.getInt("battery");
         }
@@ -46,14 +51,15 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         goals.add(new WrappedGoal(3, new EnergyStoreGoal(entity, this)));
     }
 
-    public static @Nullable IEnergyStorage getHandlerFromCap(BlockPos pos, Level level) {
+    public static @Nullable IEnergyStorage getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
         BlockEntity be = level.getBlockEntity(pos);
-        Direction side = Direction.NORTH;
+        sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
+        Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
         return be != null && be.getCapability(ENERGY, side).isPresent() && be.getCapability(ENERGY, side).resolve().isPresent() ? be.getCapability(ENERGY, side).resolve().get() : null;
     }
 
     public IEnergyStorage getHandlerFromCap(BlockPos pos) {
-        return getHandlerFromCap(pos, level);
+        return getHandlerFromCap(pos, level, side);
     }
 
     public @Nullable BlockPos getBatteryForTake() {
@@ -122,15 +128,30 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
     }
 
     @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()){
+            side = stack.getOrCreateTag().getInt("side");
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
+            syncTag();
+        }
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_energy", TO_LIST.size()));
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_energy", FROM_LIST.size()));
+        if (side >= 0){
+            tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
+        }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag.putInt("battery", energy);
+        if (side >= 0) tag.putInt("Direction", side);
         return super.toTag(tag);
     }
 

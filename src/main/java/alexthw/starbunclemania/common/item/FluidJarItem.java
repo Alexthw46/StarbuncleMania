@@ -60,7 +60,7 @@ public class FluidJarItem extends BlockItem implements IAnimatable {
         }
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    final AnimationFactory factory = new AnimationFactory(this);
 
     @Override
     public void registerControllers(AnimationData animationData) {

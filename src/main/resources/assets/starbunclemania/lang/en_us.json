@@ -1,10 +1,14 @@
 {
+	"itemGroup.starbunclemania": "StarbuncleMania",
+
 	"starbunclemania.glyph_desc.glyph_test": "This is my test!",
 	"starbunclemania.glyph_name.glyph_test": "Test",
 
 	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",
 
+	"item.starbunclemania.direction_scroll": "Direction Scroll",
 	"item.starbunclemania.star_hat": "Example hat",
+	"item.starbunclemania.prof_hat": "Wyrm Degree",
 	"item.starbunclemania.star_battery": "StarbAttery",
 	"item.starbunclemania.star_bucket": "Starbucket",
 

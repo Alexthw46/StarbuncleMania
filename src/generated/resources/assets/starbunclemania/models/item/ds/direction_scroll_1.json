@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "starbunclemania:item/ds/direction_scroll_up"
+  }
+}

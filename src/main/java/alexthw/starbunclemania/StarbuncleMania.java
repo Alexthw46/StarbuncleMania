@@ -2,9 +2,12 @@ package alexthw.starbunclemania;
 
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -31,6 +34,14 @@ public class StarbuncleMania
 {
     public static final String MODID = "starbunclemania";
 
+    public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
+        @Override
+        public ItemStack makeIcon() {
+            return ItemsRegistry.STARBUNCLE_CHARM.asItem().getDefaultInstance();
+        }
+
+    };
+
     public StarbuncleMania() {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
         ModRegistry.registerRegistries(modbus);
@@ -44,10 +55,11 @@ public class StarbuncleMania
         return new ResourceLocation(MODID, path);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
+    private void setup(final FMLCommonSetupEvent ignoredEvent)
     {
+        ArsNouveauRegistry.postInit();
         try {
-            FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation(ForgeMod.LAVA_TYPE.get(), Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, SOURCESTONE))).defaultBlockState()));
+            FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation((level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == ForgeMod.LAVA_TYPE.get() && level.getFluidState(currentPos).isSource(), Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, SOURCESTONE))).defaultBlockState()));
         }catch (NullPointerException npe){
             System.out.println("Sourcestone not found, skipping interaction.");
         }
@@ -61,7 +73,7 @@ public class StarbuncleMania
             modEventBus.addListener(this::registerBlockColors);
         }
 
-        public void clientSetup(FMLClientSetupEvent event)
+        public void clientSetup(FMLClientSetupEvent ignoredEvent)
         {
             ItemBlockRenderTypes.setRenderLayer(SOURCE_FLUID.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(SOURCE_FLUID_FLOWING.get(), RenderType.translucent());

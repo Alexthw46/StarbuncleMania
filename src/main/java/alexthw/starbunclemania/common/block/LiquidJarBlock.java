@@ -48,8 +48,7 @@ public class LiquidJarBlock extends ModBlock implements EntityBlock {
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (super.use(state, level, pos, player, hand, hit) == InteractionResult.PASS) {
-            LiquidJarTile be = (LiquidJarTile)level.getBlockEntity(pos);
-            if (be != null && be.interact(player, hand)) {
+            if (level.getBlockEntity(pos) instanceof LiquidJarTile be && be.interact(player, hand)) {
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
         }

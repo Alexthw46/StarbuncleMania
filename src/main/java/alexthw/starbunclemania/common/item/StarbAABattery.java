@@ -42,6 +42,11 @@ public class StarbAABattery extends Item implements ICosmeticItem {
         return new Vec3(0.8,1,0.8);
     }
 
+    @Override
+    public String getBone() {
+        return "body";
+    }
+
     /**
      * @param entity check if is compatible with the cosmetic item
      */

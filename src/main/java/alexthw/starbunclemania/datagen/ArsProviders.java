@@ -31,7 +31,7 @@ import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class ArsProviders {
 
-    static String root = StarbuncleMania.MODID;
+    static final String root = StarbuncleMania.MODID;
 
     public static class GlyphProvider extends GlyphRecipeProvider {
 

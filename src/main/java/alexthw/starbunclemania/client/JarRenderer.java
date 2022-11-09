@@ -12,18 +12,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
 
-    public JarRenderer(BlockEntityRendererProvider.Context context){
+    public JarRenderer(){
         super();
     }
 
@@ -60,7 +60,7 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
         matrixStackIn.pushPose();
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(texture);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(texture);
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
         matrixStackIn.translate(0.5, LIQUID_DIMENSIONS.z(), 0.5);
         addCube(builder, matrixStackIn,

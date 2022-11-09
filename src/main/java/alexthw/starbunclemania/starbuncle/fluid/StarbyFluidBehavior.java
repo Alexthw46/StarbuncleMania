@@ -1,8 +1,10 @@
 package alexthw.starbunclemania.starbuncle.fluid;
 
 import alexthw.starbunclemania.StarbuncleMania;
+import alexthw.starbunclemania.common.block.LiquidJarTile;
 import alexthw.starbunclemania.registry.ModRegistry;
 import alexthw.starbunclemania.common.item.DirectionScroll;
+import alexthw.starbunclemania.starbuncle.StarHelper;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyListBehavior;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -15,12 +17,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
@@ -97,8 +97,11 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         super.getTooltip(tooltip);
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_fluid", TO_LIST.size()));
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_fluid", FROM_LIST.size()));
+        if (!fluidStack.isEmpty()){
+            LiquidJarTile.displayFluidTooltip(tooltip, getFluidStack());
+        }
         if (side >= 0){
-            tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].getName()));
+            tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
         }
     }
 
@@ -140,7 +143,6 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         return null;
     }
 
-
     /**
      * Yeah, I don't like writing the little isPresent-resolve-isPresent-get everytime
      *
@@ -148,17 +150,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
      */
     public static @Nullable IFluidHandler getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
         BlockEntity be = level.getBlockEntity(pos);
-        for (ItemFrame i : level.getEntitiesOfClass(ItemFrame.class, new AABB(pos).inflate(1))) {
-            // Check if these frames are attached to the tile
-            BlockEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            if (adjTile == null || !adjTile.equals(be) || i.getItem().isEmpty()) continue;
-
-            ItemStack stackInFrame = i.getItem();
-            if (stackInFrame.getItem() instanceof DirectionScroll && stackInFrame.hasTag()){
-                sideOrdinal = stackInFrame.getOrCreateTag().getInt("side");
-                break;
-            }
-        }
+        sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
         Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
         return be != null && be.getCapability(FLUID_HANDLER, side).isPresent() && be.getCapability(FLUID_HANDLER, side).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, side).resolve().get() : null;
     }

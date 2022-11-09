@@ -28,7 +28,7 @@ public class LiquidJarTile extends ModdedTile implements ITooltipProvider {
 
     static public final int capacity = 16000;
 
-    protected FluidTank tank = new FluidTank(capacity) {
+    protected final FluidTank tank = new FluidTank(capacity) {
         protected void onContentsChanged() {
             LiquidJarTile.this.updateBlock();
             LiquidJarTile.this.setChanged();
@@ -50,12 +50,6 @@ public class LiquidJarTile extends ModdedTile implements ITooltipProvider {
         return FluidUtil.interactWithFluidHandler(player, hand, this.tank);
     }
 
-    public int getColor() {
-        if (this.tank.isEmpty()) return 0;
-        if (this.tank.getFluid().getFluid().getFluidType() == ForgeMod.LAVA_TYPE.get()) return 14981690;
-        return this.tank.isEmpty() ? 0 : IClientFluidTypeExtensions.of(tank.getFluid().getFluid()).getTintColor(tank.getFluid());
-    }
-
     public int getFluidAmount() {
         return this.getFluid().getAmount();
     }
@@ -63,7 +57,7 @@ public class LiquidJarTile extends ModdedTile implements ITooltipProvider {
     @Override
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
+        if (level != null) level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 8);
     }
 
     @Override

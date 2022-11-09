@@ -12,20 +12,26 @@ import net.minecraft.world.level.Level;
 
 public class DirectionScroll extends ModItem {
 
+    public DirectionScroll(Properties basicItemProperties) {
+        super(basicItemProperties);
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        if (stack.getItem() instanceof DirectionScroll){
-            Direction side = pPlayer.getDirection();
+        if (stack.getItem() instanceof DirectionScroll && pPlayer.isShiftKeyDown()){
+            Direction side = Direction.fromYRot(pPlayer.getYRot());
+            if (pPlayer.getXRot() > 60){
+                side = Direction.DOWN;
+            } else if (pPlayer.getXRot() < -60) {
+                side = Direction.UP;
+            }
             stack.getOrCreateTag().putInt("side", side.ordinal());
-            PortUtil.sendMessage(pPlayer, Component.literal("Direction set to " + side.getName()));
+            PortUtil.sendMessage(pPlayer, Component.literal("Direction set to " + side.name()));
         }
 
         return super.use(pLevel, pPlayer, pUsedHand);
-
     }
-
-
 
 }

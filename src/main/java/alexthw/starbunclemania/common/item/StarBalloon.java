@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,8 +34,8 @@ public class StarBalloon extends Item implements ICosmeticItem {
 
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);    }
 
-    final Vec3 Translation = new Vec3(+0.0,-0.22,-0.15);
-    final Vec3 Scaling = new Vec3(1.3,1.2,1.3);
+     Vec3 Translation = new Vec3(+0.0,-0.22,-0.15);
+     Vec3 Scaling = new Vec3(1,1,1);
 
     @Override
     public Vec3 getTranslations() {
@@ -44,6 +45,11 @@ public class StarBalloon extends Item implements ICosmeticItem {
     @Override
     public Vec3 getScaling() {
         return Scaling;
+    }
+
+    @Override
+    public ItemTransforms.TransformType getTransformType() {
+        return ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
     }
 
     /**

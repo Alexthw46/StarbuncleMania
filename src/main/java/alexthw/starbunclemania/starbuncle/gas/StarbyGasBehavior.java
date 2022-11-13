@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import mekanism.api.Action;
 import mekanism.api.chemical.gas.GasStack;
 import mekanism.api.chemical.gas.IGasHandler;
-import mekanism.common.capabilities.Capabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,12 +22,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import org.jetbrains.annotations.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class StarbyGasBehavior extends StarbyListBehavior {
+
+    public static final Capability<IGasHandler> GAS_HANDLER = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     private GasStack gasStack = GasStack.EMPTY;
     public int side = -1;
@@ -47,6 +53,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     public void setGasStack(GasStack gas) {
         gasStack = gas;
+        starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gas.getChemicalColorRepresentation());
         syncTag();
     }
 
@@ -55,7 +62,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(Capabilities.GAS_HANDLER).isPresent()) {
+            if (be != null && be.getCapability(GAS_HANDLER).isPresent()) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.gas_to"));
@@ -68,7 +75,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(Capabilities.GAS_HANDLER).isPresent()) {
+            if (be != null && be.getCapability(GAS_HANDLER).isPresent()) {
                 addFromPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.gas_from"));
@@ -79,7 +86,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()){
+        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()) {
             side = stack.getOrCreateTag().getInt("side");
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
             syncTag();
@@ -92,10 +99,10 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         super.getTooltip(tooltip);
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_gas", TO_LIST.size()));
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_gas", FROM_LIST.size()));
-        if (!gasStack.isEmpty()){
-            //LiquidJarTile.displayGasTooltip(tooltip, getGasStack());
+        if (!gasStack.isEmpty()) {
+            tooltip.add(Component.literal(getGasStack().getAmount() + " ").append(Component.translatable(getGasStack().getTranslationKey())));
         }
-        if (side >= 0){
+        if (side >= 0) {
             tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
         }
     }
@@ -108,6 +115,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     protected ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
+
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_gas_transport");
 
 
@@ -149,7 +157,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         BlockEntity be = level.getBlockEntity(pos);
         sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
         Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
-        return be != null && be.getCapability(Capabilities.GAS_HANDLER, side).isPresent() && be.getCapability(Capabilities.GAS_HANDLER, side).resolve().isPresent() ? be.getCapability(Capabilities.GAS_HANDLER, side).resolve().get() : null;
+        return be != null && be.getCapability(GAS_HANDLER, side).isPresent() && be.getCapability(GAS_HANDLER, side).resolve().isPresent() ? be.getCapability(GAS_HANDLER, side).resolve().get() : null;
     }
 
     public IGasHandler getHandlerFromCap(BlockPos pos) {
@@ -160,7 +168,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         IGasHandler gas = getHandlerFromCap(pos);
         if (gas != null) {
             for (int i = 0; i < gas.getTanks(); i++) {
-                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() > 0) {
+                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() < getRatio()) {
                     return true;
                 }
             }
@@ -187,5 +195,10 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         }
         if (side >= 0) tag.putInt("Direction", side);
         return super.toTag(tag);
+    }
+
+    @Override
+    public ItemStack getStackForRender() {
+        return starbuncle.getCosmeticItem();
     }
 }

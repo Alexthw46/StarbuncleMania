@@ -7,11 +7,15 @@
 	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",
 
 	"item.starbunclemania.direction_scroll": "Direction Scroll",
-	"item.starbunclemania.star_hat": "Example hat",
+	"item.starbunclemania.star_hat": "Blues Hat",
 	"item.starbunclemania.prof_hat": "Wyrm Degree",
 	"item.starbunclemania.star_battery": "StarbAttery",
 	"item.starbunclemania.star_bucket": "Starbucket",
-
+	"item.starbunclemania.star_balloon": "Starballoon",
+	"item.starbunclemania.star_bin": "StarBin",
+	"item.starbunclemania.star_saddle": "Starddle",
+	"item.starbunclemania.star_sword": "Sword of the Starb",
+	"item.starbunclemania.star_wand": "Wand of Sacred Nug",
 	"item.starbunclemania.fluid_jar": "Fluid Jar",
 	"item.starbunclemania.source_fluid_bucket": "Liquefied Source Bucket",
 
@@ -24,9 +28,16 @@
 	"ars_nouveau.starbuncle.fluid_to": "Starbuncle will store fluids here",
 	"ars_nouveau.starbuncle.fluid_from": "Starbuncle will take fluids from this tank",
 
+	"starbunclemania.tooltip.gas": "Stored %d mb of ",
+	"ars_nouveau.starbuncle.gas_to": "Starbuncle will store gas here",
+	"ars_nouveau.starbuncle.gas_from": "Starbuncle will take gas from this tank",
+
 	"ars_nouveau.starbuncle.storing_energy": "Storing energy at %d locations",
 	"ars_nouveau.starbuncle.taking_energy": "Taking energy from %d locations",
 
 	"ars_nouveau.starbuncle.storing_fluid": "Storing fluids at %d locations",
-	"ars_nouveau.starbuncle.taking_fluid": "Taking fluids from %d locations"
+	"ars_nouveau.starbuncle.taking_fluid": "Taking fluids from %d locations",
+
+	"ars_nouveau.starbuncle.storing_gas": "Storing gasses at %d locations",
+	"ars_nouveau.starbuncle.taking_gas": "Taking gasses from %d locations"
 }

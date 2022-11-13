@@ -14,9 +14,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
-public class RacoonCan extends Item implements ICosmeticItem {
+public class StarBin extends Item implements ICosmeticItem {
 
-    public RacoonCan(Properties pProperties) {
+    public StarBin(Properties pProperties) {
         super(pProperties);
     }
 
@@ -34,14 +34,22 @@ public class RacoonCan extends Item implements ICosmeticItem {
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
     }
 
+    final Vec3 Translation = new Vec3(0.0,0,0);
+    final Vec3 Scaling = new Vec3(1,1,1);
+
     @Override
     public Vec3 getTranslations() {
-        return new Vec3(0,0,0);
+        return new Vec3(0,0.5,0.5);
     }
 
     @Override
     public Vec3 getScaling() {
-        return new Vec3(0,0,0);
+        return Scaling;
+    }
+
+    @Override
+    public String getBone() {
+        return "tail";
     }
 
     /**

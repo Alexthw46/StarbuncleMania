@@ -1,6 +1,7 @@
 package alexthw.starbunclemania.starbuncle.gas;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import mekanism.api.Action;
 import mekanism.api.chemical.gas.GasStack;
@@ -38,7 +39,10 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
         if (gasHandlerExtract != null){
             GasStack toExtract = gasHandlerExtract.getChemicalInTank(tankIndexE);
             BlockPos pos = behavior.getTankForStorage(toExtract);
-            if(pos == null) return true;
+            if (pos == null) {
+                starbuncle.addGoalDebug(this, new DebugEvent("NoRoom", "No Room for " + toExtract.getTypeRegistryName() + " from " + targetPos.toString()));
+                return true;
+            }
             IGasHandler gasHandlerStore = behavior.getHandlerFromCap(pos);
 
             if (gasHandlerStore != null){
@@ -56,11 +60,16 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
                 int takeAmount = (int) Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
                 starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
                 GasStack extracted = new GasStack(toExtract, takeAmount);
-                behavior.setGasStack(extracted);
-                gasHandlerExtract.extractChemical(extracted, Action.EXECUTE);
+                behavior.setGasStack(gasHandlerExtract.extractChemical(extracted, Action.EXECUTE));
+                starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + takeAmount + "x " + extracted.getTypeRegistryName() + " from " + targetPos.toString()));
+
+            }else {
+                starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No gas handler at " + targetPos.toString()));
             }
+        }else {
+            starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No gas handler at " + targetPos.toString()));
         }
-        return false;
+        return true;
     }
 
 }

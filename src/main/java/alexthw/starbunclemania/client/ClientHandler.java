@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -33,5 +34,12 @@ public class ClientHandler {
         }));
 
     }
+
+    @SubscribeEvent
+    public static void registerColors(final RegisterColorHandlersEvent.Item event){
+        event.register((stack, tintIndex) -> tintIndex == 0 && stack.hasTag() ? stack.getOrCreateTag().getInt("color") : -1,
+                ModRegistry.STARBALLON.get());
+    }
+
 
 }

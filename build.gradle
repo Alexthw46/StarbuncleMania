@@ -73,7 +73,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                starbunclemania {
                     source sourceSets.main
                 }
             }
@@ -153,8 +153,9 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curio_version}")
     implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:1.19-2.0.0.120")
     implementation fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-77")
-    implementation fg.deobf("curse.maven:mekanism-268560:3954410")
+    compileOnly "mekanism:Mekanism:${mekanism_version}:api"
 
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")// core
     runtimeOnly fg.deobf("curse.maven:elemental-561470:4075580")
     runtimeOnly fg.deobf("curse.maven:ae2-223794:3995899")
     runtimeOnly fg.deobf("joefoxe:hexerei:0.2.5")

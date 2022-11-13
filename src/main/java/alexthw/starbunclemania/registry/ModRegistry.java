@@ -81,7 +81,7 @@ public class ModRegistry {
         STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties()));
         STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));
         STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));
-        STARTRASH = ITEMS.register("star_trash", () -> new RacoonCan(basicItemProperties()));
+        STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties()));
         STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
         STARWAND = ITEMS.register("star_wand", () -> new ExampleCosmetic(basicItemProperties()));
 

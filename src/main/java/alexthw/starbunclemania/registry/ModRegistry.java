@@ -80,10 +80,11 @@ public class ModRegistry {
         PROFHAT = ITEMS.register("prof_hat", () -> new ProfHat(basicItemProperties()));
         STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties()));
         STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));
-        STARBALLON = ITEMS.register("star_ballon", () -> new ExampleCosmetic(basicItemProperties()));
-        STARTRASH = ITEMS.register("star_trash", () -> new ExampleCosmetic(basicItemProperties()));
-        STARSWORD = ITEMS.register("star_sword", () -> new ExampleCosmetic(basicItemProperties()));
+        STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));
+        STARTRASH = ITEMS.register("star_trash", () -> new RacoonCan(basicItemProperties()));
+        STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
         STARWAND = ITEMS.register("star_wand", () -> new ExampleCosmetic(basicItemProperties()));
+
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
         STARSADDLE = ITEMS.register("star_saddle", () -> new StarbySaddle(basicItemProperties()));
 
@@ -91,7 +92,7 @@ public class ModRegistry {
         ITEMS.register("fluid_jar", () -> new FluidJarItem(FLUID_JAR.get(), basicItemProperties()));
 
         FLUID_JAR_TILE = BLOCK_ENTITIES.register("fluid_jar_tile", () -> BlockEntityType.Builder.of(LiquidJarTile::new, FLUID_JAR.get()).build(null));
-        STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, StarbyMountEntity::new, MobCategory.CREATURE);
+        STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(world), MobCategory.CREATURE);
 
     }
 

@@ -15,6 +15,12 @@ public class EnergyExtractGoal extends GoToPosGoal<StarbyEnergyBehavior> {
         super(entity, energyBehavior, () -> energyBehavior.getEnergy() == 0);
     }
 
+    @Override
+    public void start() {
+        super.start();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
+    }
+
     @Nullable
     @Override
     public BlockPos getDestination() {

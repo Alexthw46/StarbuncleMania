@@ -15,6 +15,12 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
         super(starbuncle, behavior, () -> behavior.getFluidStack().isEmpty() && !behavior.FROM_LIST.isEmpty());
     }
 
+    @Override
+    public void start() {
+        super.start();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.TAKING_ITEM;
+    }
+
     @Nullable
     @Override
     public BlockPos getDestination() {

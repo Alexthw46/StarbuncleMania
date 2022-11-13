@@ -14,6 +14,12 @@ public class EnergyStoreGoal extends GoToPosGoal<StarbyEnergyBehavior> {
         super(starbuncle, behavior, () -> behavior.getEnergy() > 0);
     }
 
+    @Override
+    public void start() {
+        super.start();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.STORING_ITEM;
+    }
+
     @Nullable
     @Override
     public BlockPos getDestination() {

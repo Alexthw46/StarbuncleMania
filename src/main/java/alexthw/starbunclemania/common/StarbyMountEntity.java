@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
 
 
-    public StarbyMountEntity(EntityType<StarbyMountEntity> entityCarbuncleEntityType, Level world) {
+    public StarbyMountEntity(Level world) {
         super(world, true);
     }
 
@@ -96,7 +96,6 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
             float f1 = Mth.sin(this.yBodyRot * (0.017453292f));
             float f = Mth.cos(this.yBodyRot * (0.017453292f));
             passenger.setPos(getX() + f1 * 0.8, d0, this.getZ() - f* 0.8);
-            //passenger.setPos(getX(), d0, this.getZ());
         }
     }
 

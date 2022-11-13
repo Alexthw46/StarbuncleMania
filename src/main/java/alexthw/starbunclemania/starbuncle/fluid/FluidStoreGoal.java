@@ -16,6 +16,12 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
         super(starbuncle, behavior, () -> !behavior.getFluidStack().isEmpty());
     }
 
+    @Override
+    public void start() {
+        super.start();
+        starbuncle.goalState = Starbuncle.StarbuncleGoalState.STORING_ITEM;
+    }
+
     @Nullable
     @Override
     public BlockPos getDestination() {

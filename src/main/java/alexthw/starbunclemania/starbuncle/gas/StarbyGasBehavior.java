@@ -31,10 +31,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.HEAD_COSMETIC;
+
 public class StarbyGasBehavior extends StarbyListBehavior {
 
-    public static final Capability<IGasHandler> GAS_HANDLER = CapabilityManager.get(new CapabilityToken<>() {
-    });
+    public static final Capability<IGasHandler> GAS_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
 
     private GasStack gasStack = GasStack.EMPTY;
     public int side = -1;
@@ -42,7 +43,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     public StarbyGasBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         if (tag.contains("Direction")) side = tag.getInt("Direction");
-        if (tag.contains("GasName")) gasStack = GasStack.readFromNBT(tag);
+        if (tag.contains("gasName")) gasStack = GasStack.readFromNBT(tag);
         goals.add(new WrappedGoal(3, new GasStoreGoal(entity, this)));
         goals.add(new WrappedGoal(3, new GasExtractGoal(entity, this)));
     }
@@ -53,7 +54,9 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     public void setGasStack(GasStack gas) {
         gasStack = gas;
-        starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gas.getChemicalColorRepresentation());
+        if (!gas.isEmpty()) {
+           starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gas.getChemicalColorRepresentation());
+        }
         syncTag();
     }
 
@@ -168,7 +171,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         IGasHandler gas = getHandlerFromCap(pos);
         if (gas != null) {
             for (int i = 0; i < gas.getTanks(); i++) {
-                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() < getRatio()) {
+                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() <= getRatio()) {
                     return true;
                 }
             }
@@ -199,6 +202,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     @Override
     public ItemStack getStackForRender() {
-        return starbuncle.getCosmeticItem();
+        starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gasStack.getChemicalColorRepresentation());
+        return ItemStack.EMPTY;
     }
 }

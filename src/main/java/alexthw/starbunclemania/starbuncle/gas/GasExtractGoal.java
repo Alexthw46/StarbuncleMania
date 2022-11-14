@@ -38,7 +38,7 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
         int tankIndexE = 0;
         if (gasHandlerExtract != null){
             GasStack toExtract = gasHandlerExtract.getChemicalInTank(tankIndexE);
-            BlockPos pos = behavior.getTankForStorage(toExtract);
+            BlockPos pos = behavior.getTankForStorage(new GasStack(toExtract, behavior.getRatio()));
             if (pos == null) {
                 starbuncle.addGoalDebug(this, new DebugEvent("NoRoom", "No Room for " + toExtract.getTypeRegistryName() + " from " + targetPos.toString()));
                 return true;
@@ -58,7 +58,7 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
                 }
                 if (maxRoom <= 0) return true;
                 int takeAmount = (int) Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
-                starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
+                starbuncle.level.playSound(null, targetPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.NEUTRAL, 0.5f, 1.3f);
                 GasStack extracted = new GasStack(toExtract, takeAmount);
                 behavior.setGasStack(gasHandlerExtract.extractChemical(extracted, Action.EXECUTE));
                 starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + takeAmount + "x " + extracted.getTypeRegistryName() + " from " + targetPos.toString()));

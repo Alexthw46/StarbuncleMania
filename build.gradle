@@ -156,6 +156,10 @@ dependencies {
     compileOnly "mekanism:Mekanism:${mekanism_version}:api"
 
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")// core
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")// Mekanism: Additions
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")// Mekanism: Generators
+    runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")// Mekanism: Tools
+
     runtimeOnly fg.deobf("curse.maven:elemental-561470:4075580")
     runtimeOnly fg.deobf("curse.maven:ae2-223794:3995899")
     runtimeOnly fg.deobf("joefoxe:hexerei:0.2.5")

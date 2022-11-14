@@ -1,0 +1,21 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"float": {
+			"loop": true,
+			"animation_length": 4,
+			"bones": {
+				"str": {
+					"position": {
+						"vector": [0, "Math.cos(query.anim_time * 90)", 0]
+					}
+				},
+				"ball": {
+					"position": {
+						"vector": [0, "Math.cos(query.anim_time * 90)", 0]
+					}
+				}
+			}
+		}
+	}
+}

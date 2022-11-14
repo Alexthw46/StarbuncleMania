@@ -37,7 +37,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void registerColors(final RegisterColorHandlersEvent.Item event){
-        event.register((stack, tintIndex) -> tintIndex == 0 && stack.hasTag() ? stack.getOrCreateTag().getInt("color") : -1,
+        event.register((stack, tintIndex) -> tintIndex == 0 ? stack.getOrCreateTag().getInt("color") : -1,
                 ModRegistry.STARBALLON.get());
     }
 

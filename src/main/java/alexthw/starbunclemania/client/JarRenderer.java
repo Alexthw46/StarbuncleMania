@@ -1,7 +1,7 @@
 package alexthw.starbunclemania.client;
 
-import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.block.LiquidJarTile;
+import alexthw.starbunclemania.common.item.FluidJarItem;
 import com.hollingsworth.arsnouveau.client.renderer.item.FixedGeoItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;

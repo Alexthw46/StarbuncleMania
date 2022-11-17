@@ -66,6 +66,7 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.trashing_items"));
         if (itemScroll != null && !itemScroll.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }

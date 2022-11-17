@@ -19,7 +19,7 @@ public class StarbySaddle extends ModItem implements ICosmeticItem {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity entity, InteractionHand pUsedHand) {
-        if (entity instanceof Starbuncle starbuncle){
+        if (entity instanceof Starbuncle starbuncle && !(entity instanceof StarbyMountEntity)){
             starbuncle.setCosmeticItem(pStack.split(1));
             StarbyMountEntity mount = new StarbyMountEntity(pPlayer.level, starbuncle.data);
             mount.setPos(starbuncle.getX(), starbuncle.getY(), starbuncle.getZ());

@@ -1,15 +1,16 @@
 package alexthw.starbunclemania.common.item;
 
 import alexthw.starbunclemania.client.BalloonRenderer;
-import alexthw.starbunclemania.client.JarRenderer;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,8 +39,9 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         if (pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)) {
             starbuncle.setCosmeticItem(pStack.split(1));
-            if (pInteractionTarget instanceof Starbuncle starby && ModList.get().isLoaded("mekanism")) {
+            if (pInteractionTarget instanceof Starbuncle starby && !pPlayer.isShiftKeyDown() && ModList.get().isLoaded("mekanism")) {
                 starby.setBehavior(new StarbyGasBehavior(starby, new CompoundTag()));
+                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.gas_behavior_set"));
             }
             return InteractionResult.SUCCESS;
         }

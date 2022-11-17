@@ -29,7 +29,7 @@ public class ProfHat extends Item implements ICosmeticItem {
 
     @Override
     public Vec3 getTranslations() {
-        return new Vec3(0,1.1,0);
+        return new Vec3(0,0.75,0);
     }
 
     @Override

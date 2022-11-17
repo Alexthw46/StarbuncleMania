@@ -3,6 +3,7 @@ package alexthw.starbunclemania.starbuncle.sword;
 import alexthw.starbunclemania.StarbuncleMania;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyBehavior;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,6 +12,8 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -49,6 +52,19 @@ public class StarbyFigherBehavior extends StarbyBehavior {
                         (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner))
                         || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner)))
         ));
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
+        starbuncle.setTarget(storedEntity);
+
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
+        starbuncle.setTarget(storedEntity);
     }
 
     @Override

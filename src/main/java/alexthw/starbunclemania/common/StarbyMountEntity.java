@@ -1,17 +1,22 @@
 package alexthw.starbunclemania.common;
 
 import alexthw.starbunclemania.registry.ModRegistry;
+import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
 
@@ -28,8 +33,22 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
     }
 
     @Override
+    public void setCosmeticItem(ItemStack stack) {
+        this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), stack));
+    }
+
+    @Override
+    public void setBehavior(ChangeableBehavior behavior) {
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+    }
+
+    final EntityDimensions BB = new EntityDimensions(2, 2, true);
+    @Override
     public EntityDimensions getDimensions(Pose p_213305_1_) {
-        return new EntityDimensions(2, 2, true);
+        return BB;
     }
 
     @Override

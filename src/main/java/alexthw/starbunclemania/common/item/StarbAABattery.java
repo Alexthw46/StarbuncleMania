@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,8 +26,9 @@ public class StarbAABattery extends Item implements ICosmeticItem {
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         if (pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)) {
             starbuncle.setCosmeticItem(pStack.split(1));
-            if ( pInteractionTarget instanceof Starbuncle starby ){
+            if ( pInteractionTarget instanceof Starbuncle starby && !pPlayer.isShiftKeyDown()){
                 starby.setBehavior(new StarbyEnergyBehavior(starby, new CompoundTag()));
+                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.energy_behavior_set"));
             }
             return InteractionResult.SUCCESS;
         }

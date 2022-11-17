@@ -1,12 +1,15 @@
 package alexthw.starbunclemania.registry;
 
 import alexthw.starbunclemania.StarbuncleMania;
+import alexthw.starbunclemania.client.FluidSourceLinkRenderer;
+import alexthw.starbunclemania.client.SourceCondenserRenderer;
 import alexthw.starbunclemania.common.ExampleCosmetic;
 import alexthw.starbunclemania.common.StarbyMountEntity;
-import alexthw.starbunclemania.common.block.LiquidJarBlock;
-import alexthw.starbunclemania.common.block.LiquidJarTile;
+import alexthw.starbunclemania.common.block.*;
 import alexthw.starbunclemania.common.item.*;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -28,9 +31,11 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
+
 import static alexthw.starbunclemania.StarbuncleMania.TAB;
 
-@SuppressWarnings("Convert2MethodRef")
+@SuppressWarnings({"Convert2MethodRef", "ConstantConditions"})
 public class ModRegistry {
 
     private static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, StarbuncleMania.MODID);
@@ -40,6 +45,10 @@ public class ModRegistry {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StarbuncleMania.MODID);
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StarbuncleMania.MODID);
+
+    // Maybe switch source conversion to recipes, currenlty in configs
+    // public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
+    //public static final DeferredRegister<RecipeSerializer<?>> RSERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
 
 
     public static void registerRegistries(IEventBus bus) {
@@ -56,6 +65,8 @@ public class ModRegistry {
         event.put(STARBY_MOUNT.get(), Starbuncle.attributes().build());
     }
 
+    public static final RegistryObject<Item> DIRECTION_SCROLL;
+
     public static final RegistryObject<Item> EXAMPLE;
     public static final RegistryObject<Item> PROFHAT;
     public static final RegistryObject<Item> STARBATTERY;
@@ -66,11 +77,13 @@ public class ModRegistry {
     public static final RegistryObject<Item> STARWAND;
     public static final RegistryObject<Item> STARSADDLE;
 
-    public static final RegistryObject<Item> DIRECTION_SCROLL;
-
 
     public static final RegistryObject<Block> FLUID_JAR;
     public static final RegistryObject<BlockEntityType<LiquidJarTile>> FLUID_JAR_TILE;
+    public static final RegistryObject<Block> SOURCE_CONDENSER;
+    public static final RegistryObject<BlockEntityType<SourceCondenserTile>> SOURCE_CONDENSER_TILE;
+    public static final RegistryObject<Block> FLUID_SOURCELINK;
+    public static final RegistryObject<BlockEntityType<FluidSourcelinkTile>> FLUID_SOURCELINK_TILE;
 
     public static final RegistryObject<EntityType<StarbyMountEntity>> STARBY_MOUNT;
 
@@ -83,15 +96,33 @@ public class ModRegistry {
         STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));
         STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties()));
         STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
-        STARWAND = ITEMS.register("star_wand", () -> new ExampleCosmetic(basicItemProperties()));
+        STARWAND = ITEMS.register("star_wand", () -> new StarWand());
 
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
         STARSADDLE = ITEMS.register("star_saddle", () -> new StarbySaddle(basicItemProperties()));
 
         FLUID_JAR = BLOCKS.register("fluid_jar", () -> new LiquidJarBlock());
         ITEMS.register("fluid_jar", () -> new FluidJarItem(FLUID_JAR.get(), basicItemProperties()));
-
         FLUID_JAR_TILE = BLOCK_ENTITIES.register("fluid_jar_tile", () -> BlockEntityType.Builder.of(LiquidJarTile::new, FLUID_JAR.get()).build(null));
+
+        SOURCE_CONDENSER = BLOCKS.register("source_condenser", () -> new SourceCondenserBlock());
+        SOURCE_CONDENSER_TILE = BLOCK_ENTITIES.register("source_condenser_tile", () -> BlockEntityType.Builder.of(SourceCondenserTile::new, SOURCE_CONDENSER.get()).build(null));
+        ITEMS.register("source_condenser", () -> new RendererBlockItem(SOURCE_CONDENSER.get(), basicItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return SourceCondenserRenderer::getISTER;
+            }
+        });
+
+        FLUID_SOURCELINK = BLOCKS.register("fluid_sourcelink", () -> new FluidSourcelinkBlock());
+        FLUID_SOURCELINK_TILE = BLOCK_ENTITIES.register("fluid_sourcelink_tile", () -> BlockEntityType.Builder.of(FluidSourcelinkTile::new, FLUID_SOURCELINK.get()).build(null));
+        ITEMS.register("fluid_sourcelink", () -> new RendererBlockItem(FLUID_SOURCELINK.get(), basicItemProperties()) {
+            @Override
+            public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                return FluidSourceLinkRenderer::getISTER;
+            }
+        });
+
         STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(world), MobCategory.CREATURE);
 
     }

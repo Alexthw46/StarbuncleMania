@@ -11,9 +11,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -25,8 +22,6 @@ import java.util.stream.Stream;
 
 public class LiquidJarBlock extends ModBlock implements EntityBlock {
 
-    public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);
-
     public LiquidJarBlock(){
         super(defaultProperties().noOcclusion());
     }
@@ -34,11 +29,6 @@ public class LiquidJarBlock extends ModBlock implements EntityBlock {
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return shape;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
-        builder.add(fill);
     }
 
     public static final VoxelShape shape = Stream.of(

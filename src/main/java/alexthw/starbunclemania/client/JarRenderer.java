@@ -43,7 +43,7 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
                     float percentage = (pStack.getOrCreateTag().contains("Starbuncle")) ? 1 : (float) fluid.getAmount() / LiquidJarTile.capacity;
                     renderFluid(percentage, IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid),
                             fluid.getFluid().getFluidType().getLightLevel(), IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(),
-                            pPoseStack, pBuffer, pPackedLight, true);
+                            pPoseStack, pBuffer, pPackedLight, true, LIQUID_DIMENSIONS);
                 }
             }
             pPoseStack.popPose();
@@ -55,16 +55,16 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
 
     public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(10 / 16f, 10 / 16f, 1 / 16f); //Width, Height, y0
 
-    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, boolean shading) {
+    public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, boolean shading, Vector3f fluidVec) {
         matrixStackIn.pushPose();
         float opacity = 1;
         if (luminosity != 0) light = light & 15728640 | luminosity << 4;
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(texture);
         VertexConsumer builder = bufferIn.getBuffer(RenderType.translucentMovingBlock());
-        matrixStackIn.translate(0.5, LIQUID_DIMENSIONS.z(), 0.5);
+        matrixStackIn.translate(0.5, fluidVec.z(), 0.5);
         addCube(builder, matrixStackIn,
-                LIQUID_DIMENSIONS.x(),
-                percentageFill * LIQUID_DIMENSIONS.y(),
+                fluidVec.x(),
+                percentageFill * fluidVec.y(),
                 sprite, light, color, opacity, true, true, shading, true);
         matrixStackIn.popPose();
     }
@@ -75,9 +75,9 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
 //render fluid
         FluidStack fluidHolder = tile.getFluid();
         if (!fluidHolder.isEmpty()) {
-            renderFluid(tile.getFluidPercentage()/10F, IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getTintColor(fluidHolder),
+            renderFluid(tile.getFluidPercentage(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getTintColor(fluidHolder),
                     fluidHolder.getFluid().getFluidType().getLightLevel(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getStillTexture(),
-                    pPoseStack, pBufferSource, pPackedLight, true);
+                    pPoseStack, pBufferSource, pPackedLight, true, LIQUID_DIMENSIONS);
         }
     }
 

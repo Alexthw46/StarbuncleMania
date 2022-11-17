@@ -2,6 +2,7 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.ArsNouveauRegistry;
 import alexthw.starbunclemania.StarbuncleMania;
+import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.Tags;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -68,16 +70,14 @@ public class ArsProviders {
 
         @Override
         public void run(CachedOutput cache) throws IOException {
-            //example of an apparatus recipe
-            /*
+
             recipes.add(builder()
-                    .withReagent(ItemsRegistry.SOURCE_GEM)
-                    .withPedestalItem(4, Recipes.SOURCE_GEM)
-                    .withResult(ItemsRegistry.BUCKET_OF_SOURCE)
-                    .withSource(100)
+                    .withReagent(ModRegistry.FLUID_JAR.get())
+                    .withPedestalItem(4, Tags.Items.NUGGETS_GOLD)
+                    .withResult(ModRegistry.STARBUCKET.get())
+                    .withSourceCost(100)
                     .build()
             );
-             */
 
             Path output = this.generator.getOutputFolder();
             for (EnchantingApparatusRecipe g : recipes){

@@ -20,6 +20,9 @@ public class ClientHandler {
     @SubscribeEvent
     public static void bindRenderers(final EntityRenderersEvent.RegisterRenderers event) {
 
+        event.registerBlockEntityRenderer(ModRegistry.FLUID_SOURCELINK_TILE.get(), FluidSourceLinkRenderer::new);
+        event.registerBlockEntityRenderer(ModRegistry.SOURCE_CONDENSER_TILE.get(), SourceCondenserRenderer::new);
+
         event.registerEntityRenderer(ModRegistry.STARBY_MOUNT.get(), ResizedStarbRender::new);
 
     }

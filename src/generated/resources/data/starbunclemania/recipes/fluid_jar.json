@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "ars_nouveau:blue_archwood_log"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "W": {
+      "item": "ars_nouveau:water_essence"
+    }
+  },
+  "pattern": [
+    " C ",
+    "GWG",
+    "CCC"
+  ],
+  "result": {
+    "item": "starbunclemania:fluid_jar"
+  }
+}

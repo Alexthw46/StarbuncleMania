@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "J": {
+      "item": "starbunclemania:fluid_jar"
+    },
+    "S": {
+      "item": "ars_nouveau:source_gem"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "SJS",
+    "SSS"
+  ],
+  "result": {
+    "item": "starbunclemania:source_condenser"
+  }
+}

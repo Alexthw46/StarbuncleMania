@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "starbunclemania:source_fluid_bucket"
+    },
+    "G": {
+      "tag": "forge:ingots/gold"
+    },
+    "S": {
+      "item": "ars_nouveau:source_gem"
+    }
+  },
+  "pattern": [
+    " S ",
+    "GBG",
+    " S "
+  ],
+  "result": {
+    "item": "starbunclemania:fluid_sourcelink"
+  }
+}

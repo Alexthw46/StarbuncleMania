@@ -1,9 +1,5 @@
 package alexthw.starbunclemania.datagen;
 
-import static alexthw.starbunclemania.registry.ModRegistry.*;
-import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.SOURCE_GEM;
-
-import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -20,6 +16,8 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Consumer;
+
+import static alexthw.starbunclemania.registry.ModRegistry.*;
 
 public class ModRecipeProvider extends RecipeProvider {
     public ModRecipeProvider(DataGenerator pGenerator) {
@@ -46,6 +44,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("NIN")
                 .save(consumer);
 
+        shaped(STARHAT)
+                .pattern(" F ")
+                .pattern("FWF")
+                .pattern(" F ")
+                .define('W', Items.BLACK_WOOL)
+                .define('F', ItemsRegistry.MAGE_FIBER)
+                .save(consumer);
+
         //blocks
         shapedB(FLUID_JAR)
                 .define('G', Items.GLASS)
@@ -60,16 +66,18 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("GBG")
                 .pattern(" S ")
                 .define('G', Tags.Items.INGOTS_GOLD)
-                .define('S', SOURCE_GEM)
+                .define('S', ItemsRegistry.SOURCE_GEM)
                 .define('B', SOURCE_FLUID_BUCKET.get())
                 .save(consumer);
         shapedB(SOURCE_CONDENSER)
                 .define('J', FLUID_JAR.get())
-                .define('S', SOURCE_GEM)
+                .define('S', ItemsRegistry.SOURCE_GEM)
                 .pattern("SSS")
                 .pattern("SJS")
                 .pattern("SSS")
                 .save(consumer);
+
+        shapelessBuilder(DIRECTION_SCROLL.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.COMPASS).save(consumer);
     }
 
     public ShapedRecipeBuilder shaped(RegistryObject<Item> result){

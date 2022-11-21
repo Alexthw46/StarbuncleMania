@@ -67,7 +67,7 @@ public class ModRegistry {
 
     public static final RegistryObject<Item> DIRECTION_SCROLL;
 
-    public static final RegistryObject<Item> EXAMPLE;
+    public static final RegistryObject<Item> STARHAT;
     public static final RegistryObject<Item> PROFHAT;
     public static final RegistryObject<Item> STARBATTERY;
     public static final RegistryObject<Item> STARBUCKET;
@@ -89,7 +89,7 @@ public class ModRegistry {
 
     static {
 
-        EXAMPLE = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));
+        STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));
         PROFHAT = ITEMS.register("prof_hat", () -> new ProfHat(basicItemProperties()));
         STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties()));
         STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));

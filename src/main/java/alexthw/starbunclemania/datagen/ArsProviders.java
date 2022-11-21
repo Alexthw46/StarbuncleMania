@@ -17,7 +17,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
@@ -77,7 +76,6 @@ public class ArsProviders {
                     .withReagent(ModRegistry.FLUID_JAR.get())
                     .withPedestalItem(4, Tags.Items.NUGGETS_GOLD)
                     .withResult(ModRegistry.STARBUCKET.get())
-                    .withSourceCost(100)
                     .build()
             );
 

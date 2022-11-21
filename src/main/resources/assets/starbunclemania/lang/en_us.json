@@ -2,6 +2,8 @@
 	"itemGroup.starbunclemania": "StarbuncleMania",
 
 	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",
+	"block.starbunclemania.fluid_sourcelink": "Fluid Sourcelink",
+	"block.starbunclemania.source_condenser": "Source Condenser",
 
 	"item.starbunclemania.direction_scroll": "Direction Scroll",
 	"item.starbunclemania.star_hat": "Blues Hat",
@@ -11,8 +13,8 @@
 	"item.starbunclemania.star_balloon": "Starballoon",
 	"item.starbunclemania.star_bin": "StarBin",
 	"item.starbunclemania.star_saddle": "Starddle",
-	"item.starbunclemania.star_sword": "Sword of the Starb",
-	"item.starbunclemania.star_wand": "Wand of Sacred Nug",
+	"item.starbunclemania.star_sword": "Sword of the Starb [WIP]",
+	"item.starbunclemania.star_wand": "Wand of Sacred Nug [WIP]",
 	"item.starbunclemania.fluid_jar": "Fluid Jar",
 	"item.starbunclemania.source_fluid_bucket": "Liquefied Source Bucket",
 	"fluid_type.starbunclemania.source_fluid": "Liquefied Source",
@@ -21,8 +23,8 @@
 	"ars_nouveau.starbuncle.fluid_behavior_set": "Starbuncle will now transport fluids",
 	"ars_nouveau.starbuncle.energy_behavior_set": "Starbuncle will now transport energy",
 	"ars_nouveau.starbuncle.gas_behavior_set": "Starbuncle will now transport gasses",
-	"ars_nouveau.starbuncle.trash_behavior_set": "Starbuncle will trah items",
-	"ars_nouveau.starbuncle.sword_behavior_set": "Starbuncle chose violence",
+	"ars_nouveau.starbuncle.trash_behavior_set": "Starbuncle will trash items",
+	"ars_nouveau.starbuncle.sword_behavior_set": "Starbuncle will now choose violence",
 	"ars_nouveau.starbuncle.heal_behavior_set": "Starbuncle will now heal creatures",
 
 	"ars_nouveau.starbuncle.default_behavior": "Defaulted to item transportation",

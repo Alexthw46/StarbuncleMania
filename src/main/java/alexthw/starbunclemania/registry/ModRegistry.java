@@ -3,7 +3,7 @@ package alexthw.starbunclemania.registry;
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.client.FluidSourceLinkRenderer;
 import alexthw.starbunclemania.client.SourceCondenserRenderer;
-import alexthw.starbunclemania.common.ExampleCosmetic;
+import alexthw.starbunclemania.common.item.cosmetic.*;
 import alexthw.starbunclemania.common.StarbyMountEntity;
 import alexthw.starbunclemania.common.block.*;
 import alexthw.starbunclemania.common.item.*;

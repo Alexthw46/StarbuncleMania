@@ -1,11 +1,11 @@
-package alexthw.starbunclemania.common.item;
+package alexthw.starbunclemania.common.item.cosmetic;
 
-import alexthw.starbunclemania.starbuncle.heal.StarbyHealerBehavior;
+import alexthw.starbunclemania.starbuncle.sword.StarbyFigherBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
-import com.hollingsworth.arsnouveau.common.items.Wand;
+import com.hollingsworth.arsnouveau.common.items.EnchantersSword;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -14,9 +14,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.phys.Vec3;
 
-public class StarWand extends Wand implements ICosmeticItem {
+public class StarSword extends EnchantersSword implements ICosmeticItem {
+
+    public StarSword(Properties pProperties) {
+        super(Tiers.GOLD, 1, 1, pProperties);
+    }
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
@@ -26,8 +31,8 @@ public class StarWand extends Wand implements ICosmeticItem {
             if (deco instanceof Starbuncle starbuncle && !pPlayer.isShiftKeyDown()){
                 CompoundTag tag = new CompoundTag();
                 tag.putUUID("master", pPlayer.getUUID());
-                starbuncle.setBehavior(new StarbyHealerBehavior(starbuncle, tag));
-                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.heal_behavior_set"));
+                starbuncle.setBehavior(new StarbyFigherBehavior(starbuncle, tag));
+                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.sword_behavior_set"));
             }
         }
 

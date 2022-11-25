@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common.item;
+package alexthw.starbunclemania.common.item.cosmetic;
 
 import alexthw.starbunclemania.client.BalloonRenderer;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
@@ -26,6 +26,7 @@ import software.bernie.ars_nouveau.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.ars_nouveau.geckolib3.core.controller.AnimationController;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationData;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationFactory;
+import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
@@ -61,8 +62,8 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
         });
     }
 
-    Vec3 Translation = new Vec3(+0.0, -0.22, -0.15);
-    Vec3 Scaling = new Vec3(1, 1, 1);
+    final Vec3 Translation = new Vec3(+0.0, -0.22, -0.15);
+    final Vec3 Scaling = new Vec3(1, 1, 1);
 
     @Override
     public Vec3 getTranslations() {
@@ -95,7 +96,7 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
         }));
     }
 
-    public final AnimationFactory factory = new AnimationFactory(this);
+    public final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

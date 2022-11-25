@@ -31,8 +31,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.HEAD_COSMETIC;
-
 public class StarbyGasBehavior extends StarbyListBehavior {
 
     public static final Capability<IGasHandler> GAS_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});

@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common;
+package alexthw.starbunclemania.common.item.cosmetic;
 
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;

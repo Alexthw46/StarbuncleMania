@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import software.bernie.ars_nouveau.geckolib3.core.IAnimatable;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationData;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationFactory;
+import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
 
@@ -56,7 +57,7 @@ public class SourceCondenserTile extends AbstractTankTile implements IAnimatable
 
     }
 
-    AnimationFactory factory = new AnimationFactory(this);
+    final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public AnimationFactory getFactory() {

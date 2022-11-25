@@ -18,7 +18,7 @@ import software.bernie.ars_nouveau.geckolib3.renderers.geo.GeoBlockRenderer;
 import static alexthw.starbunclemania.client.JarRenderer.renderFluid;
 
 public class FluidSourceLinkRenderer extends GeoBlockRenderer<FluidSourcelinkTile> {
-    public static SourcelinkModel model = new SourcelinkModel<>("alchemical");
+    public static final SourcelinkModel model = new SourcelinkModel<>("alchemical");
 
     public FluidSourceLinkRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
@@ -27,7 +27,7 @@ public class FluidSourceLinkRenderer extends GeoBlockRenderer<FluidSourcelinkTil
         return new GenericItemBlockRenderer(model);
     }
 
-    public static Vector3f LIQUID_DIMENSIONS = new Vector3f(10 / 16f, 10 / 16f, 1 / 16f); //Width, Height, y0
+    public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(10 / 16f, 10 / 16f, 1 / 16f); //Width, Height, y0
 
     @Override
     public void render(GeoModel model, FluidSourcelinkTile tile, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {

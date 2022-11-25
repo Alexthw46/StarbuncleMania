@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.ars_nouveau.geckolib3.core.IAnimatable;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationData;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationFactory;
+import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -60,7 +61,7 @@ public class FluidJarItem extends BlockItem implements IAnimatable {
         }
     }
 
-    final AnimationFactory factory = new AnimationFactory(this);
+    final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     @Override
     public void registerControllers(AnimationData animationData) {

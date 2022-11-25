@@ -1,6 +1,6 @@
 package alexthw.starbunclemania.client;
 
-import alexthw.starbunclemania.common.item.StarBalloon;
+import alexthw.starbunclemania.common.item.cosmetic.StarBalloon;
 import com.hollingsworth.arsnouveau.client.renderer.item.FixedGeoItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.mojang.blaze3d.vertex.PoseStack;

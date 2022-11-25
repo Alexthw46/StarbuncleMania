@@ -124,12 +124,6 @@ public class ArsProviders {
         @Override
         public void run(CachedOutput cache) throws IOException {
 
-            /*
-            recipes.add(new ImbuementRecipe("example_focus", Ingredient.of(Items.AMETHYST_SHARD), new ItemStack(ItemsRegistry.SUMMONING_FOCUS, 1), 5000)
-                    .withPedestalItem(ItemsRegistry.WILDEN_TRIBUTE)
-            );
-            */
-
             Path output = generator.getOutputFolder();
             for (ImbuementRecipe g : recipes) {
                 Path path = getRecipePath(output, g.getId().getPath());

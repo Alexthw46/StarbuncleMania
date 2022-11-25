@@ -166,6 +166,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
 
     @Override
     public ItemStack getStackForRender() {
-        return starbuncle.getCosmeticItem();
+        return ItemStack.EMPTY;
     }
+
 }

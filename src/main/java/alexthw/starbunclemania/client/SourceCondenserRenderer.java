@@ -20,7 +20,7 @@ import static alexthw.starbunclemania.client.JarRenderer.renderFluid;
 
 public class SourceCondenserRenderer extends GeoBlockRenderer<SourceCondenserTile> {
 
-    public static AnimatedGeoModel<SourceCondenserTile> model = new GenericModel<>("imbuement_chamber");
+    public static final AnimatedGeoModel<SourceCondenserTile> model = new GenericModel<>("imbuement_chamber");
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);

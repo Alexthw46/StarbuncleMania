@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common.item;
+package alexthw.starbunclemania.common.item.cosmetic;
 
 import alexthw.starbunclemania.starbuncle.energy.StarbyEnergyBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
@@ -35,14 +35,17 @@ public class StarbAABattery extends Item implements ICosmeticItem {
 
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);    }
 
+    static final Vec3 translation = new Vec3(0, 0.25, 0.025);
+    static final Vec3 scaling = new Vec3(1, 1, 1);
+
     @Override
     public Vec3 getTranslations() {
-        return new Vec3(0,0.0,-0.175);
+        return translation;
     }
 
     @Override
     public Vec3 getScaling() {
-        return new Vec3(0.8,1,0.8);
+        return scaling;
     }
 
     @Override

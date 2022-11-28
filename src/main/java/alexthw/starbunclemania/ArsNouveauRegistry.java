@@ -5,6 +5,7 @@ import alexthw.starbunclemania.starbuncle.energy.StarbyEnergyBehavior;
 import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
 import alexthw.starbunclemania.starbuncle.heal.StarbyHealerBehavior;
+import alexthw.starbunclemania.starbuncle.item.AdvancedItemTransportBehavior;
 import alexthw.starbunclemania.starbuncle.sword.StarbyFigherBehavior;
 import alexthw.starbunclemania.starbuncle.trash.StarbyVoidBehavior;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
@@ -23,6 +24,7 @@ public class ArsNouveauRegistry {
     public static final List<AbstractSpellPart> registeredSpells = new ArrayList<>(); //this will come handy for datagen
 
     public static void register(){
+        BehaviorRegistry.register(AdvancedItemTransportBehavior.TRANSPORT_ID, (entity, tag) -> new AdvancedItemTransportBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyEnergyBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyEnergyBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyFluidBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyFluidBehavior((Starbuncle) entity, tag));
         if (ModList.get().isLoaded("mekanism"))

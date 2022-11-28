@@ -11,6 +11,10 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import software.bernie.ars_nouveau.geckolib3.core.IAnimatable;
+import software.bernie.ars_nouveau.geckolib3.core.PlayState;
+import software.bernie.ars_nouveau.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.ars_nouveau.geckolib3.core.controller.AnimationController;
+import software.bernie.ars_nouveau.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationData;
 import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationFactory;
 import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
@@ -52,16 +56,26 @@ public class SourceCondenserTile extends AbstractTankTile implements IAnimatable
         }
     }
 
-    @Override
-    public void registerControllers(AnimationData animationData) {
+    AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
+        data.addAnimationController(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
     }
 
-    final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
+        return PlayState.CONTINUE;
+    }
+
+    private <P extends IAnimatable> PlayState floatPredicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation"));
+        return PlayState.CONTINUE;
+    }
 
     @Override
     public AnimationFactory getFactory() {
         return factory;
     }
-
 }

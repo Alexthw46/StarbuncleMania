@@ -19,7 +19,7 @@
 	"item.starbunclemania.source_fluid_bucket": "Liquefied Source Bucket",
 	"fluid_type.starbunclemania.source_fluid": "Liquefied Source",
 
-	"ars_nouveau.starbuncle.item_plus_behavior_set": "Starbuncle will now transport items",
+	"ars_nouveau.starbuncle.sided_item_behavior_set": "Starbuncle will now insert/extract items from specified sides",
 	"ars_nouveau.starbuncle.fluid_behavior_set": "Starbuncle will now transport fluids",
 	"ars_nouveau.starbuncle.energy_behavior_set": "Starbuncle will now transport energy",
 	"ars_nouveau.starbuncle.gas_behavior_set": "Starbuncle will now transport gasses",

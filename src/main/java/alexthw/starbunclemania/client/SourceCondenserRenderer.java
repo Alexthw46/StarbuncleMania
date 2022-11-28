@@ -20,7 +20,7 @@ import static alexthw.starbunclemania.client.JarRenderer.renderFluid;
 
 public class SourceCondenserRenderer extends GeoBlockRenderer<SourceCondenserTile> {
 
-    public static final AnimatedGeoModel<SourceCondenserTile> model = new GenericModel<>("imbuement_chamber");
+    public static final AnimatedGeoModel<SourceCondenserTile> model = new GenericModel<>("source_condenser");
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
@@ -36,7 +36,7 @@ public class SourceCondenserRenderer extends GeoBlockRenderer<SourceCondenserTil
     public void render(GeoModel model, SourceCondenserTile tile, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         super.render(model, tile, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         matrixStackIn.pushPose();
-        matrixStackIn.translate(-0.5,0,-0.5);
+        matrixStackIn.translate(-0.5,0.05,-0.5);
         FluidStack fluidHolder = SourceCondenserTile.tester;
         if (!fluidHolder.isEmpty()) {
             renderFluid(tile.getFluidPercentage(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getTintColor(fluidHolder),

@@ -1,0 +1,31 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"spin": {
+			"loop": true,
+			"animation_length": 23.4,
+			"bones": {
+				"bone8": {
+					"rotation": {
+						"vector": [0, "query.anim_time / 2 * 360", 0]
+					}
+				},
+				"bone5": {
+					"rotation": {
+						"vector": [0, "query.anim_time / 2 * 360", 0]
+					}
+				},
+				"bone6": {
+					"rotation": {
+						"vector": [0, "query.anim_time / 2 * 360", 0]
+					}
+				},
+				"bone7": {
+					"rotation": {
+						"vector": [0, "query.anim_time / 2 * 360", 0]
+					}
+				}
+			}
+		}
+	}
+}

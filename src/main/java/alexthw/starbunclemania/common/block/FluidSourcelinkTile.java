@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -21,13 +22,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
+
 public class FluidSourcelinkTile extends SourcelinkTile {
 
     public FluidSourcelinkTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FLUID_SOURCELINK_TILE.get(), pos, state);
     }
 
-    public static int capacity = 16000;
+    public static int capacity = 6000;
 
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> this.tank);
 
@@ -38,14 +41,35 @@ public class FluidSourcelinkTile extends SourcelinkTile {
         }
     };
 
+    boolean tester(IFluidHandler tank){
+        for (int i = 0; i < tank.getTanks(); i++){
+            FluidStack fluid = tank.getFluidInTank(i);
+            if (getSourceFromFluid(fluid) > 0){
+               return this.tank.isEmpty() || this.tank.getFluid().isFluidEqual(fluid);
+            }
+        }
+        return false;
+    }
+
     @Override
     public void tick() {
         super.tick();
-        if (level != null && !level.isClientSide() && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
-            int sourceFromFluid = getSourceFromFluid(this.getFluid());
-            if (sourceFromFluid > 0) {
-                int drain = this.tank.drain(1000, IFluidHandler.FluidAction.EXECUTE).getAmount();
-                this.addSource(drain * sourceFromFluid);
+        if (level != null) {
+            if (this.tank.getSpace() > 0 && level.getGameTime() % 20 == 0) {
+                BlockEntity be = level.getBlockEntity(this.getBlockPos().below());
+                if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).isPresent()) {
+                    IFluidHandler handler = be.getCapability(FLUID_HANDLER, Direction.DOWN).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, Direction.DOWN).resolve().get() : null;
+                    if (handler != null && tester(handler)) {
+                        this.tank.fill(handler.drain(Math.min(1000, tank.getSpace()), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+            }
+            if (!level.isClientSide() && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
+                int sourceFromFluid = getSourceFromFluid(this.getFluid());
+                if (sourceFromFluid > 0) {
+                    int drain = this.tank.drain(1000, IFluidHandler.FluidAction.EXECUTE).getAmount();
+                    this.addSource(drain * sourceFromFluid);
+                }
             }
         }
     }
@@ -53,7 +77,7 @@ public class FluidSourcelinkTile extends SourcelinkTile {
     int getSourceFromFluid(FluidStack tank) {
         if (!tank.isEmpty()) {
             ResourceLocation fluid = ForgeRegistries.FLUIDS.getKey(tank.getFluid());
-            if (fluid != null && Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)){
+            if (fluid != null && Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {
                 return Configs.FLUID_TO_SOURCE_MAP.get(fluid);
             }
         }
@@ -71,6 +95,11 @@ public class FluidSourcelinkTile extends SourcelinkTile {
 
     public FluidStack getFluid() {
         return this.tank.getFluid();
+    }
+
+    @Override
+    public int getMaxSource() {
+        return 5000;
     }
 
     @Override

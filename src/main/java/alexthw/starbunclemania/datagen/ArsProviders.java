@@ -5,7 +5,6 @@ import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -22,7 +21,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
@@ -156,7 +154,17 @@ public class ArsProviders {
                 addGlyphPage(spell);
             }
 
-            //check the superclass for examples
+            addBasicItem(ModRegistry.FLUID_JAR.get(), AUTOMATION, new CraftingPage(ModRegistry.FLUID_JAR.get()));
+            addBasicItem(ModRegistry.SOURCE_CONDENSER.get(), SOURCE, new CraftingPage(ModRegistry.SOURCE_CONDENSER.get()));
+            addBasicItem(ModRegistry.FLUID_SOURCELINK.get(), SOURCE, new CraftingPage(ModRegistry.FLUID_SOURCELINK.get()));
+
+            addBasicItem(ModRegistry.DIRECTION_SCROLL.get(), AUTOMATION, new CraftingPage(ModRegistry.DIRECTION_SCROLL.get()));
+            addBasicItem(ModRegistry.PROFHAT.get(), AUTOMATION, new CraftingPage(ModRegistry.PROFHAT.get()));
+            addBasicItem(ModRegistry.STARBUCKET.get(), AUTOMATION, new ApparatusPage(ModRegistry.STARBUCKET.get()));
+            addBasicItem(ModRegistry.STARBALLON.get(), AUTOMATION, new ApparatusPage(ModRegistry.STARBALLON.get()));
+            addBasicItem(ModRegistry.STARTRASH.get(), AUTOMATION, new CraftingPage(ModRegistry.STARTRASH.get()));
+            addBasicItem(ModRegistry.STARBATTERY.get(), AUTOMATION, new CraftingPage(ModRegistry.STARBATTERY.get()));
+
 
             for (PatchouliPage patchouliPage : pages) {
                 DataProvider.saveStable(cache, patchouliPage.build(), patchouliPage.path());
@@ -179,26 +187,6 @@ public class ArsProviders {
                     .withTextPage(root + ".familiar_desc." + familiarHolder.getRegistryName().getPath())
                     .withPage(new EntityPage(familiarHolder.getRegistryName().toString()));
             this.pages.add(new PatchouliPage(builder, getPath(FAMILIARS, familiarHolder.getRegistryName().getPath())));
-        }
-
-        public void addRitualPage(AbstractRitual ritual) {
-            PatchouliBuilder builder = new PatchouliBuilder(RITUALS, "item.starbunclemania." + ritual.getRegistryName().getPath())
-                    .withIcon(ritual.getRegistryName().toString())
-                    .withTextPage(ritual.getDescriptionKey())
-                    .withPage(new CraftingPage("starbunclemania:tablet_" + ritual.getRegistryName().getPath()));
-
-            this.pages.add(new PatchouliPage(builder, getPath(RITUALS, ritual.getRegistryName().getPath())));
-        }
-
-        public void addEnchantmentPage(Enchantment enchantment) {
-            PatchouliBuilder builder = new PatchouliBuilder(ENCHANTMENTS, enchantment.getDescriptionId())
-                    .withIcon(getRegistryName(Items.ENCHANTED_BOOK).toString())
-                    .withTextPage(root + ".enchantment_desc." + getRegistryName(enchantment).getPath());
-
-            for (int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++) {
-                builder.withPage(new EnchantingPage("ars_nouveau:" + getRegistryName(enchantment).getPath() + "_" + i));
-            }
-            this.pages.add(new PatchouliPage(builder, getPath(ENCHANTMENTS, getRegistryName(enchantment).getPath())));
         }
 
         public void addGlyphPage(AbstractSpellPart spellPart) {

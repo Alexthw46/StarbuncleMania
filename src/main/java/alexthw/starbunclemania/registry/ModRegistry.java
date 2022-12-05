@@ -48,7 +48,7 @@ public class ModRegistry {
 
     // Maybe switch source conversion to recipes, currenlty in configs
     // public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
-    //public static final DeferredRegister<RecipeSerializer<?>> RSERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
+    //public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
 
 
     public static void registerRegistries(IEventBus bus) {

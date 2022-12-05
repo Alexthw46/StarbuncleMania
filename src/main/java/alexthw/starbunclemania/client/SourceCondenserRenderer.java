@@ -37,7 +37,7 @@ public class SourceCondenserRenderer extends GeoBlockRenderer<SourceCondenserTil
         super.render(model, tile, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         matrixStackIn.pushPose();
         matrixStackIn.translate(-0.5,0.05,-0.5);
-        FluidStack fluidHolder = SourceCondenserTile.tester;
+        FluidStack fluidHolder = tile.getFluid();
         if (!fluidHolder.isEmpty()) {
             renderFluid(tile.getFluidPercentage(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getTintColor(fluidHolder),
                     fluidHolder.getFluid().getFluidType().getLightLevel(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getStillTexture(),

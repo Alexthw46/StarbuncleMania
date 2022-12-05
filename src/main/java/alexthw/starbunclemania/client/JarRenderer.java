@@ -22,14 +22,14 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
 
-    public JarRenderer(){
+    public JarRenderer() {
         super();
     }
 
     public static class ISTER extends FixedGeoItemRenderer<FluidJarItem> {
 
         public ISTER() {
-            super(new GenericModel<FluidJarItem>("mob_jar"));
+            super(new GenericModel<FluidJarItem>("fluid_jar"));
         }
 
         @Override
@@ -37,7 +37,7 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
             super.renderByItem(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             pPoseStack.pushPose();
             pPoseStack.translate(0, 0.5, 0);
-            if (pStack.getItem() instanceof FluidJarItem){
+            if (pStack.getItem() instanceof FluidJarItem) {
                 FluidStack fluid = FluidJarItem.getFluidFromTag(pStack);
                 if (!fluid.isEmpty()) {
                     float percentage = (pStack.getOrCreateTag().contains("Starbuncle")) ? 1 : (float) fluid.getAmount() / LiquidJarTile.capacity;
@@ -50,10 +50,7 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
         }
     }
 
-
-    //credits to MehVahdJukaar and Supplementaries team
-
-    public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(10 / 16f, 10 / 16f, 1 / 16f); //Width, Height, y0
+    public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(9 / 16f, 9.5f / 16f, 1 / 16f); //Width, Height, y0
 
     public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack matrixStackIn, MultiBufferSource bufferIn, int light, boolean shading, Vector3f fluidVec) {
         matrixStackIn.pushPose();
@@ -69,10 +66,9 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
         matrixStackIn.popPose();
     }
 
-
     @Override
     public void render(LiquidJarTile tile, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {
-//render fluid
+        //render fluid
         FluidStack fluidHolder = tile.getFluid();
         if (!fluidHolder.isEmpty()) {
             renderFluid(tile.getFluidPercentage(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getTintColor(fluidHolder),
@@ -80,6 +76,8 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
                     pPoseStack, pBufferSource, pPackedLight, true, LIQUID_DIMENSIONS);
         }
     }
+
+    //credits to MehVahdJukaar and Supplementaries team for magic below
 
     public static void addCube(VertexConsumer builder, PoseStack matrixStackIn, float w, float h, TextureAtlasSprite sprite, int combinedLightIn,
                                int color, float a, boolean up, boolean down, boolean fakeshading, boolean flippedY) {

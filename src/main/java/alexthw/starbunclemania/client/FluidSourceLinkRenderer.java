@@ -1,14 +1,17 @@
 package alexthw.starbunclemania.client;
 
 import alexthw.starbunclemania.common.block.FluidSourcelinkTile;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.SourcelinkModel;
+import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +21,14 @@ import software.bernie.ars_nouveau.geckolib3.renderers.geo.GeoBlockRenderer;
 import static alexthw.starbunclemania.client.JarRenderer.renderFluid;
 
 public class FluidSourceLinkRenderer extends GeoBlockRenderer<FluidSourcelinkTile> {
-    public static final SourcelinkModel model = new SourcelinkModel<>("fluid");
+    public static final SourcelinkModel model = new SourcelinkModel<>("fluid"){
+        public final ResourceLocation animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/fluid_sourcelink_animations.json");
+        @Override
+        public ResourceLocation getAnimationResource(SourcelinkTile sourcelinkTile) {
+            return animationLoc;
+        }
+
+    };
 
     public FluidSourceLinkRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);

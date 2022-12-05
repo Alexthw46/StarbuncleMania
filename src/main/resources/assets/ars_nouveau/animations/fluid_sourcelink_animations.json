@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"spin": {
+		"rotation": {
 			"loop": true,
 			"animation_length": 23.4,
 			"bones": {

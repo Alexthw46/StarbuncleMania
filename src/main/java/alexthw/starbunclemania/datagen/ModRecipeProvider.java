@@ -52,12 +52,21 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('F', ItemsRegistry.MAGE_FIBER)
                 .save(consumer);
 
+        shaped(PROFHAT)
+                .pattern("CCC")
+                .pattern(" W ")
+                .pattern("   ")
+                .define('W', Items.BLACK_WOOL)
+                .define('C', Items.BLACK_CARPET)
+                .save(consumer);
+
         //blocks
         shapedB(FLUID_JAR)
                 .define('G', Items.GLASS)
                 .define('C', BlockRegistry.CASCADING_LOG.asItem())
                 .define('W', ItemsRegistry.WATER_ESSENCE)
-                .pattern(" C ")
+                .define('I', Items.GOLD_INGOT)
+                .pattern(" I ")
                 .pattern("GWG")
                 .pattern("CCC")
                 .save(consumer);
@@ -69,12 +78,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('S', ItemsRegistry.SOURCE_GEM)
                 .define('B', SOURCE_FLUID_BUCKET.get())
                 .save(consumer);
-        shapedB(SOURCE_CONDENSER)
-                .define('J', FLUID_JAR.get())
-                .define('S', ItemsRegistry.SOURCE_GEM)
-                .pattern("SSS")
-                .pattern("SJS")
-                .pattern("SSS")
+        shapelessBuilder(SOURCE_CONDENSER.get())
+                .requires(FLUID_JAR.get())
+                .requires(BlockRegistry.RELAY)
                 .save(consumer);
 
         shapelessBuilder(DIRECTION_SCROLL.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.COMPASS).save(consumer);

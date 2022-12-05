@@ -7,12 +7,15 @@
     "G": {
       "item": "minecraft:glass"
     },
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
     "W": {
       "item": "ars_nouveau:water_essence"
     }
   },
   "pattern": [
-    " C ",
+    " I ",
     "GWG",
     "CCC"
   ],

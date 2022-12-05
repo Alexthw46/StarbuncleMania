@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:source",
+  "icon": "starbunclemania:fluid_sourcelink",
+  "name": "block.starbunclemania.fluid_sourcelink",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.fluid_sourcelink"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:fluid_sourcelink"
+    }
+  ]
+}

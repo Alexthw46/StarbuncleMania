@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:star_battery",
+  "name": "item.starbunclemania.star_battery",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.star_battery"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:star_battery"
+    }
+  ]
+}

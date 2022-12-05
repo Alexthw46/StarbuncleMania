@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:familiars",
+  "icon": "starbunclemania:star_hat",
+  "name": "starbunclemania.cosmetic",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.star_hat"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:star_hat"
+    }
+  ]
+}

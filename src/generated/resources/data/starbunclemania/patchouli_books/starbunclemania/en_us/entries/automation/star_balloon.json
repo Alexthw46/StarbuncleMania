@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:star_balloon",
+  "name": "item.starbunclemania.star_balloon",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.star_balloon"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "starbunclemania:star_balloon"
+    }
+  ]
+}

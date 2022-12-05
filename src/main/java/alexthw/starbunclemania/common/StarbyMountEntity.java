@@ -95,12 +95,12 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
     @Override
     public void onWanded(Player playerEntity) {
         Starbuncle carbuncle = new Starbuncle(playerEntity.level, true);
-        setCosmeticItem(ItemStack.EMPTY);
         Starbuncle.StarbuncleData data = this.data;
         carbuncle.setPos(getX() + 0.5, getY() + 1, getZ() + 0.5);
         carbuncle.data = data;
         carbuncle.restoreFromTag();
         playerEntity.level.addFreshEntity(carbuncle);
+        carbuncle.onWanded(playerEntity);
         this.discard();
     }
 

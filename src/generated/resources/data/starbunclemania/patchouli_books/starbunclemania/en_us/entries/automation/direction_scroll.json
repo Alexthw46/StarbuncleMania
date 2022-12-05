@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:direction_scroll",
+  "name": "item.starbunclemania.direction_scroll",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.direction_scroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:direction_scroll"
+    }
+  ]
+}

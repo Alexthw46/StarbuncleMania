@@ -39,6 +39,11 @@ public class FluidSourcelinkTile extends SourcelinkTile {
             FluidSourcelinkTile.this.updateBlock();
             FluidSourcelinkTile.this.setChanged();
         }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return FluidSourcelinkTile.this.getSourceFromFluid(stack) > 0;
+        }
     };
 
     boolean tester(IFluidHandler tank){

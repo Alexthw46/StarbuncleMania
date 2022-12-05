@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "minecraft:black_carpet"
+    },
+    "W": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "pattern": [
+    "CCC",
+    " W ",
+    "   "
+  ],
+  "result": {
+    "item": "starbunclemania:prof_hat"
+  }
+}

@@ -2,7 +2,6 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.ArsNouveauRegistry;
 import alexthw.starbunclemania.StarbuncleMania;
-import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
@@ -27,6 +26,7 @@ import net.minecraftforge.common.Tags;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import static alexthw.starbunclemania.registry.ModRegistry.*;
 import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
 
 public class ArsProviders {
@@ -71,9 +71,9 @@ public class ArsProviders {
         public void run(CachedOutput cache) throws IOException {
 
             recipes.add(builder()
-                    .withReagent(ModRegistry.FLUID_JAR.get())
+                    .withReagent(FLUID_JAR.get())
                     .withPedestalItem(4, Tags.Items.NUGGETS_GOLD)
-                    .withResult(ModRegistry.STARBUCKET.get())
+                    .withResult(STARBUCKET.get())
                     .build()
             );
 
@@ -81,7 +81,7 @@ public class ArsProviders {
                     .withReagent(Ingredient.of(ItemTags.WOOL))
                     .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
                     .withPedestalItem(2, ItemsRegistry.MAGE_FIBER)
-                    .withResult(ModRegistry.STARBALLON.get())
+                    .withResult(STARBALLON.get())
                     .build()
             );
 
@@ -89,7 +89,7 @@ public class ArsProviders {
                     .withReagent(Items.SADDLE)
                     .withPedestalItem(2, Ingredient.of(ItemTagProvider.SOURCE_GEM_TAG))
                     .withPedestalItem(2, Ingredient.of(Tags.Items.NUGGETS_GOLD))
-                    .withResult(ModRegistry.STARSADDLE.get())
+                    .withResult(STARSADDLE.get())
                     .build()
             );
 
@@ -154,17 +154,22 @@ public class ArsProviders {
                 addGlyphPage(spell);
             }
 
-            addBasicItem(ModRegistry.FLUID_JAR.get(), AUTOMATION, new CraftingPage(ModRegistry.FLUID_JAR.get()));
-            addBasicItem(ModRegistry.SOURCE_CONDENSER.get(), SOURCE, new CraftingPage(ModRegistry.SOURCE_CONDENSER.get()));
-            addBasicItem(ModRegistry.FLUID_SOURCELINK.get(), SOURCE, new CraftingPage(ModRegistry.FLUID_SOURCELINK.get()));
+            addBasicItem(FLUID_JAR.get(), AUTOMATION, new CraftingPage(FLUID_JAR.get()));
+            addBasicItem(SOURCE_CONDENSER.get(), SOURCE, new CraftingPage(SOURCE_CONDENSER.get()));
+            addBasicItem(FLUID_SOURCELINK.get(), SOURCE, new CraftingPage(FLUID_SOURCELINK.get()));
 
-            addBasicItem(ModRegistry.DIRECTION_SCROLL.get(), AUTOMATION, new CraftingPage(ModRegistry.DIRECTION_SCROLL.get()));
-            addBasicItem(ModRegistry.PROFHAT.get(), AUTOMATION, new CraftingPage(ModRegistry.PROFHAT.get()));
-            addBasicItem(ModRegistry.STARBUCKET.get(), AUTOMATION, new ApparatusPage(ModRegistry.STARBUCKET.get()));
-            addBasicItem(ModRegistry.STARBALLON.get(), AUTOMATION, new ApparatusPage(ModRegistry.STARBALLON.get()));
-            addBasicItem(ModRegistry.STARTRASH.get(), AUTOMATION, new CraftingPage(ModRegistry.STARTRASH.get()));
-            addBasicItem(ModRegistry.STARBATTERY.get(), AUTOMATION, new CraftingPage(ModRegistry.STARBATTERY.get()));
+            addBasicItem(DIRECTION_SCROLL.get(), AUTOMATION, new CraftingPage(DIRECTION_SCROLL.get()));
 
+            addPage(new PatchouliBuilder(FAMILIARS, STARHAT.get()).withName("starbunclemania.cosmetic")
+                            .withTextPage("starbunclemania.page.star_hat")
+                            .withPage(new CraftingPage(STARHAT.get()))
+                    ,getPath(FAMILIARS, "cosmetic"));
+            addBasicItem(PROFHAT.get(), AUTOMATION, new CraftingPage(PROFHAT.get()));
+            addBasicItem(STARBUCKET.get(), AUTOMATION, new ApparatusPage(STARBUCKET.get()));
+            addBasicItem(STARBALLON.get(), AUTOMATION, new ApparatusPage(STARBALLON.get()));
+            addBasicItem(STARTRASH.get(), AUTOMATION, new CraftingPage(STARTRASH.get()));
+            addBasicItem(STARBATTERY.get(), AUTOMATION, new CraftingPage(STARBATTERY.get()));
+            addBasicItem(STARSADDLE.get(), AUTOMATION, new ApparatusPage(STARSADDLE.get()));
 
             for (PatchouliPage patchouliPage : pages) {
                 DataProvider.saveStable(cache, patchouliPage.build(), patchouliPage.path());
@@ -209,7 +214,7 @@ public class ArsProviders {
          */
         @Override
         public String getName() {
-            return "Example Patchouli Datagen";
+            return "StarbuncleMania Patchouli Datagen";
         }
 
         @Override

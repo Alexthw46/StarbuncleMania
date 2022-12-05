@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:star_bucket",
+  "name": "item.starbunclemania.star_bucket",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.star_bucket"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "starbunclemania:star_bucket"
+    }
+  ]
+}

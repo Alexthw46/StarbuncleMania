@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:fluid_jar",
+  "name": "block.starbunclemania.fluid_jar",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.fluid_jar"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:fluid_jar"
+    }
+  ]
+}

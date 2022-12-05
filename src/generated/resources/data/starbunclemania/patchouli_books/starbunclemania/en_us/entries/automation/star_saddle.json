@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:star_saddle",
+  "name": "item.starbunclemania.star_saddle",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.star_saddle"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "starbunclemania:star_saddle"
+    }
+  ]
+}

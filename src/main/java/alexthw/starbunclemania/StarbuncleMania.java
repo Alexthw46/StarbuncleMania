@@ -3,6 +3,7 @@ package alexthw.starbunclemania;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -47,8 +48,9 @@ public class StarbuncleMania
     public StarbuncleMania() {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
         ModRegistry.registerRegistries(modbus);
+        ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, Configs.SERVER_SPEC, ModLoadingContext.get().getActiveContainer(), MODID + "-server");
+        ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Configs.COMMON_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.SERVER_SPEC);
         ArsNouveauRegistry.register();
         modbus.addListener(this::setup);
         MinecraftForge.EVENT_BUS.register(this);

@@ -76,7 +76,7 @@ public class Configs {
         public Server(ForgeConfigSpec.Builder builder) {
             FLUID_TO_SOURCE_CONFIG = builder.comment("Value of bucket of fluid converted in source by the sourcelink", "Example entry: minecraft:lava=500")
                     .defineList("fluid_to_source", ConfigUtil.writeConfig(getDefaultLiquidSource()), ConfigUtil::validateMap);
-
         }
     }
+
 }

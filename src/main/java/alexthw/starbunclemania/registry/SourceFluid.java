@@ -8,12 +8,20 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
+
+import static alexthw.starbunclemania.registry.ModRegistry.*;
 
 public class SourceFluid extends FluidType {
     /**
@@ -87,5 +95,32 @@ public class SourceFluid extends FluidType {
                 RenderSystem.setShaderFogShape(shape);
             }
         });
+    }
+
+    public static class FluidTypeSourceClient
+    {
+        public FluidTypeSourceClient(IEventBus modEventBus)
+        {
+            modEventBus.addListener(this::clientSetup);
+            modEventBus.addListener(this::registerBlockColors);
+        }
+
+        public void clientSetup(FMLClientSetupEvent ignoredEvent)
+        {
+            ItemBlockRenderTypes.setRenderLayer(SOURCE_FLUID.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(SOURCE_FLUID_FLOWING.get(), RenderType.translucent());
+        }
+
+        private void registerBlockColors(RegisterColorHandlersEvent.Block event)
+        {
+            event.register((state, getter, pos, index) ->
+            {
+                if (getter != null && pos != null)
+                {
+                    FluidState fluidState = getter.getFluidState(pos);
+                    return IClientFluidTypeExtensions.of(fluidState).getTintColor(fluidState, getter, pos);
+                } else return 0xAF7FFFD4;
+            }, SOURCE_FLUID_BLOCK.get());
+        }
     }
 }

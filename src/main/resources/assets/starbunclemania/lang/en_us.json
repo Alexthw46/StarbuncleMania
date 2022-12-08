@@ -7,7 +7,7 @@
 
 	"item.starbunclemania.direction_scroll": "Direction Scroll",
 	"item.starbunclemania.star_hat": "Blues Hat",
-	"item.starbunclemania.prof_hat": "Wyrm Degree",
+	"item.starbunclemania.wyrm_degree": "Wyrm Degree",
 	"item.starbunclemania.star_battery": "StarbAttery",
 	"item.starbunclemania.star_bucket": "Starbucket",
 	"item.starbunclemania.star_balloon": "Starballoon",
@@ -59,7 +59,7 @@
 	"starbunclemania.page.star_battery": "Allows Starbuncles to transport energy. Once wearing the accessory, use the Dominion wand to connect them between RF blocks.",
 	"starbunclemania.page.star_bucket": "Allows Starbuncles to transport fluids. Once wearing the accessory, use the Dominion wand to connect them between tanks.",
 	"starbunclemania.page.star_balloon": "Allows Starbuncles to transport simple gasses [Mekanism]. Once wearing the accessory, use the Dominion wand to connect them between gas tanks.",
-	"starbunclemania.page.prof_hat": "Allows Starbuncles to insert/extract items from a specific side with Direction Scrolls.",
+	"starbunclemania.page.wyrm_degree": "Allows Starbuncles to insert/extract items from a specific side with Direction Scrolls.",
 	"starbunclemania.page.star_bin": "Allows Starbuncles to embrace their inner raccoon and trash items. While wearing the accessory the Starbuncle will void any nearby item on the ground.",
 	"starbunclemania.page.star_saddle": "Allows Starbuncles to transport players. While wearing the accessory, the Starbuncle becomes rideable."
 

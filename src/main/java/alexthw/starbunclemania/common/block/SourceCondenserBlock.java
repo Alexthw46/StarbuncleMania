@@ -18,8 +18,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.stream.Stream;
-
 public class SourceCondenserBlock extends TickableModBlock {
 
     public SourceCondenserBlock(){
@@ -52,10 +50,5 @@ public class SourceCondenserBlock extends TickableModBlock {
         return shape;
     }
 
-    static final VoxelShape shape = Stream.of(
-            Block.box(4, 13, 4, 12, 14, 12),
-            Block.box(2, 0, 2, 14, 2, 14),
-            Block.box(3, 2, 3, 13, 13, 13),
-            Block.box(3, 14, 3, 13, 16, 13)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+    static final VoxelShape shape = Shapes.join(Block.box(3, 1.1, 3, 13, 12.1, 13), Block.box(2, 0, 2, 14, 1, 14), BooleanOp.OR);
 }

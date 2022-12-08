@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "starbunclemania:wyrm_degree",
+  "name": "item.starbunclemania.wyrm_degree",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.wyrm_degree"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:wyrm_degree"
+    }
+  ]
+}

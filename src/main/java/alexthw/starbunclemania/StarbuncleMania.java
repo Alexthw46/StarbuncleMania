@@ -1,18 +1,14 @@
 package alexthw.starbunclemania;
 
 import alexthw.starbunclemania.registry.ModRegistry;
+import alexthw.starbunclemania.registry.SourceFluid;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,7 +17,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -54,47 +49,19 @@ public class StarbuncleMania
         ArsNouveauRegistry.register();
         modbus.addListener(this::setup);
         MinecraftForge.EVENT_BUS.register(this);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> new FluidTypeSourceClient(modbus));
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> new SourceFluid.FluidTypeSourceClient(modbus));
     }
 
     public static ResourceLocation prefix(String path){
         return new ResourceLocation(MODID, path);
     }
 
-    private void setup(final FMLCommonSetupEvent ignoredEvent)
-    {
+    private void setup(final FMLCommonSetupEvent ignoredEvent) {
         ArsNouveauRegistry.postInit();
         try {
             FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation((level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == ForgeMod.LAVA_TYPE.get() && level.getFluidState(currentPos).isSource(), Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, SOURCESTONE))).defaultBlockState()));
         }catch (NullPointerException npe){
             System.out.println("Sourcestone not found, skipping interaction.");
-        }
-    }
-
-    private static class FluidTypeSourceClient
-    {
-        private FluidTypeSourceClient(IEventBus modEventBus)
-        {
-            modEventBus.addListener(this::clientSetup);
-            modEventBus.addListener(this::registerBlockColors);
-        }
-
-        public void clientSetup(FMLClientSetupEvent ignoredEvent)
-        {
-            ItemBlockRenderTypes.setRenderLayer(SOURCE_FLUID.get(), RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(SOURCE_FLUID_FLOWING.get(), RenderType.translucent());
-        }
-
-        private void registerBlockColors(RegisterColorHandlersEvent.Block event)
-        {
-            event.register((state, getter, pos, index) ->
-            {
-                if (getter != null && pos != null)
-                {
-                    FluidState fluidState = getter.getFluidState(pos);
-                    return IClientFluidTypeExtensions.of(fluidState).getTintColor(fluidState, getter, pos);
-                } else return 0xAF7FFFD4;
-            }, SOURCE_FLUID_BLOCK.get());
         }
     }
 

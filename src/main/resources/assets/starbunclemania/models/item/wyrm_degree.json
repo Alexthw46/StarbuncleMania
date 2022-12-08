@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:item/generated",
+  "loader": "forge:separate_transforms",
+  "base": {
+    "parent": "minecraft:item/generated",
+    "textures": {
+      "layer0": "starbunclemania:item/wyrm_degree"
+    }
+  },
+  "perspectives": {
+    "head": {
+      "parent": "starbunclemania:block/prof_hat"
+    }
+  }
+}

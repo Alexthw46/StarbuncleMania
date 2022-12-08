@@ -90,7 +90,7 @@ public class ModRegistry {
     static {
 
         STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));
-        PROFHAT = ITEMS.register("prof_hat", () -> new ProfHat(basicItemProperties()));
+        PROFHAT = ITEMS.register("wyrm_degree", () -> new ProfHat(basicItemProperties()));
         STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties()));
         STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));
         STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));

@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -37,15 +38,17 @@ public class ProfHat extends Item implements ICosmeticItem {
         return InteractionResult.PASS;
     }
 
-    static final Vec3 wyrmScale = new Vec3(2,2,2);
-    static final Vec3 wyrmTransl = new Vec3(0,0.5,0);
+    static final Vec3 wyrmScale = new Vec3(1.75,1.75,1.75);
+    static final Vec3 wyrmTransl = new Vec3(0,0.675,0);
 
     static final Vec3 starbScale = new Vec3(1.25,1.25,1.25);
+    static final Vec3 starbTransl = new Vec3(1.25,1.25,1.25);
+
     @Override
     public Vec3 getTranslations(LivingEntity entity) {
         if (entity instanceof FamiliarBookwyrm)
             return wyrmTransl;
-        return new Vec3(0,0.275,-0.05);
+        return starbTransl;
     }
 
     @Override
@@ -68,5 +71,10 @@ public class ProfHat extends Item implements ICosmeticItem {
     @Override
     public boolean canWear(LivingEntity entity) {
         return entity instanceof FamiliarBookwyrm || entity instanceof FamiliarStarbuncle || entity instanceof Starbuncle;
+    }
+
+    @Override
+    public ItemTransforms.TransformType getTransformType() {
+        return ItemTransforms.TransformType.HEAD;
     }
 }

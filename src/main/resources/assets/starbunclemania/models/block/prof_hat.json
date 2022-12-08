@@ -69,9 +69,6 @@
 		"gui": {
 			"rotation": [10, 120, 0]
 		},
-		"head": {
-			"translation": [0, -3, 0]
-		},
 		"fixed": {
 			"rotation": [0, 180, 0]
 		}

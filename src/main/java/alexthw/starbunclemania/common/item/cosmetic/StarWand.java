@@ -18,6 +18,10 @@ import net.minecraft.world.phys.Vec3;
 
 public class StarWand extends Wand implements ICosmeticItem {
 
+    public StarWand(Properties properties) {
+        super(properties);
+    }
+
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
 

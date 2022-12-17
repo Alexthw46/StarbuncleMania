@@ -2,6 +2,8 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.ArsNouveauRegistry;
 import alexthw.starbunclemania.StarbuncleMania;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
@@ -11,6 +13,8 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.*;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
+import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
+import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -69,6 +73,13 @@ public class ArsProviders {
 
         @Override
         public void run(CachedOutput cache) throws IOException {
+
+            recipes.add(builder().withReagent(Items.BOOK)
+                    .withResult(ArsNouveauAPI.getInstance().getFamiliarItem(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_BOOKWYRM)))
+                            .withPedestalItem(3, Items.IRON_INGOT)
+                            .withPedestalItem(3, ItemTagProvider.SOURCE_GEM_TAG)
+                    .build()
+            );
 
             recipes.add(builder()
                     .withReagent(FLUID_JAR.get())

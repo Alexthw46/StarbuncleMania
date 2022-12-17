@@ -2,6 +2,7 @@ package alexthw.starbunclemania.starbuncle.sword;
 
 import alexthw.starbunclemania.StarbuncleMania;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,12 +18,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class StarbyFigherBehavior extends StarbyBehavior {
+public class StarbyFighterBehavior extends StarbyBehavior {
 
     public UUID master;
     private LivingEntity owner;
 
-    public StarbyFigherBehavior(Starbuncle starbuncle, CompoundTag tag) {
+    public StarbyFighterBehavior(Starbuncle starbuncle, CompoundTag tag) {
         super(starbuncle, tag);
         if (tag.contains("master")){
            master = tag.getUUID("master");
@@ -30,20 +31,20 @@ public class StarbyFigherBehavior extends StarbyBehavior {
         if (master != null){
             owner = level.getPlayerByUUID(master);
         }
-        goals.add(new WrappedGoal(2, new HurtByTargetGoal(starbuncle)));
+        goals.add(new WrappedGoal(2, new HurtByTargetGoal(starbuncle, Player.class).setAlertOthers(WealdWalker.class, Starbuncle.class)));
         goals.add(new WrappedGoal(1, new TargetGoal(starbuncle, false){
             /**
              * Returns whether the EntityAIBase should begin execution.
              */
             public boolean canUse() {
-                return StarbyFigherBehavior.this.owner != null && StarbyFigherBehavior.this.owner.getLastHurtMob() != null;
+                return StarbyFighterBehavior.this.owner != null && StarbyFighterBehavior.this.owner.getLastHurtMob() != null;
             }
 
             /**
              * Execute a one shot task or start executing a continuous task
              */
             public void start() {
-                StarbyFigherBehavior.this.starbuncle.setTarget(StarbyFigherBehavior.this.owner.getLastHurtMob());
+                StarbyFighterBehavior.this.starbuncle.setTarget(StarbyFighterBehavior.this.owner.getLastHurtMob());
                 super.start();
             }
         }));

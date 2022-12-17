@@ -42,7 +42,7 @@ public class ProfHat extends Item implements ICosmeticItem {
     static final Vec3 wyrmTransl = new Vec3(0,0.675,0);
 
     static final Vec3 starbScale = new Vec3(1.25,1.25,1.25);
-    static final Vec3 starbTransl = new Vec3(1.25,1.25,1.25);
+    static final Vec3 starbTransl = new Vec3(0,0.43,-0.05);
 
     @Override
     public Vec3 getTranslations(LivingEntity entity) {

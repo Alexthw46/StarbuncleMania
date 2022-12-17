@@ -24,7 +24,7 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
 
     public StarbyVoidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        this.goals.add(new WrappedGoal(3, new SnatchItem(starbuncle, this)));
+        this.goals.add(new WrappedGoal(5, new SnatchItem(starbuncle, this)));
     }
 
     @Override

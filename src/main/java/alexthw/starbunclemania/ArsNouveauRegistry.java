@@ -6,7 +6,7 @@ import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
 import alexthw.starbunclemania.starbuncle.heal.StarbyHealerBehavior;
 import alexthw.starbunclemania.starbuncle.item.AdvancedItemTransportBehavior;
-import alexthw.starbunclemania.starbuncle.sword.StarbyFigherBehavior;
+import alexthw.starbunclemania.starbuncle.sword.StarbyFighterBehavior;
 import alexthw.starbunclemania.starbuncle.trash.StarbyVoidBehavior;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -30,7 +30,7 @@ public class ArsNouveauRegistry {
         if (ModList.get().isLoaded("mekanism"))
             BehaviorRegistry.register(StarbyGasBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyGasBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyVoidBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyVoidBehavior((Starbuncle) entity, tag));
-        BehaviorRegistry.register(StarbyFigherBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyFigherBehavior((Starbuncle) entity, tag));
+        BehaviorRegistry.register(StarbyFighterBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyFighterBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyHealerBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyHealerBehavior((Starbuncle) entity, tag));
     }
 

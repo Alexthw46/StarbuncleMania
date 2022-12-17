@@ -62,8 +62,8 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
         });
     }
 
-    final Vec3 Translation = new Vec3(+0.0, -0.22, -0.15);
-    final Vec3 Scaling = new Vec3(1, 1, 1);
+    static final Vec3 Translation = new Vec3(-0.1, 0, -0.05);
+    static final Vec3 Scaling = new Vec3(1, 1, 1);
 
     @Override
     public Vec3 getTranslations() {
@@ -78,6 +78,11 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
     @Override
     public ItemTransforms.TransformType getTransformType() {
         return ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+    }
+
+    @Override
+    public String getBone() {
+        return "body";
     }
 
     /**

@@ -70,16 +70,16 @@ public class FluidSourcelinkTile extends SourcelinkTile {
                 }
             }
             if (!level.isClientSide() && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
-                int sourceFromFluid = getSourceFromFluid(this.getFluid());
+                double sourceFromFluid = getSourceFromFluid(this.getFluid());
                 if (sourceFromFluid > 0) {
                     int drain = this.tank.drain(1000, IFluidHandler.FluidAction.EXECUTE).getAmount();
-                    this.addSource(drain * sourceFromFluid);
+                    this.addSource((int) (drain * sourceFromFluid));
                 }
             }
         }
     }
 
-    int getSourceFromFluid(FluidStack tank) {
+    double getSourceFromFluid(FluidStack tank) {
         if (!tank.isEmpty()) {
             ResourceLocation fluid = ForgeRegistries.FLUIDS.getKey(tank.getFluid());
             if (fluid != null && Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {

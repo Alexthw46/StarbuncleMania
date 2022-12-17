@@ -13,6 +13,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = StarbuncleMania.MODID)
 public class Configs {
@@ -20,7 +23,7 @@ public class Configs {
     public static final ForgeConfigSpec COMMON_SPEC;
     public static final Server SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
-    public static Map<ResourceLocation, Integer> FLUID_TO_SOURCE_MAP = new HashMap<>();
+    public static Map<ResourceLocation, Double> FLUID_TO_SOURCE_MAP = new HashMap<>();
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUID_TO_SOURCE_CONFIG;
 
     static {
@@ -52,15 +55,18 @@ public class Configs {
     private static void resetLiquidSource() {
         FLUID_TO_SOURCE_MAP = new HashMap<>();
         // Copy values from FLUID_TO_SOURCE_CONFIG to FLUID_TO_SOURCE_MAP
-        for (Map.Entry<String, Integer> entry : ConfigUtil.parseMapConfig(FLUID_TO_SOURCE_CONFIG).entrySet()) {
+        for (Map.Entry<String, Double> entry : parseMapConfig(FLUID_TO_SOURCE_CONFIG).entrySet()) {
             FLUID_TO_SOURCE_MAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
         }
     }
 
-    public static Map<String, Integer> getDefaultLiquidSource() {
-        Map<String, Integer> map = new HashMap<>();
-        map.put(ModRegistry.SOURCE_FLUID_TYPE.getId().toString(), 900);
-        map.put(ForgeMod.LAVA_TYPE.getId().toString(), 500);
+    public static Map<String, Double> getDefaultLiquidSource() {
+        Map<String, Double> map = new HashMap<>();
+        map.put(ModRegistry.SOURCE_FLUID_TYPE.getId().toString(), 0.9);
+        map.put(ForgeMod.LAVA_TYPE.getId().toString(), 1.6);
+        map.put(ForgeMod.MILK_TYPE.getId().toString(), 0.2);
+        map.put("create:honey", 0.2);
+        map.put("create:chocolate", 0.5);
         return map;
     }
 
@@ -74,9 +80,26 @@ public class Configs {
     public static class Server {
 
         public Server(ForgeConfigSpec.Builder builder) {
-            FLUID_TO_SOURCE_CONFIG = builder.comment("Value of bucket of fluid converted in source by the sourcelink", "Example entry: minecraft:lava=500")
-                    .defineList("fluid_to_source", ConfigUtil.writeConfig(getDefaultLiquidSource()), ConfigUtil::validateMap);
+            FLUID_TO_SOURCE_CONFIG = builder.comment("Value of milli-bucket of fluid converted in source by the sourcelink", "Example entry: \"minecraft:lava=1.6\"")
+                    .defineList("fluid_to_source", writeConfig(getDefaultLiquidSource()), ConfigUtil::validateMap);
         }
     }
 
+    public static final Pattern STRING_FLOAT_MAP = Pattern.compile("([^/=]+)=(\\d\\.\\d+)");
+
+    public static List<String> writeConfig(Map<String, Double> map) {
+        return map.entrySet().stream()
+                .map(e -> e.getKey() + "=" + e.getValue().toString())
+                .collect(Collectors.toList());
+    }
+
+    public static Map<String, Double> parseMapConfig(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+        return configValue.get().stream()
+                .map(STRING_FLOAT_MAP::matcher)
+                .filter(Matcher::matches)
+                .collect(Collectors.toMap(
+                        m -> m.group(1),
+                        m -> Double.valueOf(m.group(2))
+                ));
+    }
 }

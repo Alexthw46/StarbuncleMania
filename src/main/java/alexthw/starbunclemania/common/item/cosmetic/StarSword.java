@@ -1,6 +1,6 @@
 package alexthw.starbunclemania.common.item.cosmetic;
 
-import alexthw.starbunclemania.starbuncle.sword.StarbyFigherBehavior;
+import alexthw.starbunclemania.starbuncle.sword.StarbyFighterBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
@@ -31,7 +31,7 @@ public class StarSword extends EnchantersSword implements ICosmeticItem {
             if (deco instanceof Starbuncle starbuncle && !pPlayer.isShiftKeyDown()){
                 CompoundTag tag = new CompoundTag();
                 tag.putUUID("master", pPlayer.getUUID());
-                starbuncle.setBehavior(new StarbyFigherBehavior(starbuncle, tag));
+                starbuncle.setBehavior(new StarbyFighterBehavior(starbuncle, tag));
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.sword_behavior_set"));
             }
         }

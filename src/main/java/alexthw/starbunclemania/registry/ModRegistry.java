@@ -95,8 +95,8 @@ public class ModRegistry {
         STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));
         STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));
         STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties()));
-        STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
-        STARWAND = ITEMS.register("star_wand", () -> new StarWand());
+        STARSWORD = ITEMS.register("star_sword", () -> new StarSword(new Item.Properties()));
+        STARWAND = ITEMS.register("star_wand", () -> new StarWand(new Item.Properties()));
 
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
         STARSADDLE = ITEMS.register("star_saddle", () -> new StarbySaddle(basicItemProperties()));

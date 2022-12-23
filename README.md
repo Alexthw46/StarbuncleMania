@@ -1,15 +1,3 @@
-# Ars-Nouveau-Example-Addon
-
-An example repository for making an addon for Ars Nouveau! See the wiki for more info.
-
-**Getting Started**
-
-* Fork this repo for a ready to build work space.
-* Join the Ars Nouveau discord to ask questions, get help, or get ideas.
-
-Some useful links for beginners:
-* https://mcforge.readthedocs.io/en/latest/
-* https://forge.gemwire.uk/wiki/
-* https://wiki.mcjty.eu/modding/index.php?title=Main_Page
-* https://github.com/baileyholl/Ars-Nouveau/tree/1.18.x/src/main/java/com/hollingsworth/arsnouveau/api (Full API documentation)
-* https://github.com/bernie-g/geckolib/wiki (Animation library used by Ars Nouveau, optional)
+# StarbuncleMania
+Addon to the Ars Nouveau mod.
+Similarly to Ars Creo, this mod aim to allow more magic/tech hybrids with the Ars style of using cute animal workers instead of techy pipes and cables. 

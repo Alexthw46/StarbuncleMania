@@ -33,10 +33,11 @@ public class StarBucket extends Item implements ICosmeticItem {
             return InteractionResult.SUCCESS;
         }
 
-        return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);    }
+        return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
+    }
 
-    final Vec3 Translation = new Vec3(+0.0,-0.22,-0.15);
-    final Vec3 Scaling = new Vec3(1.3,1.2,1.3);
+    final Vec3 Translation = new Vec3(0,0, -0.05);
+    final Vec3 Scaling = new Vec3(1.2,1.075,1.05);
     @Override
     public Vec3 getTranslations() {
         return Translation;

@@ -3,9 +3,9 @@
 
 	"starbunclemania.glyph_name.glyph_": "",
 	"starbunclemania.glyph_name.glyph_place_fluid": "Place Fluid",
-	"starbunclemania.glyph_desc.glyph_place_fluid": "Place Fluid in world, draining from a nearby tank",
+	"starbunclemania.glyph_desc.glyph_place_fluid": "Place Fluid in world, draining from a tank in the hotbar or next to the turret",
 	"starbunclemania.glyph_name.glyph_pickup_fluid": "Pickup Fluid",
-	"starbunclemania.glyph_desc.glyph_pickup_fluid": "Pickups Fluid from world and fill a nearby tank",
+	"starbunclemania.glyph_desc.glyph_pickup_fluid": "Pickups Fluids from world and fill a tank in the hotbar or next to the turret",
 
 
 	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",

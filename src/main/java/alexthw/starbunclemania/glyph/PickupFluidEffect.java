@@ -115,6 +115,17 @@ public class PickupFluidEffect extends AbstractEffect {
     }
 
     @Override
+    public SpellTier getTier() {
+        return SpellTier.TWO;
+    }
+
+    @NotNull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
+    }
+
+    @Override
     protected @NotNull Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }

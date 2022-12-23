@@ -2,6 +2,7 @@ package alexthw.starbunclemania.starbuncle.gas;
 
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.common.item.DirectionScroll;
+import alexthw.starbunclemania.common.item.cosmetic.StarBalloon;
 import alexthw.starbunclemania.starbuncle.StarHelper;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyListBehavior;
@@ -52,9 +53,6 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     public void setGasStack(GasStack gas) {
         gasStack = gas;
-        if (!gas.isEmpty()) {
-           starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gas.getChemicalColorRepresentation());
-        }
         syncTag();
     }
 
@@ -200,7 +198,8 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     @Override
     public ItemStack getStackForRender() {
-        starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gasStack.getChemicalColorRepresentation());
+        if (starbuncle.getCosmeticItem().getItem() instanceof StarBalloon)
+            starbuncle.getCosmeticItem().getOrCreateTag().putInt("color", gasStack.getChemicalColorRepresentation());
         return ItemStack.EMPTY;
     }
 }

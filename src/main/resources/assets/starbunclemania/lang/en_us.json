@@ -62,7 +62,7 @@
 	"starbunclemania.page.fluid_jar": "A tank made from cascading archwood logs that can hold up to 16 buckets of fluid.",
 	"starbunclemania.page.fluid_sourcelink": "Consumes fluids to generate source. Will automatically drain from tanks below it if compatible.",
 	"starbunclemania.page.source_condenser": "Condense the Source from Jars into a stable fluid. Will automatically output to tanks below it if possible.",
-	"starbunclemania.page.star_hat": "Accessories from StarbuncleMania aren't just for the worker starbuncles to enjoy, you can use them on your starbuncle familiar too! This one doesn't do anything, but is surely stylish.",
+	"starbunclemania.page.star_hat": "Accessories from StarbuncleMania aren't just for the worker starbuncles to enjoy, you can use them on your starbuncle familiar too! This one doesn't do anything, but is surely stylish. Shift-clicking a starby with an accessory will only set it as cosmetic, without setting the job.",
 	"starbunclemania.page.star_battery": "Allows Starbuncles to transport energy. Once wearing the accessory, use the Dominion wand to connect them between RF blocks.",
 	"starbunclemania.page.star_bucket": "Allows Starbuncles to transport fluids. Once wearing the accessory, use the Dominion wand to connect them between tanks.",
 	"starbunclemania.page.star_balloon": "Allows Starbuncles to transport simple gasses [Mekanism]. Once wearing the accessory, use the Dominion wand to connect them between gas tanks.",

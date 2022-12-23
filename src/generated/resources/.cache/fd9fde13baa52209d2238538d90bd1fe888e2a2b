@@ -1,4 +1,4 @@
-// 1.19.2	2022-12-23T16:35:57.4820939	StarbuncleMania Patchouli Datagen
+// 1.19.2	2022-12-23T19:19:57.8522096	StarbuncleMania Patchouli Datagen
 437de353525001a0bb9a32e350616d291b48c570 data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/automation/direction_scroll.json
 960c565890c0956910678a85924b17895f0c4ded data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/automation/fluid_jar.json
 7b786cb216c8fe70d95d48e64648660b95386b98 data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/automation/star_balloon.json
@@ -8,7 +8,7 @@ d6f41ff3cee89ce3070621187687f5eacc77b9a4 data/starbunclemania/patchouli_books/st
 f0973ed6d7870689120b1088c9797a225fe1c20b data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/automation/star_saddle.json
 adafee0a6d57396cb490dd7b28d22bbe5ed65d39 data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/automation/wyrm_degree.json
 ab87995f3a39d2341b532d3636c3a9ea9587690e data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/familiars/cosmetic.json
-8cafca9a6ca1c4de4a73eca70e46ee22d2d5ac38 data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/glyphs_1/glyph_pickup_fluid.json
-711d87a4079bd6a30eaf57597832bc98f45cf6ac data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/glyphs_1/glyph_place_fluid.json
+c0c6d000d0a6a7c1b74983776a4ead1ed287ba5d data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/glyphs_2/glyph_pickup_fluid.json
+602a7b0aa378f1af82d4b96a9a0d8163992fdb26 data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/glyphs_2/glyph_place_fluid.json
 ebe3bcdc694c80cdf87bb77c97c6abbc804681fd data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/source/fluid_sourcelink.json
 ee283217cbfafb93b072c49f153af4b09760ba94 data/starbunclemania/patchouli_books/starbunclemania/en_us/entries/source/source_condenser.json

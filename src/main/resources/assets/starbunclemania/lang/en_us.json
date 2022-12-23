@@ -1,6 +1,13 @@
 {
 	"itemGroup.starbunclemania": "StarbuncleMania",
 
+	"starbunclemania.glyph_name.glyph_": "",
+	"starbunclemania.glyph_name.glyph_place_fluid": "Place Fluid",
+	"starbunclemania.glyph_desc.glyph_place_fluid": "Place Fluid in world, draining from a nearby tank",
+	"starbunclemania.glyph_name.glyph_pickup_fluid": "Pickup Fluid",
+	"starbunclemania.glyph_desc.glyph_pickup_fluid": "Pickups Fluid from world and fill a nearby tank",
+
+
 	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",
 	"block.starbunclemania.fluid_sourcelink": "Fluid Sourcelink",
 	"block.starbunclemania.source_condenser": "Source Condenser",

@@ -1,0 +1,16 @@
+{
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "starbunclemania:glyph_pickup_fluid",
+  "name": "starbunclemania.glyph_name.glyph_pickup_fluid",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.glyph_desc.glyph_pickup_fluid"
+    },
+    {
+      "type": "ars_nouveau:glyph_recipe",
+      "recipe": "starbunclemania:glyph_pickup_fluid"
+    }
+  ],
+  "sortnum": 2
+}

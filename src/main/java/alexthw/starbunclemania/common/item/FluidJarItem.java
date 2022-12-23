@@ -11,6 +11,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.ars_nouveau.geckolib3.core.IAnimatable;
@@ -25,6 +26,11 @@ public class FluidJarItem extends BlockItem implements IAnimatable {
 
     public FluidJarItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
+    }
+
+    @Override
+    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        return new JarStackFluidHandler(stack, LiquidJarTile.capacity);
     }
 
     @Override

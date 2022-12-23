@@ -1,5 +1,7 @@
 package alexthw.starbunclemania;
 
+import alexthw.starbunclemania.glyph.PickupFluidEffect;
+import alexthw.starbunclemania.glyph.PlaceFluidEffect;
 import alexthw.starbunclemania.registry.ModRegistry;
 import alexthw.starbunclemania.starbuncle.energy.StarbyEnergyBehavior;
 import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
@@ -24,6 +26,9 @@ public class ArsNouveauRegistry {
     public static final List<AbstractSpellPart> registeredSpells = new ArrayList<>(); //this will come handy for datagen
 
     public static void register(){
+        register(PlaceFluidEffect.INSTANCE);
+        register(PickupFluidEffect.INSTANCE);
+
         BehaviorRegistry.register(AdvancedItemTransportBehavior.TRANSPORT_ID, (entity, tag) -> new AdvancedItemTransportBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyEnergyBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyEnergyBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyFluidBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyFluidBehavior((Starbuncle) entity, tag));

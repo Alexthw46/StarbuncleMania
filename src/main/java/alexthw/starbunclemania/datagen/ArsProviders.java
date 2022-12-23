@@ -2,6 +2,8 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.ArsNouveauRegistry;
 import alexthw.starbunclemania.StarbuncleMania;
+import alexthw.starbunclemania.glyph.PickupFluidEffect;
+import alexthw.starbunclemania.glyph.PlaceFluidEffect;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
@@ -14,7 +16,6 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.*;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
-import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -46,8 +47,10 @@ public class ArsProviders {
         @Override
         public void run(CachedOutput cache) throws IOException {
 
-            Path output = this.generator.getOutputFolder();
+            add(get(PickupFluidEffect.INSTANCE).withItem(FLUID_JAR.get()).withItem(Items.HOPPER));
+            add(get(PlaceFluidEffect.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withItem(Items.DISPENSER));
 
+            Path output = this.generator.getOutputFolder();
             for (GlyphRecipe recipe : recipes) {
                 Path path = getScribeGlyphPath(output, recipe.output.getItem());
                 DataProvider.saveStable(cache, recipe.asRecipe(), path);

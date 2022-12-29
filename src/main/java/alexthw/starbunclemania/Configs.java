@@ -25,6 +25,10 @@ public class Configs {
     public static final ForgeConfigSpec SERVER_SPEC;
     public static Map<ResourceLocation, Double> FLUID_TO_SOURCE_MAP = new HashMap<>();
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUID_TO_SOURCE_CONFIG;
+    public static ForgeConfigSpec.IntValue STARBUCKET_RATIO;
+    public static ForgeConfigSpec.IntValue STARBALLOON_RATIO;
+    public static ForgeConfigSpec.IntValue STARBATTERY_RATIO;
+
 
     static {
 
@@ -82,6 +86,11 @@ public class Configs {
         public Server(ForgeConfigSpec.Builder builder) {
             FLUID_TO_SOURCE_CONFIG = builder.comment("Value of milli-bucket of fluid converted in source by the sourcelink", "Example entry: \"minecraft:lava=1.6\"")
                     .defineList("fluid_to_source", writeConfig(getDefaultLiquidSource()), ConfigUtil::validateMap);
+
+            STARBUCKET_RATIO = builder.comment("Transfer rate of the fluid starbuncles").defineInRange("starbucket_ratio", 1000, 1, Integer.MAX_VALUE);
+            STARBATTERY_RATIO = builder.comment("Transfer rate of the energy starbuncles").defineInRange("starbattery_ratio", 100000, 1, Integer.MAX_VALUE);
+            STARBALLOON_RATIO = builder.comment("Transfer rate of the gas starbuncles").defineInRange("starballoon_ratio", 1000, 1, Integer.MAX_VALUE);
+
         }
     }
 

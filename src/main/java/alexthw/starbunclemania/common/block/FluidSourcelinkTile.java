@@ -2,12 +2,15 @@ package alexthw.starbunclemania.common.block;
 
 import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.registry.ModRegistry;
+import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,6 +24,9 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
 
@@ -84,6 +90,19 @@ public class FluidSourcelinkTile extends SourcelinkTile {
             ResourceLocation fluid = ForgeRegistries.FLUIDS.getKey(tank.getFluid());
             if (fluid != null && Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {
                 return Configs.FLUID_TO_SOURCE_MAP.get(fluid);
+            }else if (tank.hasTag() && tank.getFluid().is(ModRegistry.POTION)){
+               PotionData potion = PotionData.fromTag(tank.getTag());
+               double mana = 75;
+               Set<MobEffect> effectTypes = new HashSet<>();
+                for (MobEffectInstance e : potion.fullEffects()) {
+                    mana += (e.getDuration() / 50.);
+                    mana += e.getAmplifier() * 250;
+                    mana += 150;
+                    effectTypes.add(e.getEffect());
+                }
+                if (effectTypes.size() > 1)
+                    mana *= (1.5 * (effectTypes.size() - 1));
+                return mana/1000;
             }
         }
         return 0;

@@ -1,7 +1,9 @@
 package alexthw.starbunclemania.starbuncle.fluid;
 
+import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.common.block.LiquidJarTile;
+import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.registry.ModRegistry;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.starbuncle.StarHelper;
@@ -37,11 +39,16 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
 
     private @NotNull FluidStack fluidStack = FluidStack.EMPTY;
     public int side = -1;
+    
+    public ItemStack fluidScroll;
 
     public StarbyFluidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         if (tag.contains("Direction")) side = tag.getInt("Direction");
         if (tag.contains("FluidName")) fluidStack = FluidStack.loadFluidStackFromNBT(tag);
+
+        if (tag.contains("fluidScroll"))
+            this.fluidScroll = ItemStack.of(tag.getCompound("fluidScroll"));
         goals.add(new WrappedGoal(3, new FluidStoreGoal(entity, this)));
         goals.add(new WrappedGoal(3, new FluidExtractGoal(entity, this)));
     }
@@ -88,6 +95,10 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
             side = stack.getOrCreateTag().getInt("side");
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
             syncTag();
+        } else if (stack.getItem() instanceof FluidScroll && stack.hasTag()) {
+            fluidScroll = stack;
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
+            syncTag();
         }
         return super.mobInteract(player, hand);
     }
@@ -103,10 +114,13 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         if (side >= 0){
             tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
         }
+        if (fluidScroll != null && !fluidScroll.isEmpty()) {
+            tooltip.add(Component.translatable("ars_nouveau.filtering_with", fluidScroll.getHoverName().getString()));
+        }
     }
 
     public int getRatio() {
-        return 1000;
+        return Configs.STARBUCKET_RATIO.get();
     }
 
     @Override
@@ -130,10 +144,6 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     }
 
     public BlockPos getTankToExtract() {
-        return getTankToExtract(getFluidStack());
-    }
-
-    public BlockPos getTankToExtract(FluidStack fluid) {
         for (BlockPos pos : FROM_LIST) {
             if (canExtract(pos)) {
                 return pos;
@@ -176,6 +186,8 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         if (fluid != null) {
             for (int i = 0; i < fluid.getTanks(); i++) {
                 if (!fluid.getFluidInTank(i).isEmpty()) {
+                    if (FluidScroll.checkForFilters(pos, fluidScroll, fluid.getFluidInTank(i), starbuncle.level))
+                        return false;
                     if (getTankForStorage(fluid.getFluidInTank(i)) != null)
                         return true;
                 }
@@ -188,6 +200,9 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public CompoundTag toTag(CompoundTag tag) {
         if (!getFluidStack().isEmpty()) {
             getFluidStack().writeToNBT(tag);
+        }
+        if (fluidScroll != null) {
+            tag.put("itemScroll", fluidScroll.serializeNBT());
         }
         if (side >= 0) tag.putInt("Direction", side);
         return super.toTag(tag);

@@ -10,11 +10,15 @@ import alexthw.starbunclemania.common.item.*;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -25,6 +29,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.DeferredRegister;
@@ -46,10 +51,11 @@ public class ModRegistry {
 
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StarbuncleMania.MODID);
 
-    // Maybe switch source conversion to recipes, currenlty in configs
-    // public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
+    // Maybe switch source conversion to recipes, currently in configs
+    //public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
     //public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
 
+    public static final TagKey<Fluid> POTION = FluidTags.create(new ResourceLocation("forge", "potion_fluid"));
 
     public static void registerRegistries(IEventBus bus) {
         BLOCKS.register(bus);
@@ -66,6 +72,8 @@ public class ModRegistry {
     }
 
     public static final RegistryObject<Item> DIRECTION_SCROLL;
+    public static final RegistryObject<Item> FLUID_SCROLL_A;
+    public static final RegistryObject<Item> FLUID_SCROLL_D;
 
     public static final RegistryObject<Item> STARHAT;
     public static final RegistryObject<Item> PROFHAT;
@@ -99,6 +107,15 @@ public class ModRegistry {
         STARWAND = ITEMS.register("star_wand", () -> new StarWand(new Item.Properties()));
 
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
+        FLUID_SCROLL_A = ITEMS.register("fluid_scroll_allow", () -> new FluidScroll(basicItemProperties()));
+        FLUID_SCROLL_D = ITEMS.register("fluid_scroll_deny", () -> new FluidScroll(basicItemProperties()){
+            @Override
+            public boolean isDenied(ItemStack fluidScroll, FluidStack fluidInTank) {
+                FluidData filter = new FluidData(fluidScroll);
+                return filter.containsStack(fluidInTank);
+            }
+        });
+
         STARSADDLE = ITEMS.register("star_saddle", () -> new StarbySaddle(basicItemProperties()));
 
         FLUID_JAR = BLOCKS.register("fluid_jar", () -> new LiquidJarBlock());

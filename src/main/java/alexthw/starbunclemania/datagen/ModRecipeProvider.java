@@ -10,6 +10,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
@@ -17,6 +18,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Consumer;
 
+import static alexthw.starbunclemania.StarbuncleMania.prefix;
 import static alexthw.starbunclemania.registry.ModRegistry.*;
 
 public class ModRecipeProvider extends RecipeProvider {
@@ -84,6 +86,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(consumer);
 
         shapelessBuilder(DIRECTION_SCROLL.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.COMPASS).save(consumer);
+        shapelessBuilder(FLUID_SCROLL_A.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).save(consumer);
+        shapelessBuilder(FLUID_SCROLL_D.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).requires(Ingredient.of(Tags.Items.COBBLESTONE)).save(consumer);
+        shapelessBuilder(FLUID_SCROLL_A.get()).requires(FLUID_SCROLL_A.get()).save(consumer, prefix("clear_fluid_allow"));
+        shapelessBuilder(FLUID_SCROLL_D.get()).requires(FLUID_SCROLL_D.get()).save(consumer, prefix("clear_fluid_deny"));
+
     }
 
     public ShapedRecipeBuilder shaped(RegistryObject<Item> result){

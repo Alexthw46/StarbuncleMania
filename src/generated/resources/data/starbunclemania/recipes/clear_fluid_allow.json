@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "starbunclemania:fluid_scroll_allow"
+    }
+  ],
+  "result": {
+    "item": "starbunclemania:fluid_scroll_allow"
+  }
+}

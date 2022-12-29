@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.starbuncle.energy;
 
+import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.starbuncle.StarHelper;
 import com.hollingsworth.arsnouveau.ArsNouveau;
@@ -156,7 +157,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
     }
 
     public int getRatio(){
-        return 100000;
+        return Configs.STARBATTERY_RATIO.get();
     }
 
     @Override

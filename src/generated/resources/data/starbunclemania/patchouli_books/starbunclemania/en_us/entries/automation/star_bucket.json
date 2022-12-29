@@ -4,12 +4,20 @@
   "name": "item.starbunclemania.star_bucket",
   "pages": [
     {
-      "type": "patchouli:text",
-      "text": "starbunclemania.page.star_bucket"
-    },
-    {
       "type": "ars_nouveau:apparatus_recipe",
       "recipe": "starbunclemania:star_bucket"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.fluid_scroll"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:fluid_scroll_allow"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "starbunclemania:fluid_scroll_deny"
     }
   ]
 }

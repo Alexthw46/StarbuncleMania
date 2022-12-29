@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.starbuncle.gas;
 
+import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.cosmetic.StarBalloon;
@@ -107,7 +108,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     }
 
     public int getRatio() {
-        return 1000;
+        return Configs.STARBALLOON_RATIO.get();
     }
 
     @Override
@@ -134,10 +135,6 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     }
 
     public BlockPos getTankToExtract() {
-        return getTankToExtract(getGasStack());
-    }
-
-    public BlockPos getTankToExtract(GasStack gas) {
         for (BlockPos pos : FROM_LIST) {
             if (canExtract(pos)) {
                 return pos;

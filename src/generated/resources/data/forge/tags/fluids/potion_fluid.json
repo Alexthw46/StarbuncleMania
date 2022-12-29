@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "create:potion",
+      "required": false
+    },
+    {
+      "id": "hexerei:potion",
+      "required": false
+    }
+  ]
+}

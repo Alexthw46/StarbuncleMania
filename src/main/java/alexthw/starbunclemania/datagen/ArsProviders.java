@@ -179,7 +179,12 @@ public class ArsProviders {
                             .withPage(new CraftingPage(STARHAT.get()))
                     ,getPath(FAMILIARS, "cosmetic"));
             addBasicItem(PROFHAT.get(), AUTOMATION, new CraftingPage(PROFHAT.get()));
-            addBasicItem(STARBUCKET.get(), AUTOMATION, new ApparatusPage(STARBUCKET.get()));
+            addPage(new PatchouliBuilder(AUTOMATION, STARBUCKET.get())
+                            .withPage(new ApparatusPage(STARBUCKET.get()))
+                            .withTextPage("starbunclemania.page.fluid_scroll")
+                            .withPage(new CraftingPage(FLUID_SCROLL_A))
+                            .withPage(new CraftingPage(FLUID_SCROLL_D))
+                    , getPath(AUTOMATION, "star_bucket"));
             addBasicItem(STARBALLON.get(), AUTOMATION, new ApparatusPage(STARBALLON.get()));
             addBasicItem(STARTRASH.get(), AUTOMATION, new CraftingPage(STARTRASH.get()));
             addBasicItem(STARBATTERY.get(), AUTOMATION, new CraftingPage(STARBATTERY.get()));

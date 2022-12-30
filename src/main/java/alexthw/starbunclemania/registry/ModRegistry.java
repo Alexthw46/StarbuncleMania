@@ -20,6 +20,8 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -41,7 +43,7 @@ import java.util.function.Supplier;
 
 import static alexthw.starbunclemania.StarbuncleMania.TAB;
 
-@SuppressWarnings({"Convert2MethodRef", "ConstantConditions"})
+@SuppressWarnings({"Convert2MethodRef", "ConstantConditions", "SpellCheckingInspection"})
 public class ModRegistry {
 
     private static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, StarbuncleMania.MODID);
@@ -53,8 +55,8 @@ public class ModRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StarbuncleMania.MODID);
 
     // Maybe switch source conversion to recipes, currently in configs
-    //public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
-    //public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
 
     public static final TagKey<Fluid> POTION = FluidTags.create(new ResourceLocation("forge", "potion"));
 
@@ -65,6 +67,8 @@ public class ModRegistry {
         FLUIDS.register(bus);
         BLOCK_ENTITIES.register(bus);
         ENTITIES.register(bus);
+        RECIPES.register(bus);
+        R_SERIALIZERS.register(bus);
         bus.addListener(ModRegistry::registerEntityAttributes);
         if (ModList.get().isLoaded("mekanism")){
             MekanismCompat.register(bus);

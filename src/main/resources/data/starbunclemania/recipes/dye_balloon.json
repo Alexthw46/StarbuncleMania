@@ -1,0 +1,14 @@
+{
+  "type": "ars_nouveau:dye",
+  "ingredients": [
+    {
+      "tag": "forge:dyes"
+    },
+    {
+      "item": "starbunclemania:star_balloon"
+    }
+  ],
+  "result": {
+    "item": "starbunclemania:star_balloon"
+  }
+}

@@ -4,6 +4,7 @@ import alexthw.starbunclemania.client.BalloonRenderer;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -15,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +32,7 @@ import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
+public class StarBalloon extends Item implements ICosmeticItem, IAnimatable, IDyeable {
 
     public StarBalloon(Properties pProperties) {
         super(pProperties);
@@ -48,6 +50,11 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable {
         }
 
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
+    }
+
+    @Override
+    public void onDye(ItemStack stack, DyeColor dyeColor) {
+        stack.getOrCreateTag().putInt("color", dyeColor.getFireworkColor());
     }
 
     @Override

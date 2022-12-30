@@ -17,11 +17,8 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "starbunclemania:fluid_scroll_allow"
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "starbunclemania:fluid_scroll_deny"
+      "recipe": "starbunclemania:fluid_scroll_allow",
+      "recipe2": "starbunclemania:fluid_scroll_deny"
     }
   ]
 }

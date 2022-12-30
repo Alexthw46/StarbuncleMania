@@ -8,7 +8,7 @@
   "type": "mekanism:rotary",
   "fluidInput": {
     "amount": 1,
-    "tag": "starbunclemania:source_fluid"
+    "fluid": "starbunclemania:source_fluid"
   },
   "fluidOutput": {
     "amount": 1,

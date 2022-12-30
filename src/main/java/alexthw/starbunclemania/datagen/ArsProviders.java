@@ -183,8 +183,8 @@ public class ArsProviders {
                             .withTextPage("starbunclemania.page.star_bucket")
                             .withPage(new ApparatusPage(STARBUCKET.get()))
                             .withTextPage("starbunclemania.page.fluid_scroll")
-                            .withPage(new CraftingPage(FLUID_SCROLL_A))
-                            .withPage(new CraftingPage(FLUID_SCROLL_D))
+                            .withPage(new CraftingPage(FLUID_SCROLL_A.get())
+                            .withRecipe2(FLUID_SCROLL_D.get()))
                     , getPath(AUTOMATION, "star_bucket"));
             addBasicItem(STARBALLON.get(), AUTOMATION, new ApparatusPage(STARBALLON.get()));
             addBasicItem(STARTRASH.get(), AUTOMATION, new CraftingPage(STARTRASH.get()));

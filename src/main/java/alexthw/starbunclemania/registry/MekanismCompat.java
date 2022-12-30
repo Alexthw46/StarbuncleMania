@@ -1,7 +1,10 @@
 package alexthw.starbunclemania.registry;
 
+import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
 import mekanism.api.chemical.gas.Gas;
+import mekanism.api.chemical.gas.attribute.GasAttributes;
+import mekanism.api.math.FloatingLong;
 import mekanism.common.base.IChemicalConstant;
 import mekanism.common.registration.impl.GasDeferredRegister;
 import mekanism.common.registration.impl.GasRegistryObject;
@@ -35,7 +38,7 @@ public class MekanismCompat {
         public int getLightLevel() {
             return 0;
         }
-    });
+    }, new GasAttributes.Fuel(() -> 1, () -> FloatingLong.create(Configs.GAS_SOURCE_BURN_VALUE.get())));
 
 
     public static void register(IEventBus bus) {

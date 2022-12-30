@@ -95,9 +95,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         if (p == null) return false;
         IEnergyStorage battery = getHandlerFromCap(p);
         if (battery != null) {
-            int stored = battery.getEnergyStored();
-            int max = battery.getMaxEnergyStored();
-            return battery.canReceive() && stored <= max;
+            return battery.canReceive() && battery.receiveEnergy(getRatio()/100, true) > 0;
         } else return false;
     }
 

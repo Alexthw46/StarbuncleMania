@@ -1,0 +1,25 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "mekanism:rotary",
+  "fluidInput": {
+    "amount": 1,
+    "tag": "starbunclemania:source_fluid"
+  },
+  "fluidOutput": {
+    "amount": 1,
+    "fluid": "starbunclemania:source_fluid"
+  },
+  "gasInput": {
+    "amount": 1,
+    "gas": "starbunclemania:source_gas"
+  },
+  "gasOutput": {
+    "amount": 1,
+    "gas": "starbunclemania:source_gas"
+  }
+}

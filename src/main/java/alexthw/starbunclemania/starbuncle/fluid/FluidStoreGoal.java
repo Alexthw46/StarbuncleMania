@@ -42,6 +42,7 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
         int tankIndex = 0;
         if (fluidHandler != null) {
             int room = fluidHandler.getTankCapacity(tankIndex) - fluidHandler.getFluidInTank(tankIndex).getAmount();
+            if (room <= 0) return true;
             int diff = Math.min(room, behavior.getFluidStack().getAmount());
             FluidStack fill = new FluidStack(behavior.getFluidStack(), diff);
             fluidHandler.fill(fill, IFluidHandler.FluidAction.EXECUTE);

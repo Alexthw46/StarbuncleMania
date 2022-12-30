@@ -180,6 +180,7 @@ public class ArsProviders {
                     ,getPath(FAMILIARS, "cosmetic"));
             addBasicItem(PROFHAT.get(), AUTOMATION, new CraftingPage(PROFHAT.get()));
             addPage(new PatchouliBuilder(AUTOMATION, STARBUCKET.get())
+                            .withTextPage("starbunclemania.page.star_bucket")
                             .withPage(new ApparatusPage(STARBUCKET.get()))
                             .withTextPage("starbunclemania.page.fluid_scroll")
                             .withPage(new CraftingPage(FLUID_SCROLL_A))

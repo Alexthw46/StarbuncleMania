@@ -32,6 +32,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -55,7 +56,7 @@ public class ModRegistry {
     //public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
     //public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
 
-    public static final TagKey<Fluid> POTION = FluidTags.create(new ResourceLocation("forge", "potion_fluid"));
+    public static final TagKey<Fluid> POTION = FluidTags.create(new ResourceLocation("forge", "potion"));
 
     public static void registerRegistries(IEventBus bus) {
         BLOCKS.register(bus);
@@ -65,6 +66,9 @@ public class ModRegistry {
         BLOCK_ENTITIES.register(bus);
         ENTITIES.register(bus);
         bus.addListener(ModRegistry::registerEntityAttributes);
+        if (ModList.get().isLoaded("mekanism")){
+            MekanismCompat.register(bus);
+        }
     }
 
     public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {

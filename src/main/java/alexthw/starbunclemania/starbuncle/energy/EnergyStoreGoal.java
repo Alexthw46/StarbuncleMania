@@ -1,10 +1,9 @@
 package alexthw.starbunclemania.starbuncle.energy;
 
+import alexthw.starbunclemania.Configs;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,11 +33,10 @@ public class EnergyStoreGoal extends GoToPosGoal<StarbyEnergyBehavior> {
         IEnergyStorage batteryTile = behavior.getHandlerFromCap(targetPos);
         if (batteryTile != null){
             int room = batteryTile.getMaxEnergyStored() - batteryTile.getEnergyStored();
-            if (room <= behavior.getRatio()/100) return true;
+            if (room <= Configs.STARBATTERY_THRESHOLD.get()) return true;
             int diff = Math.min(room, behavior.getEnergy());
             int actualTake = batteryTile.receiveEnergy(diff, false);
             behavior.setEnergy(behavior.getEnergy() - actualTake);
-            starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.5f, 1.3f);
         }
         return true;
     }

@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.starbuncle.fluid;
 
+import alexthw.starbunclemania.Configs;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
@@ -57,7 +58,7 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
                         if (maxRoom > 0) break;
                     }
                 }
-                if (maxRoom <= 0) return true;
+                if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get()) return true;
                 int takeAmount = Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
                 starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
                 FluidStack extracted = new FluidStack(toExtract, takeAmount);

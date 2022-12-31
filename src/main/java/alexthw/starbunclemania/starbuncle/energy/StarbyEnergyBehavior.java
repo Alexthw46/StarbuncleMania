@@ -52,6 +52,11 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         goals.add(new WrappedGoal(3, new EnergyStoreGoal(entity, this)));
     }
 
+    @Override
+    public boolean canGoToBed() {
+        return (getBatteryForTake() == null || energy > Configs.STARBATTERY_THRESHOLD.get()) && (energy == 0 || getBatteryForStore() == null);
+    }
+
     public static @Nullable IEnergyStorage getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
         BlockEntity be = level.getBlockEntity(pos);
         sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
@@ -95,7 +100,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         if (p == null) return false;
         IEnergyStorage battery = getHandlerFromCap(p);
         if (battery != null) {
-            return battery.canReceive() && battery.receiveEnergy(getRatio()/100, true) > 0;
+            return battery.canReceive() && battery.receiveEnergy(getRatio(), true) >= Configs.STARBATTERY_THRESHOLD.get();
         } else return false;
     }
 

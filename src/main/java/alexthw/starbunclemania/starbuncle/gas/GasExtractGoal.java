@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.starbuncle.gas;
 
+import alexthw.starbunclemania.Configs;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
@@ -56,7 +57,7 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
                         if (maxRoom > 0) break;
                     }
                 }
-                if (maxRoom <= 0) return true;
+                if (maxRoom <= Configs.STARBALLOON_THRESHOLD.get()) return true;
                 int takeAmount = (int) Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
                 starbuncle.level.playSound(null, targetPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.NEUTRAL, 0.5f, 1.3f);
                 GasStack extracted = new GasStack(toExtract, takeAmount);

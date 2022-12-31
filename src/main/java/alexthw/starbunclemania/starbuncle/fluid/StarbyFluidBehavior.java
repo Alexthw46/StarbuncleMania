@@ -53,6 +53,11 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         goals.add(new WrappedGoal(3, new FluidExtractGoal(entity, this)));
     }
 
+    @Override
+    public boolean canGoToBed() {
+        return getTankToExtract() == null && (getFluidStack().isEmpty() || getTankForStorage() == null);
+    }
+
     public @NotNull FluidStack getFluidStack() {
         return fluidStack;
     }
@@ -173,7 +178,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         IFluidHandler fluid = getHandlerFromCap(pos);
         if (fluid != null) {
             for (int i = 0; i < fluid.getTanks(); i++) {
-                if (fluid.isFluidValid(i, fluidStack) && fluid.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) > 0) {
+                if (fluid.isFluidValid(i, fluidStack) && fluid.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) >= Configs.STARBUCKET_THRESHOLD.get()) {
                     return true;
                 }
             }

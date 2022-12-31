@@ -102,7 +102,7 @@ public class FluidSourcelinkTile extends SourcelinkTile {
                 }
                 if (effectTypes.size() > 1)
                     mana *= (1.5 * (effectTypes.size() - 1));
-                return mana/1000;
+                return mana/250; //250 mb equals a potion
             }
         }
         return 0;

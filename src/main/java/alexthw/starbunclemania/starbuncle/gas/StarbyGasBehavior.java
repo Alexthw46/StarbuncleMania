@@ -48,6 +48,11 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         goals.add(new WrappedGoal(3, new GasExtractGoal(entity, this)));
     }
 
+    @Override
+    public boolean canGoToBed() {
+        return getTankToExtract() == null && (getGasStack().isEmpty() || getTankForStorage() == null);
+    }
+
     public @NotNull GasStack getGasStack() {
         return gasStack;
     }
@@ -164,7 +169,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         IGasHandler gas = getHandlerFromCap(pos);
         if (gas != null) {
             for (int i = 0; i < gas.getTanks(); i++) {
-                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() <= getRatio()) {
+                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() >= Configs.STARBALLOON_THRESHOLD.get()) {
                     return true;
                 }
             }

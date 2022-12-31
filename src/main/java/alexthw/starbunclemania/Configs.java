@@ -26,8 +26,12 @@ public class Configs {
     public static Map<ResourceLocation, Double> FLUID_TO_SOURCE_MAP = new HashMap<>();
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUID_TO_SOURCE_CONFIG;
     public static ForgeConfigSpec.IntValue STARBUCKET_RATIO;
+    public static ForgeConfigSpec.IntValue STARBUCKET_THRESHOLD;
     public static ForgeConfigSpec.IntValue STARBALLOON_RATIO;
+    public static ForgeConfigSpec.IntValue STARBALLOON_THRESHOLD;
     public static ForgeConfigSpec.IntValue STARBATTERY_RATIO;
+    public static ForgeConfigSpec.IntValue STARBATTERY_THRESHOLD;
+
 
     public static ForgeConfigSpec.LongValue GAS_SOURCE_BURN_VALUE;
 
@@ -93,6 +97,10 @@ public class Configs {
             STARBUCKET_RATIO = builder.comment("Transfer rate of the fluid starbuncles").defineInRange("starbucket_ratio", 1000, 1, Integer.MAX_VALUE);
             STARBATTERY_RATIO = builder.comment("Transfer rate of the energy starbuncles").defineInRange("starbattery_ratio", 100000, 1, Integer.MAX_VALUE);
             STARBALLOON_RATIO = builder.comment("Transfer rate of the gas starbuncles").defineInRange("starballoon_ratio", 1000, 1, Integer.MAX_VALUE);
+            STARBUCKET_THRESHOLD = builder.comment("Threshold of the fluid starbuncles, lower this if you need them to check and fill more often.").defineInRange("starbucket_threshold", 250, 1, Integer.MAX_VALUE);
+            STARBATTERY_THRESHOLD = builder.comment("Threshold rate of the energy starbuncles, lower this if you need them to check and fill more often.").defineInRange("starbattery_threshold", 1000, 1, Integer.MAX_VALUE);
+            STARBALLOON_THRESHOLD = builder.comment("Threshold rate of the gas starbuncles, lower this if you need them to check and fill more often.").defineInRange("starballoon_threshold", 250, 1, Integer.MAX_VALUE);
+
             builder.pop();
 
             builder.push("Mekanism Compat");

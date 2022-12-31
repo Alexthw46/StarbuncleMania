@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.starbuncle.energy;
 
+import alexthw.starbunclemania.Configs;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyExtractGoal extends GoToPosGoal<StarbyEnergyBehavior> {
 
     public EnergyExtractGoal(Starbuncle entity, StarbyEnergyBehavior energyBehavior) {
-        super(entity, energyBehavior, () -> energyBehavior.getEnergy() == 0);
+        super(entity, energyBehavior, () -> energyBehavior.getEnergy() <= Configs.STARBATTERY_THRESHOLD.get());
     }
 
     @Override
@@ -40,7 +41,7 @@ public class EnergyExtractGoal extends GoToPosGoal<StarbyEnergyBehavior> {
 
         if (take != null && storage != null) {
             int takeAmount = behavior.getRatio();
-            starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
+            starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
             int actualTake = take.extractEnergy(takeAmount, false);
             behavior.setEnergy(actualTake);
         }

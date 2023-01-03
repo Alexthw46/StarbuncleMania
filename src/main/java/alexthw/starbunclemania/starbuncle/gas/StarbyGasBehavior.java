@@ -169,7 +169,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         IGasHandler gas = getHandlerFromCap(pos);
         if (gas != null) {
             for (int i = 0; i < gas.getTanks(); i++) {
-                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() >= Configs.STARBALLOON_THRESHOLD.get()) {
+                if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() <= Configs.STARBALLOON_THRESHOLD.get()) {
                     return true;
                 }
             }

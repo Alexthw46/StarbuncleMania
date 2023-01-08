@@ -25,6 +25,7 @@ public class Setup {
                 tag(ModRegistry.POTION).addOptional(new ResourceLocation("create", "potion")).addOptional(new ResourceLocation("hexerei", "potion"));
             }
         });
+        gen.addProvider(event.includeServer(), new StarAdvancementsProvider(gen, event.getExistingFileHelper()));
         gen.addProvider(event.includeServer(), new ModRecipeProvider(gen));
         gen.addProvider(event.includeServer(), new ArsProviders.ImbuementProvider(gen));
         gen.addProvider(event.includeServer(), new ArsProviders.GlyphProvider(gen));

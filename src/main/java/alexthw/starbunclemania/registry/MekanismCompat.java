@@ -31,7 +31,7 @@ public class MekanismCompat {
 
         @Override
         public float getDensity() {
-            return 0;
+            return 0.001F;
         }
 
         @Override

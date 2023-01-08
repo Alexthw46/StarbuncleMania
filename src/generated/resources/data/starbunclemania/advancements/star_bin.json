@@ -1,0 +1,37 @@
+{
+  "parent": "ars_nouveau:starby_charm",
+  "criteria": {
+    "has_star_bin": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "starbunclemania:star_bin"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "starbunclemania.adv.desc.star_bin"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "starbunclemania:star_bin"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "starbunclemania.adv.title.star_bin"
+    }
+  },
+  "requirements": [
+    [
+      "has_star_bin"
+    ]
+  ]
+}

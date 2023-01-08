@@ -2,8 +2,6 @@ package alexthw.starbunclemania.glyph;
 
 import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
-import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
@@ -14,8 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cow;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -112,14 +108,7 @@ public class PickupFluidEffect extends AbstractEffect {
                     }
                 }
             }
-        } else if (shooter instanceof Player) {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
-            ExtractedStack extractItem = manager.extractItem((i) -> !i.isEmpty() && !(i.getItem() instanceof BucketItem) && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent(), 1);
-            if (!extractItem.isEmpty()) {
-                handlers.add(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get());
-                extractItem.returnOrDrop(world, shooter.getOnPos());
-            }
-        }
+        } else PlaceFluidEffect.getTankItems(world, shooter, spellContext, handlers);
         return handlers;
     }
 

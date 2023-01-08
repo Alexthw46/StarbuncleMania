@@ -74,6 +74,25 @@
 	"starbunclemania.page.star_balloon": "Allows Starbuncles to transport simple gasses [Mekanism]. Can be dyed if used as cosmetic, but will use the stored gas color when used for transport. Once wearing the accessory, use the Dominion wand to connect them between gas tanks.",
 	"starbunclemania.page.wyrm_degree": "Allows Starbuncles to insert/extract items from a specific side with Direction Scrolls.",
 	"starbunclemania.page.star_bin": "Allows Starbuncles to embrace their inner raccoon and trash items. While wearing the accessory the Starbuncle will void any nearby item on the ground.",
-	"starbunclemania.page.star_saddle": "Allows Starbuncles to transport players. While wearing the accessory, the Starbuncle becomes big enough to be rideable. [Still a bit wip, might be a bit wonky]"
+	"starbunclemania.page.star_saddle": "Allows Starbuncles to transport players. While wearing the accessory, the Starbuncle becomes big enough to be rideable. [Still a bit wip, might be a bit wonky]",
+
+	"starbunclemania.adv.title.wyrm_degree": "It's also thanks to my two degrees...",
+	"starbunclemania.adv.desc.wyrm_degree": "Acquire a Wyrm Degree ",
+	"starbunclemania.adv.title.star_battery": "Energy Transport",
+	"starbunclemania.adv.desc.star_battery": "Acquire a StarbAttery",
+	"starbunclemania.adv.title.star_bucket": "Fluid Transport",
+	"starbunclemania.adv.desc.star_bucket": "Acquire a Starbucket",
+	"starbunclemania.adv.title.star_balloon": "Gas Transport",
+	"starbunclemania.adv.desc.star_balloon": "Acquire a Starballoon",
+	"starbunclemania.adv.title.star_bin": "Trash Lover",
+	"starbunclemania.adv.desc.star_bin": "Acquire a StarBin",
+	"starbunclemania.adv.title.fluid_jar": "What if...",
+	"starbunclemania.adv.desc.fluid_jar": "Acquire a Fluid Jar",
+	"starbunclemania.adv.title.fluid_sourcelink": "A Source Sprinkler",
+	"starbunclemania.adv.desc.fluid_sourcelink": "Acquire a Fluid Sourcelink",
+	"starbunclemania.adv.title.source_condenser": "The Heretic Goo",
+	"starbunclemania.adv.desc.source_condenser": "Acquire a Source Condenser",
+	"starbunclemania.adv.title.": "",
+	"starbunclemania.adv.desc.": ""
 
 }

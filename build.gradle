@@ -45,6 +45,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            arg "-mixin.config=starbunclemania.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -55,7 +56,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                starbunclemania {
                     source sourceSets.main
                 }
             }
@@ -63,6 +64,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            arg "-mixin.config=starbunclemania.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -81,6 +83,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
+            arg "-mixin.config=starbunclemania.mixins.json"
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -168,6 +171,12 @@ dependencies {
     //compileOnly fg.deobf("com.tterrag.registrate:Registrate:MC1.19-1.1.5")
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
+}
+
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, "starbunclemania.refmap.json"
 }
 
 

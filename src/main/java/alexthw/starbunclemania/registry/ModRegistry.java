@@ -104,7 +104,6 @@ public class ModRegistry {
     public static final RegistryObject<EntityType<StarbyMountEntity>> STARBY_MOUNT;
 
     static {
-
         STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));
         PROFHAT = ITEMS.register("wyrm_degree", () -> new ProfHat(basicItemProperties()));
         STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties()));
@@ -127,7 +126,7 @@ public class ModRegistry {
         STARSADDLE = ITEMS.register("star_saddle", () -> new StarbySaddle(basicItemProperties()));
 
         FLUID_JAR = BLOCKS.register("fluid_jar", () -> new LiquidJarBlock());
-        ITEMS.register("fluid_jar", () -> new FluidJarItem(FLUID_JAR.get(), basicItemProperties()));
+        ITEMS.register("fluid_jar", () -> new FluidJarItem(FLUID_JAR.get(), basicItemProperties().stacksTo(1)));
         FLUID_JAR_TILE = BLOCK_ENTITIES.register("fluid_jar_tile", () -> BlockEntityType.Builder.of(LiquidJarTile::new, FLUID_JAR.get()).build(null));
 
         SOURCE_CONDENSER = BLOCKS.register("source_condenser", () -> new SourceCondenserBlock());

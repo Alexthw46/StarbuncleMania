@@ -1,0 +1,37 @@
+{
+  "parent": "starbunclemania:fluid_jar",
+  "criteria": {
+    "has_fluid_sourcelink": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "starbunclemania:fluid_sourcelink"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "starbunclemania.adv.desc.fluid_sourcelink"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "starbunclemania:fluid_sourcelink"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "starbunclemania.adv.title.fluid_sourcelink"
+    }
+  },
+  "requirements": [
+    [
+      "has_fluid_sourcelink"
+    ]
+  ]
+}

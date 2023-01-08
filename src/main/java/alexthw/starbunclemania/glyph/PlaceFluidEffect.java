@@ -1,9 +1,9 @@
 package alexthw.starbunclemania.glyph;
 
+import alexthw.starbunclemania.mixin.InventoryManagerAccessor;
 import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
-import com.hollingsworth.arsnouveau.api.item.inv.InventoryManager;
+import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -19,8 +19,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -41,6 +43,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
 
@@ -74,6 +77,7 @@ public class PlaceFluidEffect extends AbstractEffect {
         BlockState state = world.getBlockState(pPos);
         boolean isReplaceable = state.getMaterial().isReplaceable();
         for (IFluidHandler tank : tanks) {
+            if (tank.getFluidInTank(0).isEmpty()) continue;
             //a bucket is 1000 millibuckets
             FluidStack tester = new FluidStack(tank.getFluidInTank(0), 1000);
             if (tester.getFluid() instanceof FlowingFluid ff && tank.drain(tester, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000 && (state.isAir() || isReplaceable || state.getBlock() instanceof LiquidBlockContainer)) {
@@ -121,15 +125,38 @@ public class PlaceFluidEffect extends AbstractEffect {
                     }
                 }
             }
-        } else if (shooter instanceof Player) {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
-            ExtractedStack extractItem = manager.extractItem((i) -> !i.isEmpty() && !(i.getItem() instanceof BucketItem) && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent(), 1);
-            if (!extractItem.isEmpty()) {
-                handlers.add(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get());
-                extractItem.returnOrDrop(world, shooter.getOnPos());
-            }
+        } else {
+            getTankItems(world, shooter, spellContext, handlers);
         }
         return handlers;
+    }
+
+    public static void getTankItems(Level world, @Nonnull LivingEntity shooter, SpellContext spellContext, List<IFluidHandler> handlers) {
+        if (shooter instanceof Player) {
+            InventoryManager manager = spellContext.getCaster().getInvManager();
+            Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && !(i.getItem() instanceof BucketItem) && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+            FilterableItemHandler highestHandler = ((InventoryManagerAccessor) manager).callHighestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
+            if (highestHandler != null){
+                for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
+                    ExtractedStack extractItem = ExtractedStack.from(slot,1);
+                    if (!extractItem.isEmpty()) {
+                        handlers.add(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get());
+                        extractItem.returnOrDrop(world, shooter.getOnPos());
+                    }
+                }
+            }
+        }
+    }
+
+    public static List<SlotReference> findItems(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type){
+        List<SlotReference> slots = new ArrayList<>();
+        for(int slot = 0; slot < Inventory.getSelectionSize(); slot++){
+            ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+                slots.add(new SlotReference(itemHandler.getHandler(), slot));
+            }
+        }
+        return slots;
     }
 
     @Override

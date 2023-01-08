@@ -64,14 +64,17 @@ public class PickupFluidEffect extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+        BlockPos adjustedPos = rayTraceResult.getBlockPos();
+        if (!world.getFluidState(adjustedPos).isSource()){
+            adjustedPos = adjustedPos.relative(rayTraceResult.getDirection());
+        }
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, adjustedPos, rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
 
         List<IFluidHandler> tanks = getTanks(world, shooter, spellContext);
         if (tanks.isEmpty()) return;
 
         for (BlockPos pos1 : posList) {
-            pos1 = rayTraceResult.isInside() ? pos1 : pos1.relative(rayTraceResult.getDirection());
             BlockState state = world.getBlockState(pos1);
             if (state.getBlock() instanceof BucketPickup bp && !MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
                 this.pickup(pos1, world, shooter, tanks, bp, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));

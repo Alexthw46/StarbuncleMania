@@ -18,6 +18,7 @@ public class Setup {
         DataGenerator gen = event.getGenerator();
 
         gen.addProvider(event.includeClient(), new StarItemModelProvider(gen, event.getExistingFileHelper()));
+        gen.addProvider(event.includeServer(), new StarBlockTagsProvider(gen, event.getExistingFileHelper()));
         gen.addProvider(event.includeServer(), new FluidTagsProvider(gen, StarbuncleMania.MODID, event.getExistingFileHelper()){
             @Override
             protected void addTags() {

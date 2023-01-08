@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.Level;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -49,7 +51,19 @@ public class PickupFluidEffect extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        onResolveBlock(new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, rayTraceResult.getEntity().getOnPos(),true), world, shooter, spellStats, spellContext, resolver);
+        if (rayTraceResult.getEntity() instanceof Cow cow && !cow.isBaby()){
+            List<IFluidHandler> tanks = getTanks(world, shooter, spellContext);
+            for (IFluidHandler tank : tanks) {
+                //a bucket is 1000 millibuckets
+                FluidStack tester = new FluidStack(ForgeMod.MILK.get(), 1000);
+                if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
+                    tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                    break;
+                }
+            }
+        }else {
+            onResolveBlock(new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, rayTraceResult.getEntity().getOnPos(),true), world, shooter, spellStats, spellContext, resolver);
+        }
     }
 
     @Override

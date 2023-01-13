@@ -1,7 +1,6 @@
 package alexthw.starbunclemania;
 
 import alexthw.starbunclemania.registry.ModRegistry;
-import com.hollingsworth.arsnouveau.setup.ConfigUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
@@ -92,7 +91,7 @@ public class Configs {
         public Server(ForgeConfigSpec.Builder builder) {
             builder.push("General Configs");
             FLUID_TO_SOURCE_CONFIG = builder.comment("Value of milli-bucket of fluid converted in source by the sourcelink", "Example entry: \"minecraft:lava=1.6\"")
-                    .defineList("fluid_to_source", writeConfig(getDefaultLiquidSource()), ConfigUtil::validateMap);
+                    .defineList("fluid_to_source", writeConfig(getDefaultLiquidSource()), Configs::validateMap);
 
             STARBUCKET_RATIO = builder.comment("Transfer rate of the fluid starbuncles").defineInRange("starbucket_ratio", 1000, 1, Integer.MAX_VALUE);
             STARBATTERY_RATIO = builder.comment("Transfer rate of the energy starbuncles").defineInRange("starbattery_ratio", 100000, 1, Integer.MAX_VALUE);
@@ -115,6 +114,13 @@ public class Configs {
         return map.entrySet().stream()
                 .map(e -> e.getKey() + "=" + e.getValue().toString())
                 .collect(Collectors.toList());
+    }
+
+    public static boolean validateMap(Object rawConfig) {
+        if (rawConfig instanceof CharSequence raw) {
+            return STRING_FLOAT_MAP.matcher(raw).matches();
+        }
+        return false;
     }
 
     public static Map<String, Double> parseMapConfig(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {

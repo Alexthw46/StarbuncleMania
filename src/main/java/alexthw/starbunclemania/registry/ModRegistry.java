@@ -3,10 +3,12 @@ package alexthw.starbunclemania.registry;
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.client.FluidSourceLinkRenderer;
 import alexthw.starbunclemania.client.SourceCondenserRenderer;
-import alexthw.starbunclemania.common.item.cosmetic.*;
 import alexthw.starbunclemania.common.StarbyMountEntity;
 import alexthw.starbunclemania.common.block.*;
-import alexthw.starbunclemania.common.item.*;
+import alexthw.starbunclemania.common.item.DirectionScroll;
+import alexthw.starbunclemania.common.item.FluidJarItem;
+import alexthw.starbunclemania.common.item.FluidScroll;
+import alexthw.starbunclemania.common.item.cosmetic.*;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -16,6 +18,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -76,7 +79,7 @@ public class ModRegistry {
     }
 
     public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-        event.put(STARBY_MOUNT.get(), Starbuncle.attributes().build());
+        event.put(STARBY_MOUNT.get(), Starbuncle.attributes().add(Attributes.MAX_HEALTH, 20).build());
     }
 
     public static final RegistryObject<Item> DIRECTION_SCROLL;

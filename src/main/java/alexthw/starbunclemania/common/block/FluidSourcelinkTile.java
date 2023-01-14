@@ -77,7 +77,7 @@ public class FluidSourcelinkTile extends SourcelinkTile {
             }
             if (!level.isClientSide() && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
                 double sourceFromFluid = getSourceFromFluid(this.getFluid());
-                if (sourceFromFluid > 0) {
+                if (sourceFromFluid > 0 && this.canAcceptSource((int) sourceFromFluid)) {
                     int drain = this.tank.drain(1000, IFluidHandler.FluidAction.EXECUTE).getAmount();
                     this.addSource((int) (drain * sourceFromFluid));
                 }

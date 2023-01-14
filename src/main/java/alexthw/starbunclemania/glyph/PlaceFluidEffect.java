@@ -1,6 +1,5 @@
 package alexthw.starbunclemania.glyph;
 
-import alexthw.starbunclemania.mixin.InventoryManagerAccessor;
 import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
@@ -37,6 +36,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -135,7 +135,12 @@ public class PlaceFluidEffect extends AbstractEffect {
         if (shooter instanceof Player) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
             Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && !(i.getItem() instanceof BucketItem) && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
-            FilterableItemHandler highestHandler = ((InventoryManagerAccessor) manager).callHighestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
+            FilterableItemHandler highestHandler = null;
+            try{
+                var caller = ObfuscationReflectionHelper.findMethod(InventoryManager.class, "highestPrefInventory", List.class, Predicate.class, InteractType.class);
+                highestHandler = (FilterableItemHandler) caller.invoke(manager, manager.getInventory(), predicate, InteractType.EXTRACT);
+            }catch (Exception ignored){
+            }
             if (highestHandler != null){
                 for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
                     ExtractedStack extractItem = ExtractedStack.from(slot,1);

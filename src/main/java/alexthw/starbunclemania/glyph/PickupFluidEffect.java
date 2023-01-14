@@ -13,10 +13,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -76,8 +79,26 @@ public class PickupFluidEffect extends AbstractEffect {
 
         for (BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
-            if (state.getBlock() instanceof BucketPickup bp && !MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
-                this.pickup(pos1, world, shooter, tanks, bp, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
+            if (!MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
+                if (state.getBlock() instanceof BucketPickup bp) {
+                    this.pickup(pos1, world, shooter, tanks, bp, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
+                } else if (state.getBlock() == Blocks.WATER_CAULDRON || state.getBlock() == Blocks.LAVA_CAULDRON) {
+                    this.pickupCauldron(pos1, world, shooter, tanks, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
+                }
+            }
+        }
+    }
+
+    private void pickupCauldron(BlockPos pPos, Level world, LivingEntity shooter, List<IFluidHandler> tanks, SpellResolver resolver, SpellContext spellContext, BlockHitResult resolveResult) {
+        Fluid fluid = world.getBlockState(pPos).getBlock() == Blocks.WATER_CAULDRON ? Fluids.WATER :Fluids.LAVA;
+        for (IFluidHandler tank : tanks) {
+            //a bucket is 1000 millibuckets
+            FluidStack tester = new FluidStack(fluid, 1000);
+            if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
+                world.setBlockAndUpdate(pPos, Blocks.CAULDRON.defaultBlockState());
+                tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                ShapersFocus.tryPropagateBlockSpell(resolveResult, world, shooter, spellContext, resolver);
+                break;
             }
         }
     }

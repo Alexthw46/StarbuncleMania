@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
+@SuppressWarnings("deprecation")
 public class LiquidJarBlock extends TickableModBlock {
 
     public LiquidJarBlock() {
@@ -62,6 +63,18 @@ public class LiquidJarBlock extends TickableModBlock {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+        LiquidJarTile tile = (LiquidJarTile) worldIn.getBlockEntity(pos);
+        if (tile == null || tile.getFluidPercentage() <= 0) return 0;
+        return (int) (tile.getFluidPercentage() * 15);
     }
 
     @Nullable

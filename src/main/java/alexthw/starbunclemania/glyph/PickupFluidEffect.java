@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -68,7 +69,7 @@ public class PickupFluidEffect extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         BlockPos adjustedPos = rayTraceResult.getBlockPos();
-        if (!world.getFluidState(adjustedPos).isSource()){
+        if (!world.getFluidState(adjustedPos).isSource() || world.getBlockState(adjustedPos).getBlock() instanceof AbstractCauldronBlock){
             adjustedPos = adjustedPos.relative(rayTraceResult.getDirection());
         }
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, adjustedPos, rayTraceResult, spellStats);

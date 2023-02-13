@@ -36,10 +36,8 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -110,7 +108,7 @@ public class PlaceFluidEffect extends AbstractEffect {
         }
     }
 
-    public List<IFluidHandler> getTanks(Level world, @Nonnull LivingEntity shooter, SpellContext spellContext) {
+    public List<IFluidHandler> getTanks(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
         List<IFluidHandler> handlers = new ArrayList<>();
 
         //ensure it's not a real player
@@ -131,16 +129,12 @@ public class PlaceFluidEffect extends AbstractEffect {
         return handlers;
     }
 
-    public static void getTankItems(Level world, @Nonnull LivingEntity shooter, SpellContext spellContext, List<IFluidHandler> handlers) {
+    public static void getTankItems(Level world, @NotNull LivingEntity shooter, SpellContext spellContext, List<IFluidHandler> handlers) {
         if (shooter instanceof Player) {
             InventoryManager manager = spellContext.getCaster().getInvManager();
             Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && !(i.getItem() instanceof BucketItem) && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
-            FilterableItemHandler highestHandler = null;
-            try{
-                var caller = ObfuscationReflectionHelper.findMethod(InventoryManager.class, "highestPrefInventory", List.class, Predicate.class, InteractType.class);
-                highestHandler = (FilterableItemHandler) caller.invoke(manager, manager.getInventory(), predicate, InteractType.EXTRACT);
-            }catch (Exception ignored){
-            }
+            FilterableItemHandler highestHandler = manager.highestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
+
             if (highestHandler != null){
                 for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
                     ExtractedStack extractItem = ExtractedStack.from(slot,1);
@@ -170,7 +164,7 @@ public class PlaceFluidEffect extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 

@@ -34,7 +34,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -118,7 +117,7 @@ public class PickupFluidEffect extends AbstractEffect {
         }
     }
 
-    public List<IFluidHandler> getTanks(Level world, @Nonnull LivingEntity shooter, SpellContext spellContext) {
+    public List<IFluidHandler> getTanks(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
         List<IFluidHandler> handlers = new ArrayList<>();
 
         //ensure it's a turret or similar
@@ -143,7 +142,7 @@ public class PickupFluidEffect extends AbstractEffect {
     }
 
     @Override
-    public SpellTier getTier() {
+    public SpellTier defaultTier() {
         return SpellTier.TWO;
     }
 

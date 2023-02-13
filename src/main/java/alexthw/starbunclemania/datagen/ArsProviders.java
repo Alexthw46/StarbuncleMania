@@ -198,12 +198,14 @@ public class ArsProviders {
         }
 
         @Override
-        public void addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
+        public PatchouliPage addBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
             PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                     .withIcon(item.asItem())
                     .withPage(new TextPage(root + ".page." + getRegistryName(item.asItem()).getPath()))
                     .withPage(recipePage);
-            this.pages.add(new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()).getPath())));
+            var page = new PatchouliPage(builder, getPath(category, getRegistryName(item.asItem()).getPath()));
+            this.pages.add(page);
+            return page;
         }
 
         public void addFamiliarPage(AbstractFamiliarHolder familiarHolder) {
@@ -215,7 +217,7 @@ public class ArsProviders {
         }
 
         public void addGlyphPage(AbstractSpellPart spellPart) {
-            ResourceLocation category = switch (spellPart.getTier().value) {
+            ResourceLocation category = switch (spellPart.defaultTier().value) {
                 case 1 -> GLYPHS_1;
                 case 2 -> GLYPHS_2;
                 default -> GLYPHS_3;

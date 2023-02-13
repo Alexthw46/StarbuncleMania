@@ -9,6 +9,7 @@ import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.common.item.cosmetic.*;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
@@ -73,13 +75,19 @@ public class ModRegistry {
         RECIPES.register(bus);
         R_SERIALIZERS.register(bus);
         bus.addListener(ModRegistry::registerEntityAttributes);
-        if (ModList.get().isLoaded("mekanism")){
+        bus.addListener(ModRegistry::editEntityAttributes);
+        if (ModList.get().isLoaded("mekanism")) {
             MekanismCompat.register(bus);
         }
     }
 
     public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
         event.put(STARBY_MOUNT.get(), Starbuncle.attributes().add(Attributes.MAX_HEALTH, 20).build());
+    }
+
+    public static void editEntityAttributes(final EntityAttributeModificationEvent event) {
+        event.add(ModEntities.STARBUNCLE_TYPE.get(), Attributes.ATTACK_DAMAGE, 2);
+        event.add(ModEntities.STARBUNCLE_TYPE.get(), Attributes.FOLLOW_RANGE, 5);
     }
 
     public static final RegistryObject<Item> DIRECTION_SCROLL;
@@ -113,12 +121,12 @@ public class ModRegistry {
         STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));
         STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));
         STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties()));
-        STARSWORD = ITEMS.register("star_sword", () -> new StarSword(new Item.Properties()));
+        STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
         STARWAND = ITEMS.register("star_wand", () -> new StarWand(new Item.Properties()));
 
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
         FLUID_SCROLL_A = ITEMS.register("fluid_scroll_allow", () -> new FluidScroll(basicItemProperties()));
-        FLUID_SCROLL_D = ITEMS.register("fluid_scroll_deny", () -> new FluidScroll(basicItemProperties()){
+        FLUID_SCROLL_D = ITEMS.register("fluid_scroll_deny", () -> new FluidScroll(basicItemProperties()) {
             @Override
             public boolean isDenied(ItemStack fluidScroll, FluidStack fluidInTank) {
                 FluidData filter = new FluidData(fluidScroll);

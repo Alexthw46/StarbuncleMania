@@ -9,11 +9,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -31,8 +34,11 @@ public class StarbyFighterBehavior extends StarbyBehavior {
         if (master != null){
             owner = level.getPlayerByUUID(master);
         }
-        goals.add(new WrappedGoal(2, new HurtByTargetGoal(starbuncle, Player.class).setAlertOthers(WealdWalker.class, Starbuncle.class)));
-        goals.add(new WrappedGoal(1, new TargetGoal(starbuncle, false){
+        goals.add(new WrappedGoal(1, new MeleeAttackGoal(this.starbuncle, 2.0, true)));
+        goals.add(new WrappedGoal(4, new RandomStrollGoal(this.starbuncle, 1.0)));
+        starbuncle.targetSelector.removeAllGoals();
+        starbuncle.targetSelector.addGoal(3, new HurtByTargetGoal(starbuncle, Player.class).setAlertOthers(WealdWalker.class, Starbuncle.class));
+        starbuncle.targetSelector.addGoal(1, new TargetGoal(starbuncle, false){
             /**
              * Returns whether the EntityAIBase should begin execution.
              */
@@ -47,25 +53,30 @@ public class StarbyFighterBehavior extends StarbyBehavior {
                 StarbyFighterBehavior.this.starbuncle.setTarget(StarbyFighterBehavior.this.owner.getLastHurtMob());
                 super.start();
             }
-        }));
-        goals.add(new WrappedGoal(3, new NearestAttackableTargetGoal<>(starbuncle, Mob.class, 10, false, true,
+        });
+        starbuncle.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(starbuncle, Mob.class, 10, false, false,
                 (LivingEntity entity) ->
-                        (entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner))
-                        || (entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner)))
-        ));
+                        entity instanceof Mob mob && mob.getTarget() != null && mob.getTarget().equals(this.owner)
+                        || entity != null && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+        );
     }
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
-        starbuncle.setTarget(storedEntity);
-
+        if (storedEntity != starbuncle) {
+            starbuncle.setTarget(storedEntity);
+            syncTag();
+        }
     }
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
-        starbuncle.setTarget(storedEntity);
+        if (storedEntity != starbuncle) {
+            starbuncle.setTarget(storedEntity);
+            syncTag();
+        }
     }
 
     @Override
@@ -81,5 +92,10 @@ public class StarbyFighterBehavior extends StarbyBehavior {
         return TRANSPORT_ID;
     }
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_fighter");
+
+    @Override
+    public ItemStack getStackForRender() {
+        return ItemStack.EMPTY;
+    }
 
 }

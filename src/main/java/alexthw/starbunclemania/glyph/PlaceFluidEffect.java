@@ -20,7 +20,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlockContainer;
@@ -28,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -54,6 +54,11 @@ public class PlaceFluidEffect extends AbstractEffect {
     }
 
     @Override
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        onResolveBlock(new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, rayTraceResult.getEntity().getOnPos(),true), world, shooter, spellStats, spellContext, resolver);
+    }
+
+    @Override
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
@@ -69,6 +74,13 @@ public class PlaceFluidEffect extends AbstractEffect {
                 this.place(pos1, world, shooter, tanks, spellContext, resolver, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
             }
         }
+
+        for (var tank: tanks){
+            if (tank instanceof WrappedExtractedItemHandler wrap){
+                wrap.extractedStack.returnOrDrop(world, shooter.getOnPos());
+            }
+        }
+
     }
 
     private void place(BlockPos pPos, Level world, LivingEntity shooter, List<IFluidHandler> tanks, SpellContext spellContext, SpellResolver resolver, BlockHitResult resolveResult) {
@@ -102,6 +114,7 @@ public class PlaceFluidEffect extends AbstractEffect {
                     }
                 }
                 tank.drain(tester, IFluidHandler.FluidAction.EXECUTE);
+                if (tank instanceof WrappedExtractedItemHandler wrap) wrap.updateContainer();
                 ShapersFocus.tryPropagateBlockSpell(resolveResult, world, shooter, spellContext, resolver);
                 break;
             }
@@ -111,7 +124,7 @@ public class PlaceFluidEffect extends AbstractEffect {
     public List<IFluidHandler> getTanks(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
         List<IFluidHandler> handlers = new ArrayList<>();
 
-        //ensure it's not a real player
+        //check nearby inventories if it's a turret or similar
         if (shooter instanceof FakePlayer) {
             for (Direction side : Direction.values()) {
                 BlockPos pos = shooter.getOnPos().above().relative(side);
@@ -123,24 +136,22 @@ public class PlaceFluidEffect extends AbstractEffect {
                     }
                 }
             }
-        } else {
-            getTankItems(world, shooter, spellContext, handlers);
         }
+        getTankItems(shooter, spellContext, handlers);
         return handlers;
     }
 
-    public static void getTankItems(Level world, @NotNull LivingEntity shooter, SpellContext spellContext, List<IFluidHandler> handlers) {
+    public static void getTankItems(@NotNull LivingEntity shooter, SpellContext spellContext, List<IFluidHandler> handlers) {
         if (shooter instanceof Player) {
-            InventoryManager manager = spellContext.getCaster().getInvManager();
-            Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && !(i.getItem() instanceof BucketItem) && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+            InventoryManager manager = spellContext.getCaster().getInvManager(); //!(i.getItem() instanceof BucketItem) &&
+            Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
             FilterableItemHandler highestHandler = manager.highestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
 
             if (highestHandler != null){
                 for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
                     ExtractedStack extractItem = ExtractedStack.from(slot,1);
                     if (!extractItem.isEmpty()) {
-                        handlers.add(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get());
-                        extractItem.returnOrDrop(world, shooter.getOnPos());
+                        handlers.add(new WrappedExtractedItemHandler(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get(), extractItem));
                     }
                 }
             }

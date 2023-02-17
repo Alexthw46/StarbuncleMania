@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.common.block;
 
+import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -38,7 +39,7 @@ public class SourceCondenserTile extends AbstractTankTile implements IAnimatable
     public void tick() {
         if (level != null && !level.isClientSide() && level.getGameTime() % 40 == 0) {
             if (this.tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
-                if (SourceUtil.takeSourceWithParticles(getBlockPos(), level, 6, 1100) != null) {
+                if (SourceUtil.takeSourceWithParticles(getBlockPos(), level, 6, Configs.SOURCE_TO_FLUID.get()) != null) {
                     this.tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
                 }
             }

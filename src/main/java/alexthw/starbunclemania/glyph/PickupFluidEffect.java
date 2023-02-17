@@ -4,6 +4,7 @@ import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -51,15 +52,7 @@ public class PickupFluidEffect extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof Cow cow && !cow.isBaby()){
-            List<IFluidHandler> tanks = getTanks(world, shooter, spellContext);
-            for (IFluidHandler tank : tanks) {
-                //a bucket is 1000 millibuckets
-                FluidStack tester = new FluidStack(ForgeMod.MILK.get(), 1000);
-                if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
-                    tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
-                    break;
-                }
-            }
+            pickupCow(getTanks(world, shooter, spellContext), world, shooter);
         }else {
             onResolveBlock(new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, rayTraceResult.getEntity().getOnPos(),true), world, shooter, spellStats, spellContext, resolver);
         }
@@ -82,11 +75,19 @@ public class PickupFluidEffect extends AbstractEffect {
             if (!MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
                 if (state.getBlock() instanceof BucketPickup bp) {
                     this.pickup(pos1, world, shooter, tanks, bp, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
-                } else if (state.getBlock() == Blocks.WATER_CAULDRON || state.getBlock() == Blocks.LAVA_CAULDRON) {
+                } else if (!state.hasBlockEntity() && (state.getBlock() == Blocks.WATER_CAULDRON || state.getBlock() == Blocks.LAVA_CAULDRON)) {
                     this.pickupCauldron(pos1, world, shooter, tanks, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
+                } else if (world.getBlockEntity(pos1) instanceof MobJarTile jar && jar.getEntity() instanceof Cow) {
+                    this.pickupCow(tanks, world, shooter);
                 }
             }
         }
+        for (var tank: tanks){
+            if (tank instanceof WrappedExtractedItemHandler wrap){
+                wrap.extractedStack.returnOrDrop(world, shooter.getOnPos());
+            }
+        }
+
     }
 
     private void pickupCauldron(BlockPos pPos, Level world, LivingEntity shooter, List<IFluidHandler> tanks, SpellResolver resolver, SpellContext spellContext, BlockHitResult resolveResult) {
@@ -97,8 +98,23 @@ public class PickupFluidEffect extends AbstractEffect {
             if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
                 world.setBlockAndUpdate(pPos, Blocks.CAULDRON.defaultBlockState());
                 tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                if (tank instanceof WrappedExtractedItemHandler wrap) wrap.updateContainer();
                 ShapersFocus.tryPropagateBlockSpell(resolveResult, world, shooter, spellContext, resolver);
                 break;
+            }
+        }
+    }
+
+    private void pickupCow(List<IFluidHandler> tanks, Level world, LivingEntity shooter){
+        for (IFluidHandler tank : tanks) {
+            //a bucket is 1000 millibuckets
+            FluidStack tester = new FluidStack(ForgeMod.MILK.get(), 1000);
+            if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
+                tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                break;
+            }
+            if (tank instanceof WrappedExtractedItemHandler wrap){
+                wrap.extractedStack.returnOrDrop(world, shooter.getOnPos());
             }
         }
     }
@@ -111,6 +127,7 @@ public class PickupFluidEffect extends AbstractEffect {
             if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000 && fluidState.isSource()) {
                 bp.pickupBlock(world, pPos, world.getBlockState(pPos));
                 tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                if (tank instanceof WrappedExtractedItemHandler wrap) wrap.updateContainer();
                 ShapersFocus.tryPropagateBlockSpell(resolveResult, world, shooter, spellContext, resolver);
                 break;
             }
@@ -120,7 +137,7 @@ public class PickupFluidEffect extends AbstractEffect {
     public List<IFluidHandler> getTanks(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
         List<IFluidHandler> handlers = new ArrayList<>();
 
-        //ensure it's a turret or similar
+        //check nearby inventories if it's a turret or similar
         if (shooter instanceof FakePlayer) {
             for (Direction side : Direction.values()) {
                 BlockPos pos = shooter.getOnPos().above().relative(side);
@@ -132,7 +149,8 @@ public class PickupFluidEffect extends AbstractEffect {
                     }
                 }
             }
-        } else PlaceFluidEffect.getTankItems(world, shooter, spellContext, handlers);
+        }
+        PlaceFluidEffect.getTankItems(shooter, spellContext, handlers);
         return handlers;
     }
 

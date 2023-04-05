@@ -4,8 +4,10 @@ import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.item.inv.*;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -19,7 +21,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlockContainer;
@@ -63,7 +64,7 @@ public class PlaceFluidEffect extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
 
-        List<IFluidHandler> tanks = getTanks(world, shooter, spellContext);
+        List<IFluidHandler> tanks = getTanks(world, spellContext);
         if (tanks.isEmpty()) return;
 
         for (BlockPos pos1 : posList) {
@@ -121,13 +122,14 @@ public class PlaceFluidEffect extends AbstractEffect {
         }
     }
 
-    public List<IFluidHandler> getTanks(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
+    public List<IFluidHandler> getTanks(Level world, SpellContext spellContext) {
         List<IFluidHandler> handlers = new ArrayList<>();
 
         //check nearby inventories if it's a turret or similar
-        if (shooter instanceof FakePlayer) {
+        if (spellContext.getCaster() instanceof TileCaster tile && !(tile.getTile() instanceof RuneTile rune && rune.isSensitive)) {
+            BlockPos tilePos = tile.getTile().getBlockPos();
             for (Direction side : Direction.values()) {
-                BlockPos pos = shooter.getOnPos().above().relative(side);
+                BlockPos pos = tilePos.relative(side);
                 BlockEntity be = world.getBlockEntity(pos);
                 if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent()) {
                     IFluidHandler handler = StarbyFluidBehavior.getHandlerFromCap(pos, world, side.ordinal());
@@ -137,22 +139,20 @@ public class PlaceFluidEffect extends AbstractEffect {
                 }
             }
         }
-        getTankItems(shooter, spellContext, handlers);
+        getTankItems(spellContext, handlers);
         return handlers;
     }
 
-    public static void getTankItems(@NotNull LivingEntity shooter, SpellContext spellContext, List<IFluidHandler> handlers) {
-        if (shooter instanceof Player) {
-            InventoryManager manager = spellContext.getCaster().getInvManager(); //!(i.getItem() instanceof BucketItem) &&
-            Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
-            FilterableItemHandler highestHandler = manager.highestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
+    public static void getTankItems(SpellContext spellContext, List<IFluidHandler> handlers) {
+        InventoryManager manager = spellContext.getCaster().getInvManager();
+        Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+        FilterableItemHandler highestHandler = manager.highestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
 
-            if (highestHandler != null){
-                for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
-                    ExtractedStack extractItem = ExtractedStack.from(slot,1);
-                    if (!extractItem.isEmpty()) {
-                        handlers.add(new WrappedExtractedItemHandler(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get(), extractItem));
-                    }
+        if (highestHandler != null){
+            for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
+                ExtractedStack extractItem = ExtractedStack.from(slot,1);
+                if (!extractItem.isEmpty()) {
+                    handlers.add(new WrappedExtractedItemHandler(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get(), extractItem));
                 }
             }
         }
@@ -162,7 +162,7 @@ public class PlaceFluidEffect extends AbstractEffect {
         List<SlotReference> slots = new ArrayList<>();
         for(int slot = 0; slot < Inventory.getSelectionSize(); slot++){
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type)){
+            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()){
                 slots.add(new SlotReference(itemHandler.getHandler(), slot));
             }
         }
@@ -182,7 +182,7 @@ public class PlaceFluidEffect extends AbstractEffect {
     @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
-        return setOf(SpellSchools.MANIPULATION);
+        return setOf(SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_WATER);
     }
 
     @Override

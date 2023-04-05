@@ -3,8 +3,10 @@ package alexthw.starbunclemania.glyph;
 import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.spell.wrapped_caster.TileCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.curios.ShapersFocus;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -52,7 +54,7 @@ public class PickupFluidEffect extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         if (rayTraceResult.getEntity() instanceof Cow cow && !cow.isBaby()) {
-            var tanks = getTanks(world, shooter, spellContext);
+            var tanks = getTanks(world, spellContext);
             pickupCow(tanks);
             for (IFluidHandler tank : tanks)
                 if (tank instanceof WrappedExtractedItemHandler wrap)
@@ -71,7 +73,7 @@ public class PickupFluidEffect extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, adjustedPos, rayTraceResult, spellStats);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
 
-        List<IFluidHandler> tanks = getTanks(world, shooter, spellContext);
+        List<IFluidHandler> tanks = getTanks(world, spellContext);
         if (tanks.isEmpty()) return;
 
         for (BlockPos pos1 : posList) {
@@ -137,13 +139,14 @@ public class PickupFluidEffect extends AbstractEffect {
         }
     }
 
-    public List<IFluidHandler> getTanks(Level world, @NotNull LivingEntity shooter, SpellContext spellContext) {
+    public List<IFluidHandler> getTanks(Level world, SpellContext spellContext) {
         List<IFluidHandler> handlers = new ArrayList<>();
 
         //check nearby inventories if it's a turret or similar
-        if (shooter instanceof FakePlayer) {
+        if (spellContext.getCaster() instanceof TileCaster tile && !(tile.getTile() instanceof RuneTile rune && rune.isSensitive)) {
+            BlockPos tilePos = tile.getTile().getBlockPos();
             for (Direction side : Direction.values()) {
-                BlockPos pos = shooter.getOnPos().above().relative(side);
+                BlockPos pos = tilePos.relative(side);
                 BlockEntity be = world.getBlockEntity(pos);
                 if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent()) {
                     IFluidHandler handler = StarbyFluidBehavior.getHandlerFromCap(pos, world, side.ordinal());
@@ -153,13 +156,13 @@ public class PickupFluidEffect extends AbstractEffect {
                 }
             }
         }
-        PlaceFluidEffect.getTankItems(shooter, spellContext, handlers);
+        PlaceFluidEffect.getTankItems(spellContext, handlers);
         return handlers;
     }
 
     @Override
     public int getDefaultManaCost() {
-        return 20;
+        return 80;
     }
 
     @Override
@@ -170,7 +173,7 @@ public class PickupFluidEffect extends AbstractEffect {
     @NotNull
     @Override
     public Set<SpellSchool> getSchools() {
-        return setOf(SpellSchools.MANIPULATION);
+        return setOf(SpellSchools.MANIPULATION, SpellSchools.ELEMENTAL_WATER);
     }
 
     @Override

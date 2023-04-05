@@ -1,0 +1,11 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "type": "starbunclemania:fluid_sourcelink",
+  "fluid": "create:honey",
+  "mb_to_source_ratio": 0.3
+}

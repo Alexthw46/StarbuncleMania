@@ -1,9 +1,7 @@
 package alexthw.starbunclemania;
 
-import alexthw.starbunclemania.registry.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -72,13 +70,7 @@ public class Configs {
     }
 
     public static Map<String, Double> getDefaultLiquidSource() {
-        Map<String, Double> map = new HashMap<>();
-        map.put(ModRegistry.SOURCE_FLUID_TYPE.getId().toString(), 0.9);
-        map.put(ForgeMod.LAVA_TYPE.getId().toString(), 1.6);
-        map.put(ForgeMod.MILK_TYPE.getId().toString(), 0.2);
-        map.put("create:honey", 0.2);
-        map.put("create:chocolate", 0.5);
-        return map;
+        return new HashMap<>();
     }
 
     public static class Common {

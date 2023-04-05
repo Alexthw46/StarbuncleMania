@@ -9,6 +9,7 @@ import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.common.item.cosmetic.*;
+import alexthw.starbunclemania.recipe.FluidSourcelinkRecipe;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
@@ -47,6 +48,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 import static alexthw.starbunclemania.StarbuncleMania.TAB;
+import static alexthw.starbunclemania.StarbuncleMania.prefix;
 
 @SuppressWarnings({"Convert2MethodRef", "ConstantConditions", "SpellCheckingInspection"})
 public class ModRegistry {
@@ -88,6 +90,14 @@ public class ModRegistry {
     public static void editEntityAttributes(final EntityAttributeModificationEvent event) {
         event.add(ModEntities.STARBUNCLE_TYPE.get(), Attributes.ATTACK_DAMAGE, 2);
         event.add(ModEntities.STARBUNCLE_TYPE.get(), Attributes.FOLLOW_RANGE, 5);
+    }
+
+    public static final RegistryObject<RecipeType<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RT;
+    public static final RegistryObject<RecipeSerializer<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RS;
+
+    static {
+       FLUID_SOURCELINK_RT = RECIPES.register("fluid_sourcelink", () -> RecipeType.simple(prefix("fluid_sourcelink")));
+       FLUID_SOURCELINK_RS = R_SERIALIZERS.register("fluid_sourcelink", FluidSourcelinkRecipe.Serializer::new);
     }
 
     public static final RegistryObject<Item> DIRECTION_SCROLL;

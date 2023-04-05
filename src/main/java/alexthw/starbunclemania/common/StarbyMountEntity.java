@@ -3,6 +3,9 @@ package alexthw.starbunclemania.common;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -15,11 +18,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeHooks;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
+public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumping {
 
+
+    private float playerJumpPendingScale;
+    private boolean isJumping;
 
     public StarbyMountEntity(Level world) {
         super(world, true);
@@ -46,6 +54,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
     }
 
     final EntityDimensions BB = new EntityDimensions(2, 2, true);
+
     @Override
     public EntityDimensions getDimensions(Pose p_213305_1_) {
         return BB;
@@ -60,6 +69,14 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
     @Override
     public EntityType<?> getType() {
         return ModRegistry.STARBY_MOUNT.get();
+    }
+
+    public boolean isJumping() {
+        return this.isJumping;
+    }
+
+    public void setIsJumping(boolean pJumping) {
+        this.isJumping = pJumping;
     }
 
     public void travel(Vec3 pTravelVector) {
@@ -77,6 +94,24 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
                     forward *= 0.25F;
                 }
 
+                if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
+                    double d0 = this.getJumpPower() * 2 * (double) this.playerJumpPendingScale * (double) this.getBlockJumpFactor();
+                    double d1 = d0 + this.getJumpBoostPower();
+                    Vec3 vec3 = this.getDeltaMovement();
+                    this.setDeltaMovement(vec3.x, d1, vec3.z);
+                    this.setIsJumping(true);
+                    this.hasImpulse = true;
+                    ForgeHooks.onLivingJump(this);
+                    if (forward > 0.0F) {
+                        float f2 = Mth.sin(this.getYRot() * ((float) Math.PI / 180F));
+                        float f3 = Mth.cos(this.getYRot() * ((float) Math.PI / 180F));
+                        this.setDeltaMovement(this.getDeltaMovement().add(-0.4F * f2 * this.playerJumpPendingScale, 0.0D, 0.4F * f3 * this.playerJumpPendingScale));
+                    }
+
+                    this.playerJumpPendingScale = 0.0F;
+                }
+
+
                 this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
                     setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
@@ -84,7 +119,10 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
                 } else {
                     this.setDeltaMovement(Vec3.ZERO);
                 }
-
+                if (this.onGround) {
+                    this.playerJumpPendingScale = 0.0F;
+                    this.setIsJumping(false);
+                }
             } else {
                 this.flyingSpeed = 0.02F;
                 super.travel(pTravelVector);
@@ -100,8 +138,18 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
         carbuncle.data = data;
         carbuncle.restoreFromTag();
         playerEntity.level.addFreshEntity(carbuncle);
+        playerEntity.level.addFreshEntity(new ItemEntity(playerEntity.level, getX(), getY(), getZ(), ModRegistry.STARSADDLE.get().getDefaultInstance()));
         carbuncle.onWanded(playerEntity);
+        carbuncle.setBehavior(new StarbyTransportBehavior(carbuncle, new CompoundTag()));
         this.discard();
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
     }
 
     @Override
@@ -114,13 +162,8 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
             double d0 = this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset();
             float f1 = Mth.sin(this.yBodyRot * (0.017453292f));
             float f = Mth.cos(this.yBodyRot * (0.017453292f));
-            passenger.setPos(getX() + f1 * 0.8, d0, this.getZ() - f* 0.8);
+            passenger.setPos(getX() + f1 * 0.8, d0, this.getZ() - f * 0.8);
         }
-    }
-
-    @Override
-    public double getPassengersRidingOffset() {
-        return 1.4D;
     }
 
     @Override
@@ -130,13 +173,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
 
     @Override
     public LivingEntity getControllingPassenger() {
-
-        Entity entity = this.getFirstPassenger();
-        if (entity instanceof LivingEntity) {
-            return (LivingEntity) entity;
-        }
-
-        return null;
+        return this.getFirstPassenger() instanceof LivingEntity livingEntity ? livingEntity : null;
     }
 
     @Override
@@ -155,6 +192,35 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideable {
         }
 
         return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public void onPlayerJump(int pJumpPower) {
+        if (pJumpPower < 0) {
+            pJumpPower = 0;
+        }
+
+        if (pJumpPower >= 90) {
+            this.playerJumpPendingScale = 1.0F;
+        } else {
+            this.playerJumpPendingScale = 0.4F + 0.4F * (float) pJumpPower / 90.0F;
+        }
+
+    }
+
+    @Override
+    public boolean canJump() {
+        return true;
+    }
+
+    @Override
+    public void handleStartJump(int pJumpPower) {
+
+    }
+
+    @Override
+    public void handleStopJump() {
+
     }
 
 }

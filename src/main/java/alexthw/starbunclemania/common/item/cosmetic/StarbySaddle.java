@@ -3,9 +3,7 @@ package alexthw.starbunclemania.common.item.cosmetic;
 import alexthw.starbunclemania.common.StarbyMountEntity;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyBehavior;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +25,7 @@ public class StarbySaddle extends ModItem implements ICosmeticItem {
             mount.setPos(starbuncle.getX(), starbuncle.getY(), starbuncle.getZ());
             pPlayer.level.addFreshEntity(mount);
             starbuncle.discard();
-
+            pStack.shrink(1);
             return InteractionResult.SUCCESS;
         }
         return super.interactLivingEntity(pStack, pPlayer, entity, pUsedHand);

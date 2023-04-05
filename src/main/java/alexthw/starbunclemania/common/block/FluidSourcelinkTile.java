@@ -2,11 +2,13 @@ package alexthw.starbunclemania.common.block;
 
 import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.registry.ModRegistry;
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
@@ -25,19 +27,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
 
-public class FluidSourcelinkTile extends SourcelinkTile {
+public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvider {
 
     public FluidSourcelinkTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FLUID_SOURCELINK_TILE.get(), pos, state);
     }
 
     public static int capacity = 6000;
-
     private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> this.tank);
 
     protected final FluidTank tank = new FluidTank(capacity) {
@@ -52,11 +52,11 @@ public class FluidSourcelinkTile extends SourcelinkTile {
         }
     };
 
-    boolean tester(IFluidHandler tank){
-        for (int i = 0; i < tank.getTanks(); i++){
+    boolean tester(IFluidHandler tank) {
+        for (int i = 0; i < tank.getTanks(); i++) {
             FluidStack fluid = tank.getFluidInTank(i);
-            if (getSourceFromFluid(fluid) > 0){
-               return this.tank.isEmpty() || this.tank.getFluid().isFluidEqual(fluid);
+            if (getSourceFromFluid(fluid) > 0) {
+                return this.tank.isEmpty() || this.tank.getFluid().isFluidEqual(fluid);
             }
         }
         return false;
@@ -71,29 +71,36 @@ public class FluidSourcelinkTile extends SourcelinkTile {
                 if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).isPresent()) {
                     IFluidHandler handler = be.getCapability(FLUID_HANDLER, Direction.DOWN).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, Direction.DOWN).resolve().get() : null;
                     if (handler != null && tester(handler)) {
-                        this.tank.fill(handler.drain(Math.min(1000, tank.getSpace()), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+                        this.tank.fill(handler.drain(Math.min(2000, tank.getSpace()), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             }
             if (!level.isClientSide() && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
                 double sourceFromFluid = getSourceFromFluid(this.getFluid());
                 if (sourceFromFluid > 0 && this.canAcceptSource((int) sourceFromFluid)) {
-                    int drain = this.tank.drain(1000, IFluidHandler.FluidAction.EXECUTE).getAmount();
+                    int drain = this.tank.drain(2000, IFluidHandler.FluidAction.EXECUTE).getAmount();
                     this.addSource((int) (drain * sourceFromFluid));
                 }
             }
         }
     }
 
+    static Map<ResourceLocation, Double> cache = new HashMap<>();
+
     double getSourceFromFluid(FluidStack tank) {
-        if (!tank.isEmpty()) {
+        if (!tank.isEmpty() && level != null) {
             ResourceLocation fluid = ForgeRegistries.FLUIDS.getKey(tank.getFluid());
-            if (fluid != null && Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {
-                return Configs.FLUID_TO_SOURCE_MAP.get(fluid);
-            }else if (tank.hasTag() && tank.getFluid().is(ModRegistry.POTION)){
-               PotionData potion = PotionData.fromTag(tank.getTag());
-               double mana = 75;
-               Set<MobEffect> effectTypes = new HashSet<>();
+            if (fluid == null) return 0;
+            if (cache.containsKey(fluid)) {
+                return cache.get(fluid);
+            } else if (Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {
+                double value = Configs.FLUID_TO_SOURCE_MAP.get(fluid);
+                cache.put(fluid,value);
+                return value;
+            } else if (tank.hasTag() && tank.getFluid().is(ModRegistry.POTION)) {
+                PotionData potion = PotionData.fromTag(tank.getTag());
+                double mana = 75;
+                Set<MobEffect> effectTypes = new HashSet<>();
                 for (MobEffectInstance e : potion.fullEffects()) {
                     mana += (e.getDuration() / 50.);
                     mana += e.getAmplifier() * 250;
@@ -102,7 +109,16 @@ public class FluidSourcelinkTile extends SourcelinkTile {
                 }
                 if (effectTypes.size() > 1)
                     mana *= (1.5 * (effectTypes.size() - 1));
-                return mana/250; //250 mb equals a potion
+                return mana / 250; //250 mb equals a potion
+            } else {
+                var recipes = level.getRecipeManager().getAllRecipesFor(ModRegistry.FLUID_SOURCELINK_RT.get());
+                var find = recipes.stream().filter(r -> r.fluidType.equals(fluid)).findFirst().orElse(null);
+                double value = 0;
+                if (find != null){
+                    value = find.conversion_ratio;
+                }
+                cache.put(fluid, value);
+                return value;
             }
         }
         return 0;
@@ -127,6 +143,11 @@ public class FluidSourcelinkTile extends SourcelinkTile {
     }
 
     @Override
+    public int getTransferRate() {
+        return 2000;
+    }
+
+    @Override
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
         if (level != null)
@@ -145,6 +166,12 @@ public class FluidSourcelinkTile extends SourcelinkTile {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         tank.readFromNBT(pTag);
+    }
+
+    @Override
+    public void getTooltip(List<Component> tooltip) {
+        LiquidJarTile.displayFluidTooltip(tooltip, this.getFluid());
+        tooltip.add(Component.translatable("ars_nouveau.source_jar.fullness", (getSource() * 100) / this.getMaxSource()));
     }
 
 }

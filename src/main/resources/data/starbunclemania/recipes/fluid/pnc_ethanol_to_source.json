@@ -1,0 +1,11 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "pneumaticcraft"
+    }
+  ],
+  "type": "starbunclemania:fluid_sourcelink",
+  "fluid": "pneumaticcraft:ethanol",
+  "mb_to_source_ratio": 1.6
+}

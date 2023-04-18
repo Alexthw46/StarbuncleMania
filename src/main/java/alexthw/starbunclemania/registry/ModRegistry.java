@@ -168,7 +168,7 @@ public class ModRegistry {
             }
         });
 
-        STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(world), MobCategory.CREATURE);
+        STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(entityCarbuncleEntityType,world), MobCategory.CREATURE);
 
     }
 

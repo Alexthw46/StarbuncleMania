@@ -56,7 +56,7 @@ public class PlaceFluidEffect extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        onResolveBlock(new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, rayTraceResult.getEntity().getOnPos(),true), world, shooter, spellStats, spellContext, resolver);
+        onResolveBlock(new BlockHitResult(rayTraceResult.getLocation(), Direction.UP, rayTraceResult.getEntity().getOnPos(), true), world, shooter, spellStats, spellContext, resolver);
     }
 
     @Override
@@ -71,17 +71,36 @@ public class PlaceFluidEffect extends AbstractEffect {
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
             pos1 = spellStats.getBuffCount(AugmentSensitive.INSTANCE) > 0 ? pos1 : pos1.relative(rayTraceResult.getDirection());
-            if (!MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
+            if (world.getBlockEntity(pos1) != null && world.getBlockEntity(pos1).getCapability(ForgeCapabilities.FLUID_HANDLER, rayTraceResult.getDirection()).isPresent()) {
+                var cap = StarbyFluidBehavior.getHandlerFromCap(pos1, world, rayTraceResult.getDirection().ordinal());
+                this.placeInTank(cap, tanks);
+            } else if (!MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
                 this.place(pos1, world, shooter, tanks, spellContext, resolver, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
             }
         }
 
-        for (var tank: tanks){
-            if (tank instanceof WrappedExtractedItemHandler wrap){
+        for (var tank : tanks) {
+            if (tank instanceof WrappedExtractedItemHandler wrap) {
                 wrap.extractedStack.returnOrDrop(world, shooter.getOnPos());
             }
         }
 
+    }
+
+    private void placeInTank(IFluidHandler cap, List<IFluidHandler> tanks) {
+        for (IFluidHandler tank : tanks) {
+            FluidStack fluid = tank.getFluidInTank(0);
+            if (fluid.isEmpty()) continue;
+            if (!cap.isFluidValid(0, fluid)) continue;
+
+            int room = Math.min(1000, cap.fill(fluid, IFluidHandler.FluidAction.SIMULATE));
+
+            if (room > 0) {
+                int actualFill = cap.fill(new FluidStack(fluid, room), IFluidHandler.FluidAction.EXECUTE);
+                tank.drain(actualFill, IFluidHandler.FluidAction.EXECUTE);
+                if (tank instanceof WrappedExtractedItemHandler wrap) wrap.updateContainer();
+            }
+        }
     }
 
     private void place(BlockPos pPos, Level world, LivingEntity shooter, List<IFluidHandler> tanks, SpellContext spellContext, SpellResolver resolver, BlockHitResult resolveResult) {
@@ -91,8 +110,9 @@ public class PlaceFluidEffect extends AbstractEffect {
             if (tank.getFluidInTank(0).isEmpty()) continue;
             //a bucket is 1000 millibuckets
             FluidStack tester = new FluidStack(tank.getFluidInTank(0), 1000);
-            if (tester.getFluid() instanceof FlowingFluid ff && tank.drain(tester, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000 && (state.isAir() || isReplaceable || state.getBlock() instanceof LiquidBlockContainer)) {
-                if (state.getFluidState().isSource() && state.getFluidState().getFluidType() == ff.getFluidType()) break;
+            if (tester.getFluid() instanceof FlowingFluid ff && tank.drain(tester, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000 && (state.isAir() || isReplaceable || state.getBlock() instanceof LiquidBlockContainer container && container.canPlaceLiquid(world, pPos, state, ff))) {
+                if (state.getFluidState().isSource() && state.getFluidState().getFluidType() == ff.getFluidType())
+                    break;
                 //adapted code from BucketItem
                 //nether water effect
                 if (world.dimensionType().ultraWarm() && tester.getFluid().is(FluidTags.WATER)) {
@@ -148,9 +168,9 @@ public class PlaceFluidEffect extends AbstractEffect {
         Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
         FilterableItemHandler highestHandler = manager.highestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
 
-        if (highestHandler != null){
+        if (highestHandler != null) {
             for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
-                ExtractedStack extractItem = ExtractedStack.from(slot,1);
+                ExtractedStack extractItem = ExtractedStack.from(slot, 1);
                 if (!extractItem.isEmpty()) {
                     handlers.add(new WrappedExtractedItemHandler(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get(), extractItem));
                 }
@@ -158,11 +178,11 @@ public class PlaceFluidEffect extends AbstractEffect {
         }
     }
 
-    public static List<SlotReference> findItems(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type){
+    public static List<SlotReference> findItems(FilterableItemHandler itemHandler, Predicate<ItemStack> stackPredicate, InteractType type) {
         List<SlotReference> slots = new ArrayList<>();
-        for(int slot = 0; slot < Inventory.getSelectionSize(); slot++){
+        for (int slot = 0; slot < Inventory.getSelectionSize(); slot++) {
             ItemStack stackInSlot = itemHandler.getHandler().getStackInSlot(slot);
-            if(!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()){
+            if (!stackInSlot.isEmpty() && stackPredicate.test(stackInSlot) && itemHandler.canInteractFor(stackInSlot, type).valid()) {
                 slots.add(new SlotReference(itemHandler.getHandler(), slot));
             }
         }

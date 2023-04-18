@@ -30,14 +30,19 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     private boolean isJumping;
 
     public StarbyMountEntity(Level world) {
-        super(world, true);
+        super(ModRegistry.STARBY_MOUNT.get(), world);
+        this.setTamed(true);
     }
 
     public StarbyMountEntity(Level world, StarbuncleData data) {
-        super(world, true);
+        this(world);
         this.data = data;
         restoreFromTag();
-        refreshDimensions();
+    }
+
+    public StarbyMountEntity(EntityType<StarbyMountEntity> entityType, Level world) {
+        super(entityType, world);
+        this.setTamed(true);
     }
 
     @Override
@@ -53,17 +58,10 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     public void getTooltip(List<Component> tooltip) {
     }
 
-    final EntityDimensions BB = new EntityDimensions(2, 2, true);
-
-    @Override
-    public EntityDimensions getDimensions(Pose p_213305_1_) {
-        return BB;
-    }
-
     @Override
     public void die(DamageSource source) {
-        this.setCosmeticItem(ItemStack.EMPTY);
         super.die(source);
+        level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), ModRegistry.STARSADDLE.get().getDefaultInstance()));
     }
 
     @Override
@@ -179,6 +177,11 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     @Override
     protected boolean canRide(Entity pEntity) {
         return pEntity instanceof Player;
+    }
+
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
+        return false;
     }
 
     @Override

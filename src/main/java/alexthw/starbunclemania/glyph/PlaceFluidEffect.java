@@ -105,7 +105,7 @@ public class PlaceFluidEffect extends AbstractEffect {
 
     private void place(BlockPos pPos, Level world, LivingEntity shooter, List<IFluidHandler> tanks, SpellContext spellContext, SpellResolver resolver, BlockHitResult resolveResult) {
         BlockState state = world.getBlockState(pPos);
-        boolean isReplaceable = state.getMaterial().isReplaceable();
+        boolean isReplaceable = state.canBeReplaced();
         for (IFluidHandler tank : tanks) {
             if (tank.getFluidInTank(0).isEmpty()) continue;
             //a bucket is 1000 millibuckets
@@ -126,7 +126,7 @@ public class PlaceFluidEffect extends AbstractEffect {
                 } else if (state.getBlock() instanceof LiquidBlockContainer container && container.canPlaceLiquid(world, pPos, state, ff)) {
                     container.placeLiquid(world, pPos, state, ff.defaultFluidState());
                 } else {
-                    if (!world.isClientSide && state.getMaterial().isReplaceable() && !state.getMaterial().isLiquid()) {
+                    if (!world.isClientSide && state.canBeReplaced() && !state.liquid()) {
                         world.destroyBlock(pPos, true);
                     }
 

@@ -36,7 +36,7 @@ public class StarbyFighterBehavior extends StarbyBehavior {
         }
         goals.add(new WrappedGoal(1, new MeleeAttackGoal(this.starbuncle, 2.0, true)));
         goals.add(new WrappedGoal(4, new RandomStrollGoal(this.starbuncle, 1.0)));
-        starbuncle.targetSelector.removeAllGoals();
+        starbuncle.targetSelector.removeAllGoals( (g) -> true);
         starbuncle.targetSelector.addGoal(3, new HurtByTargetGoal(starbuncle, Player.class).setAlertOthers(WealdWalker.class, Starbuncle.class));
         starbuncle.targetSelector.addGoal(1, new TargetGoal(starbuncle, false){
             /**

@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
 
     @Override
     public void setCosmeticItem(ItemStack stack) {
-        this.level.addFreshEntity(new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), stack));
+        this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), stack));
     }
 
     @Override
@@ -61,7 +62,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     @Override
     public void die(DamageSource source) {
         super.die(source);
-        level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), ModRegistry.STARSADDLE.get().getDefaultInstance()));
+        level().addFreshEntity(new ItemEntity(level(), getX(), getY(), getZ(), ModRegistry.STARSADDLE.get().getDefaultInstance()));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
         this.isJumping = pJumping;
     }
 
-    public void travel(Vec3 pTravelVector) {
+    public void travel(@NotNull Vec3 pTravelVector) {
         if (this.isAlive()) {
             if (this.isVehicle() && this.getControllingPassenger() instanceof Player livingentity) {
                 this.setYRot(livingentity.getYRot());
@@ -92,7 +93,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
                     forward *= 0.25F;
                 }
 
-                if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
+                if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround()) {
                     double d0 = this.getJumpPower() * 2 * (double) this.playerJumpPendingScale * (double) this.getBlockJumpFactor();
                     double d1 = d0 + this.getJumpBoostPower();
                     Vec3 vec3 = this.getDeltaMovement();
@@ -110,19 +111,19 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
                 }
 
 
-                this.flyingSpeed = this.getSpeed() * 0.1F;
+                //this.flyingSpeed = this.getSpeed() * 0.1F;
                 if (this.isControlledByLocalInstance()) {
                     setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                     super.travel(new Vec3(strafe, pTravelVector.y, forward));
                 } else {
                     this.setDeltaMovement(Vec3.ZERO);
                 }
-                if (this.onGround) {
+                if (this.onGround()) {
                     this.playerJumpPendingScale = 0.0F;
                     this.setIsJumping(false);
                 }
             } else {
-                this.flyingSpeed = 0.02F;
+                //this.flyingSpeed = 0.02F;
                 super.travel(pTravelVector);
             }
         }
@@ -130,13 +131,13 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
 
     @Override
     public void onWanded(Player playerEntity) {
-        Starbuncle carbuncle = new Starbuncle(playerEntity.level, true);
+        Starbuncle carbuncle = new Starbuncle(playerEntity.level(), true);
         Starbuncle.StarbuncleData data = this.data;
         carbuncle.setPos(getX() + 0.5, getY() + 1, getZ() + 0.5);
         carbuncle.data = data;
         carbuncle.restoreFromTag();
-        playerEntity.level.addFreshEntity(carbuncle);
-        playerEntity.level.addFreshEntity(new ItemEntity(playerEntity.level, getX(), getY(), getZ(), ModRegistry.STARSADDLE.get().getDefaultInstance()));
+        playerEntity.level().addFreshEntity(carbuncle);
+        playerEntity.level().addFreshEntity(new ItemEntity(playerEntity.level(), getX(), getY(), getZ(), ModRegistry.STARSADDLE.get().getDefaultInstance()));
         carbuncle.onWanded(playerEntity);
         carbuncle.setBehavior(new StarbyTransportBehavior(carbuncle, new CompoundTag()));
         this.discard();
@@ -151,8 +152,8 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     }
 
     @Override
-    public void positionRider(Entity passenger) {
-        super.positionRider(passenger);
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
+        super.positionRider(passenger, callback);
         if (passenger instanceof Mob mob && this.getControllingPassenger() == passenger && mob.zza > 0) {
             this.yBodyRot = mob.yBodyRot;
         }
@@ -160,13 +161,13 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
             double d0 = this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset();
             float f1 = Mth.sin(this.yBodyRot * (0.017453292f));
             float f = Mth.cos(this.yBodyRot * (0.017453292f));
-            passenger.setPos(getX() + f1 * 0.8, d0, this.getZ() - f * 0.8);
+            callback.accept(passenger, getX() + f1 * 0.8, d0, this.getZ() - f * 0.8);
         }
     }
 
     @Override
-    public boolean rideableUnderWater() {
-        return true;
+    public boolean dismountsUnderwater() {
+        return false;
     }
 
     @Override
@@ -175,19 +176,19 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     }
 
     @Override
-    protected boolean canRide(Entity pEntity) {
+    protected boolean canRide(@NotNull Entity pEntity) {
         return pEntity instanceof Player;
     }
 
     @Override
-    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
         return false;
     }
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
 
-        if (player.level.isClientSide()) return InteractionResult.PASS;
+        if (player.level().isClientSide()) return InteractionResult.PASS;
 
         if (player.getMainHandItem().isEmpty() && !player.isShiftKeyDown()) {
             player.startRiding(this);

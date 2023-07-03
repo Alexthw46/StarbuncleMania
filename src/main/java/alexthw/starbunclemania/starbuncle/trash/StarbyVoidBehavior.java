@@ -36,7 +36,7 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
     }
 
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if (storedPos != null && playerEntity.level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
+        if (storedPos != null && playerEntity.level().getBlockState(storedPos).getBlock() instanceof SummonBed) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
             starbuncle.data.bedPos = storedPos.immutable();
         }

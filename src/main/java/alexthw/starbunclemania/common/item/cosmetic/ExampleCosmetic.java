@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -34,8 +35,8 @@ public class ExampleCosmetic extends ModItem implements ICosmeticItem {
     }
 
     @Override
-    public ItemTransforms.TransformType getTransformType() {
-        return ItemTransforms.TransformType.HEAD;
+    public ItemDisplayContext getTransformType() {
+        return ItemDisplayContext.HEAD;
     }
 
     @Override

@@ -20,7 +20,7 @@ public class DirectionScroll extends ModItem {
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
 
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-        if (stack.getItem() instanceof DirectionScroll && pPlayer.isShiftKeyDown() && !pPlayer.level.isClientSide()){
+        if (stack.getItem() instanceof DirectionScroll && pPlayer.isShiftKeyDown() && !pPlayer.level().isClientSide()){
             Direction side = Direction.fromYRot(pPlayer.getYRot());
             if (pPlayer.getXRot() > 60){
                 side = Direction.DOWN;

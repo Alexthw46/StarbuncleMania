@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class StarbySaddle extends ModItem implements ICosmeticItem {
 
@@ -18,12 +19,12 @@ public class StarbySaddle extends ModItem implements ICosmeticItem {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity entity, InteractionHand pUsedHand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity entity, @NotNull InteractionHand pUsedHand) {
         if (entity instanceof Starbuncle starbuncle && !(entity instanceof StarbyMountEntity)){
             starbuncle.onWanded(pPlayer);
-            StarbyMountEntity mount = new StarbyMountEntity(pPlayer.level, starbuncle.data);
+            StarbyMountEntity mount = new StarbyMountEntity(pPlayer.level(), starbuncle.data);
             mount.setPos(starbuncle.getX(), starbuncle.getY(), starbuncle.getZ());
-            pPlayer.level.addFreshEntity(mount);
+            pPlayer.level().addFreshEntity(mount);
             starbuncle.discard();
             pStack.shrink(1);
             return InteractionResult.SUCCESS;

@@ -2,23 +2,26 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.registry.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 public class StarBlockTagsProvider extends BlockTagsProvider {
 
-        public StarBlockTagsProvider(DataGenerator gen, @Nullable ExistingFileHelper existingFileHelper) {
-            super(gen, StarbuncleMania.MODID, existingFileHelper);
+        public StarBlockTagsProvider(DataGenerator gen, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(gen.getPackOutput(), lookupProvider ,StarbuncleMania.MODID, existingFileHelper);
         }
 
         @Override
-        protected void addTags() {
+        protected void addTags(HolderLookup.@NotNull Provider tagProvider) {
             addPickMineable(0, ModRegistry.SOURCE_CONDENSER.get(), ModRegistry.FLUID_SOURCELINK.get(), ModRegistry.FLUID_JAR.get());
         }
 

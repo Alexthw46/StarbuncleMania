@@ -41,7 +41,7 @@ public class EnergyExtractGoal extends GoToPosGoal<StarbyEnergyBehavior> {
 
         if (take != null && storage != null) {
             int takeAmount = behavior.getRatio();
-            starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
+            starbuncle.level().playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
             int actualTake = take.extractEnergy(takeAmount, false);
             behavior.setEnergy(actualTake);
         }

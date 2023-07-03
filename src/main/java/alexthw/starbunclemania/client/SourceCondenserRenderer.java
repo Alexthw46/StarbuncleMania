@@ -5,45 +5,43 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRendere
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import org.jetbrains.annotations.Nullable;
-import software.bernie.ars_nouveau.geckolib3.geo.render.built.GeoModel;
-import software.bernie.ars_nouveau.geckolib3.model.AnimatedGeoModel;
-import software.bernie.ars_nouveau.geckolib3.renderers.geo.GeoBlockRenderer;
+import org.joml.Vector3f;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import static alexthw.starbunclemania.client.JarRenderer.renderFluid;
 
 public class SourceCondenserRenderer extends GeoBlockRenderer<SourceCondenserTile> {
 
-    public static final AnimatedGeoModel<SourceCondenserTile> model = new GenericModel<>("source_condenser");
+    public static final GeoModel<SourceCondenserTile> model = new GenericModel<>("source_condenser");
 
     public static GenericItemBlockRenderer getISTER() {
         return new GenericItemBlockRenderer(model);
     }
 
     public SourceCondenserRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, model);
+        super(model);
     }
 
     public static final Vector3f LIQUID_DIMENSIONS = new Vector3f(10 / 16f, 10 / 16f, 1 / 16f); //Width, Height, y0
 
     @Override
-    public void render(GeoModel model, SourceCondenserTile tile, float partialTicks, RenderType type, PoseStack matrixStackIn, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        super.render(model, tile, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(-0.5,0.05,-0.5);
+    public void preRender(PoseStack poseStack, SourceCondenserTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.preRender(poseStack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        poseStack.pushPose();
+        poseStack.translate(-0.5,0.05,-0.5);
         FluidStack fluidHolder = tile.getFluid();
         if (!fluidHolder.isEmpty()) {
             renderFluid(tile.getFluidPercentage(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getTintColor(fluidHolder),
                     fluidHolder.getFluid().getFluidType().getLightLevel(), IClientFluidTypeExtensions.of(fluidHolder.getFluid()).getStillTexture(),
-                    matrixStackIn, renderTypeBuffer, packedLightIn, true, LIQUID_DIMENSIONS);
+                    poseStack, bufferSource, packedLight, true, LIQUID_DIMENSIONS);
         }
-        matrixStackIn.popPose();
+        poseStack.popPose();
     }
 
 }

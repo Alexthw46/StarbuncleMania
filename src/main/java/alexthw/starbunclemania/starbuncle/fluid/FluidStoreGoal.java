@@ -47,7 +47,7 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
             int diff = fluidHandler.fill(fill, IFluidHandler.FluidAction.EXECUTE);
             behavior.getFluidStack().shrink(diff);
             behavior.syncTag();
-            starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.5f, 1.3f);
+            starbuncle.level().playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.5f, 1.3f);
         }
         return true;
     }

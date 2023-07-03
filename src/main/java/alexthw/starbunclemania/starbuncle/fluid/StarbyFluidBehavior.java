@@ -191,7 +191,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         if (fluid != null) {
             for (int i = 0; i < fluid.getTanks(); i++) {
                 if (!fluid.getFluidInTank(i).isEmpty()) {
-                    if (FluidScroll.checkForFilters(pos, fluidScroll, fluid.getFluidInTank(i), starbuncle.level))
+                    if (FluidScroll.checkForFilters(pos, fluidScroll, fluid.getFluidInTank(i), starbuncle.level()))
                         return false;
                     if (getTankForStorage(fluid.getFluidInTank(i)) != null)
                         return true;

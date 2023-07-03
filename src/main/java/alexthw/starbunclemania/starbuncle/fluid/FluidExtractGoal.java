@@ -55,7 +55,7 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
                 }
                 if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get()) return true;
                 int takeAmount = Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
-                starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
+                starbuncle.level().playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.5f, 1.3f);
                 FluidStack extracted = new FluidStack(toExtract, takeAmount);
                 behavior.setFluidStack(extracted);
                 fluidHandlerExtract.drain(extracted, IFluidHandler.FluidAction.EXECUTE);

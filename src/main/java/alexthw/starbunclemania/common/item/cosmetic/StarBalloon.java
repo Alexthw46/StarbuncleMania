@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -18,28 +17,30 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.fml.ModList;
-import software.bernie.ars_nouveau.geckolib3.core.IAnimatable;
-import software.bernie.ars_nouveau.geckolib3.core.PlayState;
-import software.bernie.ars_nouveau.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.ars_nouveau.geckolib3.core.controller.AnimationController;
-import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationData;
-import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationFactory;
-import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
+import org.jetbrains.annotations.NotNull;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class StarBalloon extends Item implements ICosmeticItem, IAnimatable, IDyeable {
+public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeable {
 
     public StarBalloon(Properties pProperties) {
         super(pProperties);
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
         if (pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)) {
             starbuncle.setCosmeticItem(pStack.split(1));
             if (pInteractionTarget instanceof Starbuncle starby && !pPlayer.isShiftKeyDown() && ModList.get().isLoaded("mekanism")) {
@@ -58,7 +59,7 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable, IDy
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             final BalloonRenderer renderer = new BalloonRenderer();
@@ -83,8 +84,8 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable, IDy
     }
 
     @Override
-    public ItemTransforms.TransformType getTransformType() {
-        return ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
+    public ItemDisplayContext getTransformType() {
+        return ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
     }
 
     @Override
@@ -101,17 +102,16 @@ public class StarBalloon extends Item implements ICosmeticItem, IAnimatable, IDy
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<>(this, "idle_controller", 1.0F, tAnimationEvent -> {
-            tAnimationEvent.getController().setAnimation((new AnimationBuilder()).addAnimation("float"));
-            return PlayState.CONTINUE;
-        }));
+    public void registerControllers(AnimatableManager.ControllerRegistrar animationData) {
+        animationData.add(new AnimationController<>(this, "idle_controller", 1, tAnimationEvent ->
+            tAnimationEvent.setAndContinue(RawAnimation.begin().thenLoop("float"))));
     }
 
-    public final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
+
 }

@@ -32,14 +32,6 @@ public class StarbuncleMania
 {
     public static final String MODID = "starbunclemania";
 
-    public static final CreativeModeTab TAB = new CreativeModeTab(MODID) {
-        @Override
-        public ItemStack makeIcon() {
-            return ItemsRegistry.STARBUNCLE_CHARM.asItem().getDefaultInstance();
-        }
-
-    };
-
     public StarbuncleMania() {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
         ModRegistry.registerRegistries(modbus);

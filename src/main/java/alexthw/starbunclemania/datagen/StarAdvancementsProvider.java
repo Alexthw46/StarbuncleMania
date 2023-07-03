@@ -2,33 +2,29 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.registry.ModRegistry;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.datagen.Advancements;
 import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancementBuilder;
 import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancements;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class StarAdvancementsProvider extends Advancements {
-    public StarAdvancementsProvider(DataGenerator generatorIn, ExistingFileHelper fileHelperIn) {
-        super(generatorIn, fileHelperIn);
-    }
+public class StarAdvancementsProvider extends ForgeAdvancementProvider {
 
-    @Override
-    protected void registerAdvancements(Consumer<Advancement> consumer, ExistingFileHelper fileHelper) {
-        for (Consumer<Consumer<Advancement>> consumer1 : ImmutableList.of(new AEAdvancements())) {
-            consumer1.accept(consumer);
-        }
+    public StarAdvancementsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
+        super(output, registries, existingFileHelper, List.of(new AEAdvancements()));
     }
 
     public static class AEAdvancements extends ANAdvancements {
@@ -36,11 +32,12 @@ public class StarAdvancementsProvider extends Advancements {
         static Consumer<Advancement> advancementConsumer;
 
         static Advancement dummy(String name) {
-            return new Advancement(new ResourceLocation(ArsNouveau.MODID, name), null, null, AdvancementRewards.EMPTY, ImmutableMap.of(), null);
+            return new Advancement(new ResourceLocation(ArsNouveau.MODID, name), null, null, AdvancementRewards.EMPTY, ImmutableMap.of(), null, false);
         }
 
+
         @Override
-        public void accept(Consumer<Advancement> con) {
+        public void generate(HolderLookup.Provider registries, Consumer<Advancement> con, ExistingFileHelper existingFileHelper) {
             advancementConsumer = con;
             Advancement starbyCharm = dummy("starby_charm");
             saveBasicItem(ModRegistry.STARBUCKET.get(), starbyCharm);

@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.jei;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import mezz.jei.api.constants.VanillaTypes;
@@ -11,6 +12,7 @@ import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategor
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,11 +26,11 @@ public class DyeRecipeCategory implements ICraftingCategoryExtension {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull ICraftingGridHelper craftingGridHelper, @NotNull IFocusGroup focuses) {
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
                 .map(ingredient -> List.of(ingredient.getItems()))
                 .toList();
-        ItemStack resultItem = recipe.getResultItem();
+        ItemStack resultItem = recipe.getResultItem(ArsNouveau.proxy.getClientWorld().registryAccess());
         List<ItemStack> results = new ArrayList<>();
         if (resultItem.getItem() instanceof IDyeable toDye) {
             var focus = focuses.getFocuses(VanillaTypes.ITEM_STACK, RecipeIngredientRole.CATALYST)

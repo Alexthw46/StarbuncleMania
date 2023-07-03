@@ -11,18 +11,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import software.bernie.ars_nouveau.geckolib3.core.IAnimatable;
-import software.bernie.ars_nouveau.geckolib3.core.PlayState;
-import software.bernie.ars_nouveau.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.ars_nouveau.geckolib3.core.controller.AnimationController;
-import software.bernie.ars_nouveau.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationData;
-import software.bernie.ars_nouveau.geckolib3.core.manager.AnimationFactory;
-import software.bernie.ars_nouveau.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
 
-public class SourceCondenserTile extends AbstractTankTile implements IAnimatable, ITickable {
+public class SourceCondenserTile extends AbstractTankTile implements GeoBlockEntity, ITickable {
 
     public SourceCondenserTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SOURCE_CONDENSER_TILE.get(), pos, state);
@@ -43,11 +41,11 @@ public class SourceCondenserTile extends AbstractTankTile implements IAnimatable
                     this.tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
-            if (!this.tank.isEmpty() && this.tank.getFluidAmount() >= 1000){
+            if (!this.tank.isEmpty() && this.tank.getFluidAmount() >= 1000) {
                 BlockEntity be = level.getBlockEntity(this.getBlockPos().below());
-                if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).isPresent()){
+                if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).isPresent()) {
                     IFluidHandler handler = be.getCapability(FLUID_HANDLER, Direction.UP).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, Direction.UP).resolve().get() : null;
-                    if (handler != null && handler.fill(tester, IFluidHandler.FluidAction.SIMULATE) > 100){
+                    if (handler != null && handler.fill(tester, IFluidHandler.FluidAction.SIMULATE) > 100) {
                         int drain = handler.fill(tester, IFluidHandler.FluidAction.EXECUTE);
                         this.tank.drain(drain, IFluidHandler.FluidAction.EXECUTE);
                     }
@@ -57,26 +55,16 @@ public class SourceCondenserTile extends AbstractTankTile implements IAnimatable
         }
     }
 
-    AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "rotate_controller", 0, this::idlePredicate));
-        data.addAnimationController(new AnimationController<>(this, "float_controller", 0, this::floatPredicate));
-    }
-
-    private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating"));
-        return PlayState.CONTINUE;
-    }
-
-    private <P extends IAnimatable> PlayState floatPredicate(AnimationEvent<P> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation"));
-        return PlayState.CONTINUE;
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "rotate_controller", 0, e -> e.setAndContinue(RawAnimation.begin().thenLoop("floating"))));
+        data.add(new AnimationController<>(this, "float_controller", 0, e -> e.setAndContinue(RawAnimation.begin().thenLoop("rotation"))));
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 }

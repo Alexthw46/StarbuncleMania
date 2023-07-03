@@ -45,15 +45,15 @@ public class ArsProviders {
         }
 
         @Override
-        public void run(CachedOutput cache) throws IOException {
+        public void collectJsons(CachedOutput cache) {
 
             add(get(PickupFluidEffect.INSTANCE).withItem(FLUID_JAR.get()).withItem(Items.HOPPER));
             add(get(PlaceFluidEffect.INSTANCE).withItem(ItemsRegistry.WATER_ESSENCE).withItem(Items.DISPENSER));
 
-            Path output = this.generator.getOutputFolder();
+            Path output = this.generator.getPackOutput().getOutputFolder();
             for (GlyphRecipe recipe : recipes) {
                 Path path = getScribeGlyphPath(output, recipe.output.getItem());
-                DataProvider.saveStable(cache, recipe.asRecipe(), path);
+                saveStable(cache, recipe.asRecipe(), path);
             }
 
         }
@@ -75,7 +75,7 @@ public class ArsProviders {
         }
 
         @Override
-        public void run(CachedOutput cache) throws IOException {
+        public void collectJsons(CachedOutput cache) {
 
             recipes.add(builder().withReagent(Items.BOOK)
                     .withResult(ArsNouveauAPI.getInstance().getFamiliarItem(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_BOOKWYRM)))
@@ -107,11 +107,11 @@ public class ArsProviders {
                     .build()
             );
 
-            Path output = this.generator.getOutputFolder();
+            Path output = this.generator.getPackOutput().getOutputFolder();
             for (EnchantingApparatusRecipe g : recipes) {
                 if (g != null) {
                     Path path = getRecipePath(output, g.getId().getPath());
-                    DataProvider.saveStable(cache, g.asRecipe(), path);
+                    saveStable(cache, g.asRecipe(), path);
                 }
             }
 
@@ -134,9 +134,9 @@ public class ArsProviders {
         }
 
         @Override
-        public void run(CachedOutput cache) throws IOException {
+        public void collectJsons(CachedOutput cache) {
 
-            Path output = generator.getOutputFolder();
+            Path output = generator.getPackOutput().getOutputFolder();
             for (ImbuementRecipe g : recipes) {
                 Path path = getRecipePath(output, g.getId().getPath());
                 DataProvider.saveStable(cache, g.asRecipe(), path);
@@ -162,7 +162,7 @@ public class ArsProviders {
         }
 
         @Override
-        public void run(CachedOutput cache) throws IOException {
+        public void collectJsons(CachedOutput cache) {
 
             for (AbstractSpellPart spell : ArsNouveauRegistry.registeredSpells) {
                 addGlyphPage(spell);
@@ -192,7 +192,7 @@ public class ArsProviders {
             addBasicItem(STARSADDLE.get(), AUTOMATION, new ApparatusPage(STARSADDLE.get()));
 
             for (PatchouliPage patchouliPage : pages) {
-                DataProvider.saveStable(cache, patchouliPage.build(), patchouliPage.path());
+                saveStable(cache, patchouliPage.build(), patchouliPage.path());
             }
 
         }
@@ -237,11 +237,6 @@ public class ArsProviders {
         @Override
         public String getName() {
             return "StarbuncleMania Patchouli Datagen";
-        }
-
-        @Override
-        public Path getPath(ResourceLocation category, String fileName) {
-            return this.generator.getOutputFolder().resolve("data/" + root + "/patchouli_books/starbunclemania/en_us/entries/" + category.getPath() + "/" + fileName + ".json");
         }
 
         ImbuementPage ImbuementPage(ItemLike item) {

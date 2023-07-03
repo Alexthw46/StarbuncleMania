@@ -16,7 +16,7 @@ import static alexthw.starbunclemania.StarbuncleMania.prefix;
 
 public class StarItemModelProvider extends ItemModelProvider {
     public StarItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, StarbuncleMania.MODID, existingFileHelper);
+        super(generator.getPackOutput(), StarbuncleMania.MODID, existingFileHelper);
     }
 
     private static final ResourceLocation GENERATED = new ResourceLocation("item/generated");

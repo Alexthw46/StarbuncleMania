@@ -50,7 +50,7 @@ public class ArsNouveauRegistry {
 
     public static void postInit(){
         LightManager.register(ModRegistry.STARBY_MOUNT.get(), (p -> {
-            if (p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6) {
+            if (p.level().getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6) {
                 return 10;
             }
             return 0;

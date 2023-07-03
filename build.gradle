@@ -35,7 +35,7 @@ archivesBaseName = 'starbunclemania'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 minecraft {
 
-    mappings channel: 'parchment', version: '2022.08.14-1.19.2'
+    mappings channel: 'parchment', version: '1.19.3-2023.03.12-1.20'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -146,6 +146,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     implementation fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-${mc_version}:${ars_version}")
+    implementation fg.deobf("com.hollingsworth:ars_nouveau:${mc_version}-${ars_version}")
+    compileOnly fg.deobf("curse.maven:geckolib-388172:4573048")
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
@@ -153,24 +155,30 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curio_version}")
-    implementation fg.deobf("com.github.glitchfiend:TerraBlender-forge:1.19-2.0.0.120")
-    implementation fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-77")
+    //implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curio_version}")
+    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curio_version}")
 
-    implementation fg.deobf("mekanism:Mekanism:${mekanism_version}")// core
+    implementation fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
+    implementation /*compileOnly*/ fg.deobf("com.github.glitchfiend:TerraBlender-forge:1.20.1-3.0.0.165")
+
+
+    compileOnly fg.deobf("mekanism:Mekanism:${mekanism_version}")// core
+    /*
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:additions")// Mekanism: Additions
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:generators")// Mekanism: Generators
     runtimeOnly fg.deobf("mekanism:Mekanism:${mekanism_version}:tools")// Mekanism: Tools
 
+
     runtimeOnly fg.deobf("curse.maven:immersiveng-231951:4193176")  // Immersive engineering
     runtimeOnly fg.deobf("curse.maven:titanium-287342:4484497") // Titanium
-    implementation fg.deobf("curse.maven:functional-storage-556861:4324174") // Functional Storage
+    runtimeOnly fg.deobf("curse.maven:functional-storage-556861:4324174") // Functional Storage
     runtimeOnly fg.deobf("curse.maven:pnc-281849:4371201") // Pneumaticcraft
     runtimeOnly fg.deobf("curse.maven:elemental-561470:4424442") // Ars Elemental
     runtimeOnly fg.deobf("curse.maven:ae2-223794:3995899") // Applied Energistics 2
     runtimeOnly fg.deobf("joefoxe:hexerei:0.3.2-all") // Hexerei
     implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
     runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
+     */
 
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 }

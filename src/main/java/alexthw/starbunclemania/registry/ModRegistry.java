@@ -28,12 +28,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -47,7 +47,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-import static alexthw.starbunclemania.StarbuncleMania.TAB;
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
 
 @SuppressWarnings({"Convert2MethodRef", "ConstantConditions", "SpellCheckingInspection"})
@@ -179,12 +178,12 @@ public class ModRegistry {
     public static final RegistryObject<Fluid> SOURCE_FLUID_FLOWING = FLUIDS.register("source_fluid_flowing", () ->
             new ForgeFlowingFluid.Flowing(fluidProperties()));
     public static final RegistryObject<LiquidBlock> SOURCE_FLUID_BLOCK = BLOCKS.register("source_fluid_block", () ->
-            new LiquidBlock(SOURCE_FLUID, BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100.0F).noLootTable()));
+            new LiquidBlock(SOURCE_FLUID, BlockBehaviour.Properties.copy(Blocks.WATER).noCollission().strength(100.0F).noLootTable()));
     public static final RegistryObject<Item> SOURCE_FLUID_BUCKET = ITEMS.register("source_fluid_bucket", () ->
             new BucketItem(SOURCE_FLUID, basicItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     static Item.Properties basicItemProperties() {
-        return new Item.Properties().tab(TAB);
+        return new Item.Properties();
     }
 
     private static ForgeFlowingFluid.Properties fluidProperties() {

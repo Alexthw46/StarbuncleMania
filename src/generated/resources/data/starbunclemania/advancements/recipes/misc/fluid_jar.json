@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "starbunclemania:star_battery"
+        "recipe": "starbunclemania:fluid_jar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "starbunclemania:star_battery"
+      "starbunclemania:fluid_jar"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

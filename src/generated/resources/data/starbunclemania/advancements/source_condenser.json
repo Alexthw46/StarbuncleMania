@@ -33,5 +33,6 @@
     [
       "has_source_condenser"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

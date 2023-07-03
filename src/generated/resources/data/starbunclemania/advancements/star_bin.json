@@ -33,5 +33,6 @@
     [
       "has_star_bin"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

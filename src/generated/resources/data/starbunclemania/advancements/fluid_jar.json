@@ -33,5 +33,6 @@
     [
       "has_fluid_jar"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

@@ -6,34 +6,22 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "item": "minecraft:iron_ingot"
-      }
+      "item": "minecraft:iron_ingot"
     },
     {
-      "item": {
-        "item": "minecraft:iron_ingot"
-      }
+      "item": "minecraft:iron_ingot"
     },
     {
-      "item": {
-        "item": "minecraft:iron_ingot"
-      }
+      "item": "minecraft:iron_ingot"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     },
     {
-      "item": {
-        "tag": "forge:gems/source"
-      }
+      "tag": "forge:gems/source"
     }
   ],
   "reagent": [

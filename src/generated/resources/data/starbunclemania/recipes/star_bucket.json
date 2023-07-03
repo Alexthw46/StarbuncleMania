@@ -6,24 +6,16 @@
   },
   "pedestalItems": [
     {
-      "item": {
-        "tag": "forge:nuggets/gold"
-      }
+      "tag": "forge:nuggets/gold"
     },
     {
-      "item": {
-        "tag": "forge:nuggets/gold"
-      }
+      "tag": "forge:nuggets/gold"
     },
     {
-      "item": {
-        "tag": "forge:nuggets/gold"
-      }
+      "tag": "forge:nuggets/gold"
     },
     {
-      "item": {
-        "tag": "forge:nuggets/gold"
-      }
+      "tag": "forge:nuggets/gold"
     }
   ],
   "reagent": [

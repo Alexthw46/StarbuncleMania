@@ -21,31 +21,6 @@ import static alexthw.starbunclemania.client.JarRenderer.renderFluid;
 public class FluidSourceLinkRenderer extends GeoBlockRenderer<FluidSourcelinkTile> {
     public static final GeoModel<FluidSourcelinkTile> model = new DefaultedBlockGeoModel<>(new ResourceLocation(ArsNouveau.MODID, "fluid_sourcelink"));
 
-    /*{
-
-
-        public final ResourceLocation animationLoc = new ResourceLocation(ArsNouveau.MODID, "animations/fluid_sourcelink_animations.json");
-        public final ResourceLocation modelLocation = new ResourceLocation("ars_nouveau", "geo/" + "fluid" + "_sourcelink.geo.json");
-        public final ResourceLocation textLoc = new ResourceLocation("ars_nouveau", "textures/block/" + "fluid" + "_sourcelink.png");
-
-
-        @Override
-        public ResourceLocation getModelResource(FluidSourcelinkTile tile) {
-            return modelLocation;
-        }
-
-        @Override
-        public ResourceLocation getTextureResource(FluidSourcelinkTile tile) {
-            return textLoc;
-        }
-
-        @Override
-        public ResourceLocation getAnimationResource(FluidSourcelinkTile sourcelinkTile) {
-            return animationLoc;
-        }
-
-    };
-    */
     public FluidSourceLinkRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(model);
     }

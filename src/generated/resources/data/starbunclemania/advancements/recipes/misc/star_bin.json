@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "starbunclemania:fluid_sourcelink"
+        "recipe": "starbunclemania:star_bin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "starbunclemania:fluid_sourcelink"
+      "starbunclemania:star_bin"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

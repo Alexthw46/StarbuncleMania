@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "starbunclemania:fluid_scroll_allow"
+        "recipe": "starbunclemania:direction_scroll"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "starbunclemania:fluid_scroll_allow"
+      "starbunclemania:direction_scroll"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

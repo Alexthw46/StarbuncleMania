@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "starbunclemania:source_fluid_bucket"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "starbunclemania:fluid_sourcelink"
-  }
+  },
+  "show_notification": true
 }

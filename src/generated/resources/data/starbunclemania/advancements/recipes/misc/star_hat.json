@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "starbunclemania:wyrm_degree"
+        "recipe": "starbunclemania:star_hat"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "starbunclemania:wyrm_degree"
+      "starbunclemania:star_hat"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

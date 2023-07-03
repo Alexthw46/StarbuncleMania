@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "starbunclemania:fluid_scroll_deny"
+        "recipe": "starbunclemania:star_battery"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "starbunclemania:fluid_scroll_deny"
+      "starbunclemania:star_battery"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

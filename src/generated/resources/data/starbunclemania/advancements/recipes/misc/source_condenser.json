@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "starbunclemania:clear_fluid_allow"
+        "recipe": "starbunclemania:source_condenser"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "starbunclemania:clear_fluid_allow"
+      "starbunclemania:source_condenser"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

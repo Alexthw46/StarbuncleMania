@@ -49,6 +49,6 @@ Starbuncles will conquer the world
 [[dependencies.starbunclemania]]
     modId="ars_nouveau"
     mandatory=true
-    versionRange="[3.5.0,)"
+    versionRange="[3.17.0,)"
     ordering="AFTER"
     side="BOTH"

@@ -41,11 +41,10 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
         IFluidHandler fluidHandler = behavior.getHandlerFromCap(targetPos);
         int tankIndex = 0;
         if (fluidHandler != null) {
-            int room = fluidHandler.getTankCapacity(tankIndex) - fluidHandler.getFluidInTank(tankIndex).getAmount();
+            int room = fluidHandler.fill(behavior.getFluidStack(), IFluidHandler.FluidAction.SIMULATE);
             if (room <= 0) return true;
-            int diff = Math.min(room, behavior.getFluidStack().getAmount());
-            FluidStack fill = new FluidStack(behavior.getFluidStack(), diff);
-            fluidHandler.fill(fill, IFluidHandler.FluidAction.EXECUTE);
+            FluidStack fill = new FluidStack(behavior.getFluidStack(), room);
+            int diff = fluidHandler.fill(fill, IFluidHandler.FluidAction.EXECUTE);
             behavior.getFluidStack().shrink(diff);
             behavior.syncTag();
             starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.5f, 1.3f);

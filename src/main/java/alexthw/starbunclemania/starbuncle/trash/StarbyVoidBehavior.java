@@ -3,7 +3,10 @@ package alexthw.starbunclemania.starbuncle.trash;
 import alexthw.starbunclemania.StarbuncleMania;
 import com.hollingsworth.arsnouveau.common.block.SummonBed;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.FindItem;
+import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.ForageManaBerries;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.TakeItemGoal;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -24,16 +27,12 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
 
     public StarbyVoidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        this.goals.add(new WrappedGoal(5, new SnatchItem(starbuncle, this)));
-    }
+        this.goals.clear();
 
-    @Override
-    public void onWanded(Player playerEntity) {
-        starbuncle.setColor(Starbuncle.COLORS.ORANGE.name());
-        super.onWanded(playerEntity);
-        starbuncle.dynamicBehavior = new StarbyTransportBehavior(starbuncle, new CompoundTag());
-        PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.default_behavior"));
-        starbuncle.syncBehavior();
+        goals.add(new WrappedGoal(1, new FindItem(starbuncle, this)));
+        goals.add(new WrappedGoal(2, new ForageManaBerries(starbuncle, this)));
+        goals.add(new WrappedGoal(3, new TakeItemGoal<>(starbuncle, this)));
+        goals.add(new WrappedGoal(5, new SnatchItem(starbuncle, this)));
     }
 
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
@@ -44,7 +43,8 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+    public int getMaxTake(ItemStack stack) {
+        return 64;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.trashing_items"));
+        tooltip.add(Component.translatable("ars_nouveau.starbuncle.trashing_items", FROM_LIST.size()));
         if (itemScroll != null && !itemScroll.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }

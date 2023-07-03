@@ -29,9 +29,6 @@ public class StarBin extends Item implements ICosmeticItem {
             if (pInteractionTarget instanceof Starbuncle starby && !pPlayer.isShiftKeyDown()) {
                 starby.setBehavior(new StarbyVoidBehavior(starby, new CompoundTag()));
                 PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.trash_behavior_set"));
-                starby.setColor(RACOON);
-            } else if (pInteractionTarget instanceof FamiliarStarbuncle starby) {
-                starby.setColor(RACOON);
             }
             return InteractionResult.SUCCESS;
         }
@@ -39,12 +36,12 @@ public class StarBin extends Item implements ICosmeticItem {
         return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
     }
 
-    Vec3 Translation;
+    static final Vec3 Translation = new Vec3(0, 0.55, 0.15);
     static final Vec3 Scaling = new Vec3(1, 1, 1);
 
     @Override
     public Vec3 getTranslations() {
-        return new Vec3(0, 0.55, 0.15);
+        return Translation;
     }
 
     @Override
@@ -65,5 +62,4 @@ public class StarBin extends Item implements ICosmeticItem {
         return entity instanceof Starbuncle || entity instanceof FamiliarStarbuncle;
     }
 
-    public static final String RACOON = "racoon";
 }

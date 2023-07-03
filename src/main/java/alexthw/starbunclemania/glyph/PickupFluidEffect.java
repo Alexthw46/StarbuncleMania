@@ -13,6 +13,8 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.level.Level;
@@ -53,9 +55,9 @@ public class PickupFluidEffect extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @NotNull LivingEntity shooter, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
-        if (rayTraceResult.getEntity() instanceof Cow cow && !cow.isBaby()) {
+        if (rayTraceResult.getEntity() instanceof Cow cow && !cow.isBaby() && !cow.hasEffect(MobEffects.HERO_OF_THE_VILLAGE)) {
             var tanks = getTanks(world, spellContext);
-            pickupCow(tanks);
+            pickupCow(tanks, cow);
             for (IFluidHandler tank : tanks)
                 if (tank instanceof WrappedExtractedItemHandler wrap)
                     wrap.extractedStack.returnOrDrop(world, shooter.getOnPos());
@@ -80,11 +82,7 @@ public class PickupFluidEffect extends AbstractEffect {
             BlockState state = world.getBlockState(pos1);
             if (!MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
                 if (state.getBlock() instanceof BucketPickup bp) {
-                    if (world.getBlockEntity(pos1) instanceof MobJarTile jar && jar.getEntity() instanceof Cow) {
-                        this.pickupCow(tanks);
-                    } else {
-                        this.pickup(pos1, world, shooter, tanks, bp, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
-                    }
+                    this.pickup(pos1, world, shooter, tanks, bp, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
                 } else if (!state.hasBlockEntity() && (state.getBlock() == Blocks.WATER_CAULDRON || state.getBlock() == Blocks.LAVA_CAULDRON)) {
                     this.pickupCauldron(pos1, world, shooter, tanks, resolver, spellContext, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
                 }
@@ -113,12 +111,13 @@ public class PickupFluidEffect extends AbstractEffect {
         }
     }
 
-    private void pickupCow(List<IFluidHandler> tanks) {
+    private void pickupCow(List<IFluidHandler> tanks, Cow cow) {
         for (IFluidHandler tank : tanks) {
             //a bucket is 1000 millibuckets
             FluidStack tester = new FluidStack(ForgeMod.MILK.get(), 1000);
             if (tank.fill(tester, IFluidHandler.FluidAction.SIMULATE) == 1000) {
                 tank.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                cow.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 20, 1, false,false, false));
                 break;
             }
         }

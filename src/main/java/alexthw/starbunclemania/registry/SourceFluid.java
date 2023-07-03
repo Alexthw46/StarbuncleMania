@@ -28,7 +28,7 @@ public class SourceFluid extends FluidType {
      * Default constructor.
      */
     public SourceFluid() {
-        super(FluidType.Properties.create().supportsBoating(true).canHydrate(true).density(0).temperature(0).viscosity(0));
+        super(FluidType.Properties.create().supportsBoating(true).canHydrate(true).density(1).temperature(1).viscosity(1));
     }
 
     @Override

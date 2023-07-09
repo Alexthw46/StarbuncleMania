@@ -3,18 +3,22 @@ package alexthw.starbunclemania.starbuncle.item;
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.starbuncle.StarHelper;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +33,33 @@ public class AdvancedItemTransportBehavior extends StarbyTransportBehavior{
     public AdvancedItemTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         if (tag.contains("Direction")) side = tag.getInt("Direction");
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        if (storedPos != null && playerEntity.level.getBlockState(storedPos).is(BlockTagProvider.SUMMON_SLEEPABLE)) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
+            starbuncle.data.bedPos = storedPos.immutable();
+        }
+        if (storedPos == null)
+            return;
+        BlockEntity blockEntity = level.getBlockEntity(storedPos);
+        if (blockEntity != null && (blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() || getItemCapFromTile(blockEntity) != null)) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.store"));
+            addToPos(storedPos);
+        }
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        if (storedPos == null)
+            return;
+
+        BlockEntity blockEntity = level.getBlockEntity(storedPos);
+        if (blockEntity != null && (blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent() || getItemCapFromTile(blockEntity) != null)) {
+            PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
+            addFromPos(storedPos);
+        }
     }
 
     @Override

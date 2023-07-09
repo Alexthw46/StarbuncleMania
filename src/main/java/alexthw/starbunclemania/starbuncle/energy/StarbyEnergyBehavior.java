@@ -110,7 +110,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(ENERGY).isPresent()) {
+            if (be != null && (be.getCapability(ENERGY).isPresent() || getHandlerFromCap(storedPos) != null)) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.energy_to"));
@@ -123,7 +123,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(ENERGY).isPresent()) {
+            if (be != null && (be.getCapability(ENERGY).isPresent() || getHandlerFromCap(storedPos) != null) ) {
             addFromPos(storedPos);
             syncTag();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.energy_from"));

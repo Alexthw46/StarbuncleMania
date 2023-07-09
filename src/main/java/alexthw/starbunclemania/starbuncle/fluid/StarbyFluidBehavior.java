@@ -72,7 +72,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(FLUID_HANDLER).isPresent()) {
+            if (be != null && (be.getCapability(FLUID_HANDLER).isPresent() || getHandlerFromCap(storedPos) != null)) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.fluid_to"));
@@ -85,7 +85,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(FLUID_HANDLER).isPresent()) {
+            if (be != null && (be.getCapability(FLUID_HANDLER).isPresent()|| getHandlerFromCap(storedPos) != null)) {
                 addFromPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.fluid_from"));

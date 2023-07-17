@@ -5,9 +5,9 @@ import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.glyph.PickupFluidEffect;
 import alexthw.starbunclemania.glyph.PlaceFluidEffect;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
+import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -16,7 +16,7 @@ import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.*;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -28,11 +28,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import static alexthw.starbunclemania.registry.ModRegistry.*;
-import static com.hollingsworth.arsnouveau.api.RegistryHelper.getRegistryName;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 public class ArsProviders {
 
@@ -78,7 +77,7 @@ public class ArsProviders {
         public void collectJsons(CachedOutput cache) {
 
             recipes.add(builder().withReagent(Items.BOOK)
-                    .withResult(ArsNouveauAPI.getInstance().getFamiliarItem(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_BOOKWYRM)))
+                    .withResult(FamiliarRegistry.getFamiliarScriptMap().get(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_BOOKWYRM)))
                             .withPedestalItem(3, Items.IRON_INGOT)
                             .withPedestalItem(3, ItemTagProvider.SOURCE_GEM_TAG)
                     .build()

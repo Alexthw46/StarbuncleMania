@@ -3,11 +3,8 @@ package alexthw.starbunclemania;
 import alexthw.starbunclemania.registry.ModRegistry;
 import alexthw.starbunclemania.registry.SourceFluid;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.config.ANModConfig;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,7 +20,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 
-import static alexthw.starbunclemania.registry.ModRegistry.*;
+import static alexthw.starbunclemania.registry.ModRegistry.SOURCE_FLUID_TYPE;
 import static com.hollingsworth.arsnouveau.common.lib.LibBlockNames.SOURCESTONE;
 
 // The value here should match an entry in the META-INF/mods.toml file

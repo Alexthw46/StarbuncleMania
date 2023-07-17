@@ -10,12 +10,12 @@ import alexthw.starbunclemania.starbuncle.heal.StarbyHealerBehavior;
 import alexthw.starbunclemania.starbuncle.item.AdvancedItemTransportBehavior;
 import alexthw.starbunclemania.starbuncle.sword.StarbyFighterBehavior;
 import alexthw.starbunclemania.starbuncle.trash.StarbyVoidBehavior;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
+import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
-import com.hollingsworth.arsnouveau.common.entity.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import net.minecraft.server.level.ServerLevel;
@@ -59,7 +59,7 @@ public class ArsNouveauRegistry {
     }
 
     public static void register(AbstractSpellPart spellPart){
-        ArsNouveauAPI.getInstance().registerSpell(spellPart);
+        GlyphRegistry.registerSpell(spellPart);
         registeredSpells.add(spellPart);
     }
 

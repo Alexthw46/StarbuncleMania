@@ -20,12 +20,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
-import static net.minecraftforge.common.capabilities.ForgeCapabilities.ENERGY;
 
 public class StarbyEnergyBehavior extends StarbyListBehavior {
 
@@ -54,14 +53,14 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
 
     @Override
     public boolean canGoToBed() {
-        return (getBatteryForTake() == null || energy > Configs.STARBATTERY_THRESHOLD.get()) && (energy == 0 || getBatteryForStore() == null);
+        return isBedPowered() || (getBatteryForTake() == null || energy > Configs.STARBATTERY_THRESHOLD.get()) && (energy == 0 || getBatteryForStore() == null);
     }
 
     public static @Nullable IEnergyStorage getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
         BlockEntity be = level.getBlockEntity(pos);
         sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
         Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
-        return be != null && be.getCapability(ENERGY, side).isPresent() && be.getCapability(ENERGY, side).resolve().isPresent() ? be.getCapability(ENERGY, side).resolve().get() : null;
+        return be != null && be.getCapability(ForgeCapabilities.ENERGY, side).isPresent() && be.getCapability(ForgeCapabilities.ENERGY, side).resolve().isPresent() ? be.getCapability(ForgeCapabilities.ENERGY, side).resolve().get() : null;
     }
 
     public IEnergyStorage getHandlerFromCap(BlockPos pos) {
@@ -110,7 +109,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && (be.getCapability(ENERGY).isPresent() || getHandlerFromCap(storedPos) != null)) {
+            if (be != null && (be.getCapability(ForgeCapabilities.ENERGY).isPresent() || getHandlerFromCap(storedPos) != null)) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.energy_to"));
@@ -123,7 +122,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && (be.getCapability(ENERGY).isPresent() || getHandlerFromCap(storedPos) != null) ) {
+            if (be != null && (be.getCapability(ForgeCapabilities.ENERGY).isPresent() || getHandlerFromCap(storedPos) != null) ) {
             addFromPos(storedPos);
             syncTag();
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.energy_from"));

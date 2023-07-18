@@ -27,15 +27,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
-import org.jetbrains.annotations.Nullable;
-
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class StarbyGasBehavior extends StarbyListBehavior {
 
-    public static final Capability<IGasHandler> GAS_HANDLER = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<IGasHandler> GAS_HANDLER = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     private GasStack gasStack = GasStack.EMPTY;
     public int side = -1;
@@ -50,7 +50,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     @Override
     public boolean canGoToBed() {
-        return getTankToExtract() == null && (getGasStack().isEmpty() || getTankForStorage() == null);
+        return isBedPowered() || (getTankToExtract() == null && (getGasStack().isEmpty() || getTankForStorage() == null));
     }
 
     public @NotNull GasStack getGasStack() {

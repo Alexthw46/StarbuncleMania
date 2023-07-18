@@ -55,7 +55,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
 
     @Override
     public boolean canGoToBed() {
-        return getTankToExtract() == null && (getFluidStack().isEmpty() || getTankForStorage() == null);
+        return isBedPowered() || (getTankToExtract() == null && (getFluidStack().isEmpty() || getTankForStorage() == null));
     }
 
     public @NotNull FluidStack getFluidStack() {

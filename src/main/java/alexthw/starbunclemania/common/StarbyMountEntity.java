@@ -1,7 +1,7 @@
 package alexthw.starbunclemania.common;
 
 import alexthw.starbunclemania.registry.ModRegistry;
-import com.hollingsworth.arsnouveau.common.entity.ChangeableBehavior;
+import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import net.minecraft.core.BlockPos;

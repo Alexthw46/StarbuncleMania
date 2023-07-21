@@ -59,7 +59,7 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
                 }
                 if (maxRoom <= Configs.STARBALLOON_THRESHOLD.get()) return true;
                 int takeAmount = (int) Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
-                starbuncle.level().playSound(null, targetPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.NEUTRAL, 0.5f, 1.3f);
+                starbuncle.level().playSound(null, targetPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.NEUTRAL, 0.2f, 1.3f);
                 GasStack extracted = new GasStack(toExtract, takeAmount);
                 behavior.setGasStack(gasHandlerExtract.extractChemical(extracted, Action.EXECUTE));
                 starbuncle.addGoalDebug(this, new DebugEvent("SetHeld", "Taking " + takeAmount + "x " + extracted.getTypeRegistryName() + " from " + targetPos.toString()));

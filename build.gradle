@@ -146,8 +146,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
     implementation fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-${mc_version}:${ars_version}")
-    implementation fg.deobf("com.hollingsworth:ars_nouveau:${mc_version}-${ars_version}")
-    compileOnly fg.deobf("curse.maven:geckolib-388172:4573048")
+    implementation fg.deobf("curse.maven:geckolib-388172:4573048")
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")

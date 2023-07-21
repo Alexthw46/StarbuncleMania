@@ -10,7 +10,7 @@ import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.common.item.cosmetic.*;
 import alexthw.starbunclemania.recipe.FluidSourcelinkRecipe;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

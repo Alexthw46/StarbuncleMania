@@ -80,6 +80,22 @@ public class ArsNouveauRegistry {
                 }
             }
         });
+        JarBehaviorRegistry.register(EntityType.MOOSHROOM, new JarBehavior<>(){
+            @Override
+            public void tick(MobJarTile tile) {
+                super.tick(tile);
+                var level = tile.getLevel();
+                if (level instanceof ServerLevel && level.getGameTime() % 20 == 0){
+                    var cap = tile.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
+                    if (cap != null){
+                        var fluid = cap.getFluidInTank(0);
+                        if (fluid.isEmpty() || (fluid.getFluid().isSame(ForgeMod.MILK.get()) && fluid.getAmount() < cap.getTankCapacity(0))){
+                            cap.fill(new FluidStack(ForgeMod.MILK.get(), 1000), IFluidHandler.FluidAction.EXECUTE);
+                        }
+                    }
+                }
+            }
+        });
     }
 
 }

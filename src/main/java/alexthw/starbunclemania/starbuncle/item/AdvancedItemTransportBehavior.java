@@ -22,13 +22,12 @@ import java.util.List;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
-public class AdvancedItemTransportBehavior extends StarbyTransportBehavior{
+public class AdvancedItemTransportBehavior extends StarbyTransportBehavior {
 
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_adv_item_transport");
-    public int side = -1;
+
     public AdvancedItemTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if (tag.contains("Direction")) side = tag.getInt("Direction");
     }
 
     @Override
@@ -36,38 +35,13 @@ public class AdvancedItemTransportBehavior extends StarbyTransportBehavior{
         return TRANSPORT_ID;
     }
 
-    @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()){
-            side = stack.getOrCreateTag().getInt("side");
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
-            syncTag();
-        }
-        return super.mobInteract(player, hand);
-    }
-
     @Nullable
     @Override
-    public IItemHandler getItemCapFromTile(BlockEntity be) {
+    public IItemHandler getItemCapFromTile(BlockEntity be, Direction side) {
         if (be == null) return null;
-        int sideOrdinal = StarHelper.checkItemFramesForSide(be.getBlockPos(), level, side, be);
-        Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
+        int sideOrdinal = StarHelper.checkItemFramesForSide(be.getBlockPos(), level, side == null ? -1 : side.ordinal(), be);
+        side = sideOrdinal < 0 ? null : Direction.from3DDataValue(sideOrdinal);
         return be.getCapability(ITEM_HANDLER, side).isPresent() && be.getCapability(ITEM_HANDLER, side).resolve().isPresent() ? be.getCapability(ITEM_HANDLER, side).resolve().get() : null;
     }
 
-
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        if (side >= 0) tag.putInt("Direction", side);
-        return super.toTag(tag);
-    }
-
-    @Override
-    public void getTooltip(List<Component> tooltip) {
-        super.getTooltip(tooltip);
-        if (side >= 0){
-            tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
-        }
-    }
 }

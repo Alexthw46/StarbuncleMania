@@ -34,7 +34,7 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
     @Override
     public boolean onDestinationReached() {
 
-        IGasHandler gasHandlerExtract = behavior.getHandlerFromCap(targetPos);
+        IGasHandler gasHandlerExtract = behavior.getHandlerFromCap(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
 
         int tankIndexE = 0;
         if (gasHandlerExtract != null){
@@ -44,7 +44,7 @@ public class GasExtractGoal extends GoToPosGoal<StarbyGasBehavior>{
                 starbuncle.addGoalDebug(this, new DebugEvent("NoRoom", "No Room for " + toExtract.getTypeRegistryName() + " from " + targetPos.toString()));
                 return true;
             }
-            IGasHandler gasHandlerStore = behavior.getHandlerFromCap(pos);
+            IGasHandler gasHandlerStore = behavior.getHandlerFromCap(pos, behavior.TO_DIRECTION_MAP.get(pos.hashCode()));
 
             if (gasHandlerStore != null){
                 long maxRoom = -1;

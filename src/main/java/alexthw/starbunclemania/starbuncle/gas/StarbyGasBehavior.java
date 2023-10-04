@@ -2,7 +2,6 @@ package alexthw.starbunclemania.starbuncle.gas;
 
 import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
-import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.cosmetic.StarBalloon;
 import alexthw.starbunclemania.starbuncle.StarHelper;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
@@ -16,8 +15,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
@@ -38,11 +35,9 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     });
 
     private GasStack gasStack = GasStack.EMPTY;
-    public int side = -1;
 
     public StarbyGasBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if (tag.contains("Direction")) side = tag.getInt("Direction");
         if (tag.contains("gasName")) gasStack = GasStack.readFromNBT(tag);
         goals.add(new WrappedGoal(3, new GasStoreGoal(entity, this)));
         goals.add(new WrappedGoal(3, new GasExtractGoal(entity, this)));
@@ -89,26 +84,12 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()) {
-            side = stack.getOrCreateTag().getInt("side");
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
-            syncTag();
-        }
-        return super.mobInteract(player, hand);
-    }
-
-    @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_gas", TO_LIST.size()));
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_gas", FROM_LIST.size()));
         if (!gasStack.isEmpty()) {
             tooltip.add(Component.literal(getGasStack().getAmount() + " ").append(Component.translatable(getGasStack().getTranslationKey())));
-        }
-        if (side >= 0) {
-            tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
         }
     }
 
@@ -161,12 +142,12 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         return be != null && be.getCapability(GAS_HANDLER, side).isPresent() && be.getCapability(GAS_HANDLER, side).resolve().isPresent() ? be.getCapability(GAS_HANDLER, side).resolve().get() : null;
     }
 
-    public IGasHandler getHandlerFromCap(BlockPos pos) {
-        return getHandlerFromCap(pos, level, side);
+    public IGasHandler getHandlerFromCap(BlockPos pos, Direction side) {
+        return getHandlerFromCap(pos, level, side == null ? -1 : side.ordinal());
     }
 
     public boolean canStore(BlockPos pos, @NotNull GasStack gasStack) {
-        IGasHandler gas = getHandlerFromCap(pos);
+        IGasHandler gas = getHandlerFromCap(pos, TO_DIRECTION_MAP.get(pos.hashCode()));
         if (gas != null) {
             for (int i = 0; i < gas.getTanks(); i++) {
                 if (gas.isValid(i, gasStack) && gas.insertChemical(gasStack, Action.SIMULATE).getAmount() <= Configs.STARBALLOON_THRESHOLD.get()) {
@@ -178,7 +159,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     }
 
     public boolean canExtract(BlockPos pos) {
-        IGasHandler gas = getHandlerFromCap(pos);
+        IGasHandler gas = getHandlerFromCap(pos, FROM_DIRECTION_MAP.get(pos.hashCode()));
         if (gas != null) {
             for (int i = 0; i < gas.getTanks(); i++) {
                 if (!gas.getChemicalInTank(i).isEmpty()) {
@@ -194,7 +175,6 @@ public class StarbyGasBehavior extends StarbyListBehavior {
         if (!getGasStack().isEmpty()) {
             getGasStack().write(tag);
         }
-        if (side >= 0) tag.putInt("Direction", side);
         return super.toTag(tag);
     }
 

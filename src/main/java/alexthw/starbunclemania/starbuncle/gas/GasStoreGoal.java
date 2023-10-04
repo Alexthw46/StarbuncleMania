@@ -34,7 +34,7 @@ public class GasStoreGoal extends GoToPosGoal<StarbyGasBehavior> {
     public boolean onDestinationReached() {
         this.starbuncle.getNavigation().stop();
 
-        IGasHandler gasHandler = behavior.getHandlerFromCap(targetPos);
+        IGasHandler gasHandler = behavior.getHandlerFromCap(targetPos, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
         int tankIndex = 0;
         if (gasHandler != null) {
             int room = (int) (gasHandler.getTankCapacity(tankIndex) - gasHandler.getChemicalInTank(tankIndex).getAmount());

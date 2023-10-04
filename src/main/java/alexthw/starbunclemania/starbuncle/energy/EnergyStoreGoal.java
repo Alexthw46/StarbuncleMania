@@ -33,7 +33,7 @@ public class EnergyStoreGoal extends GoToPosGoal<StarbyEnergyBehavior> {
     public boolean onDestinationReached() {
         this.starbuncle.getNavigation().stop();
 
-        IEnergyStorage batteryTile = behavior.getHandlerFromCap(targetPos);
+        IEnergyStorage batteryTile = behavior.getHandlerFromCap(targetPos, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
 
 
         if (batteryTile == null) {

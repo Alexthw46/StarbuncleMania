@@ -54,8 +54,8 @@ public class EnergyExtractGoal extends GoToPosGoal<StarbyEnergyBehavior> {
         BlockPos pos = behavior.getBatteryForStore();
         if (pos == null) return true;
 
-        IEnergyStorage take = behavior.getHandlerFromCap(targetPos);
-        IEnergyStorage storage = behavior.getHandlerFromCap(pos);
+        IEnergyStorage take = behavior.getHandlerFromCap(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
+        IEnergyStorage storage = behavior.getHandlerFromCap(pos, behavior.TO_DIRECTION_MAP.get(pos.hashCode()));
 
         if (take != null && storage != null) {
             int takeAmount = behavior.getRatio();

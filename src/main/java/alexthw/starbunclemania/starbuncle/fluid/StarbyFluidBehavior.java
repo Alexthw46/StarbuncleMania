@@ -5,7 +5,6 @@ import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.common.block.LiquidJarTile;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.registry.ModRegistry;
-import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.starbuncle.StarHelper;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyListBehavior;
@@ -38,13 +37,11 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_fluid_transport");
 
     private @NotNull FluidStack fluidStack = FluidStack.EMPTY;
-    public int side = -1;
-    
+
     public ItemStack fluidScroll;
 
     public StarbyFluidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if (tag.contains("Direction")) side = tag.getInt("Direction");
         if (tag.contains("FluidName")) fluidStack = FluidStack.loadFluidStackFromNBT(tag);
 
         if (tag.contains("fluidScroll"))
@@ -68,11 +65,11 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(FLUID_HANDLER).isPresent()) {
+            if (be != null && be.getCapability(FLUID_HANDLER, side).isPresent()) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.fluid_to"));
@@ -81,11 +78,11 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(FLUID_HANDLER).isPresent()) {
+            if (be != null && be.getCapability(FLUID_HANDLER, side).isPresent()) {
                 addFromPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.fluid_from"));
@@ -96,11 +93,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()){
-            side = stack.getOrCreateTag().getInt("side");
-            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
-            syncTag();
-        } else if (stack.getItem() instanceof FluidScroll && stack.hasTag()) {
+        if (stack.getItem() instanceof FluidScroll && stack.hasTag()) {
             fluidScroll = stack;
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
             syncTag();
@@ -113,11 +106,8 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         super.getTooltip(tooltip);
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_fluid", TO_LIST.size()));
         tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_fluid", FROM_LIST.size()));
-        if (!fluidStack.isEmpty()){
+        if (!fluidStack.isEmpty()) {
             LiquidJarTile.displayFluidTooltip(tooltip, getFluidStack());
-        }
-        if (side >= 0){
-            tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
         }
         if (fluidScroll != null && !fluidScroll.isEmpty()) {
             tooltip.add(Component.translatable("ars_nouveau.filtering_with", fluidScroll.getHoverName().getString()));
@@ -166,16 +156,16 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public static @Nullable IFluidHandler getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
         BlockEntity be = level.getBlockEntity(pos);
         sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
-        Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
+        Direction side = sideOrdinal < 0 ? null : Direction.values()[sideOrdinal];
         return be != null && be.getCapability(FLUID_HANDLER, side).isPresent() && be.getCapability(FLUID_HANDLER, side).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, side).resolve().get() : null;
     }
 
-    public IFluidHandler getHandlerFromCap(BlockPos pos) {
-        return getHandlerFromCap(pos, level, side);
+    public IFluidHandler getHandlerFromCap(BlockPos pos, Direction side) {
+        return getHandlerFromCap(pos, level, side == null ? -1 : side.ordinal());
     }
 
     public boolean canStore(BlockPos pos, @NotNull FluidStack fluidStack) {
-        IFluidHandler fluid = getHandlerFromCap(pos);
+        IFluidHandler fluid = getHandlerFromCap(pos, TO_DIRECTION_MAP.get(pos.hashCode()));
         if (fluid != null) {
             for (int i = 0; i < fluid.getTanks(); i++) {
                 if (fluid.isFluidValid(i, fluidStack) && fluid.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) >= Configs.STARBUCKET_THRESHOLD.get()) {
@@ -187,7 +177,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     }
 
     public boolean canExtract(BlockPos pos) {
-        IFluidHandler fluid = getHandlerFromCap(pos);
+        IFluidHandler fluid = getHandlerFromCap(pos, FROM_DIRECTION_MAP.get(pos.hashCode()));
         if (fluid != null) {
             for (int i = 0; i < fluid.getTanks(); i++) {
                 if (!fluid.getFluidInTank(i).isEmpty()) {
@@ -209,7 +199,6 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
         if (fluidScroll != null) {
             tag.put("itemScroll", fluidScroll.serializeNBT());
         }
-        if (side >= 0) tag.putInt("Direction", side);
         return super.toTag(tag);
     }
 
@@ -217,7 +206,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public ItemStack getStackForRender() {
         ItemStack instance = ModRegistry.FLUID_JAR.get().asItem().getDefaultInstance();
         CompoundTag tag = instance.getOrCreateTag();
-        if (!getFluidStack().isEmpty()){
+        if (!getFluidStack().isEmpty()) {
             tag.put("BlockEntityTag", getFluidStack().writeToNBT(new CompoundTag()));
         }
         tag.putBoolean("Starbuncle", true);

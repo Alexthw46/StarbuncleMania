@@ -57,13 +57,13 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
      */
     @Override
     public boolean onDestinationReached() {
-        IFluidHandler fluidHandlerExtract = behavior.getHandlerFromCap(targetPos);
+        IFluidHandler fluidHandlerExtract = behavior.getHandlerFromCap(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
         int tankIndexE = 0;
         if (fluidHandlerExtract != null) {
             FluidStack toExtract = fluidHandlerExtract.getFluidInTank(tankIndexE);
             BlockPos pos = behavior.getTankForStorage(toExtract);
             if (pos == null) return true;
-            IFluidHandler fluidHandlerStore = behavior.getHandlerFromCap(pos);
+            IFluidHandler fluidHandlerStore = behavior.getHandlerFromCap(pos, behavior.TO_DIRECTION_MAP.get(pos.hashCode()));
 
             if (fluidHandlerStore != null) {
                 int maxRoom = -1;

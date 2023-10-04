@@ -41,7 +41,7 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
     public boolean onDestinationReached() {
         this.starbuncle.getNavigation().stop();
 
-        IFluidHandler fluidHandler = behavior.getHandlerFromCap(targetPos);
+        IFluidHandler fluidHandler = behavior.getHandlerFromCap(targetPos, behavior.TO_DIRECTION_MAP.get(targetPos.hashCode()));
         if (fluidHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoFluidHandler", "No fluid handler at " + targetPos.toString()));
             return true;

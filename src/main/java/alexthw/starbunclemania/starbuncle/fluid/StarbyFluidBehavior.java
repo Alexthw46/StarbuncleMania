@@ -126,7 +126,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public BlockPos getTankForStorage(FluidStack fluidInTank) {
         if (!fluidInTank.isEmpty()) {
             for (BlockPos pos : TO_LIST) {
-                if (canStore(pos, fluidInTank)) {
+                if (level.isLoaded(pos) && canStore(pos, fluidInTank)) {
                     return pos;
                 }
             }
@@ -140,7 +140,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
 
     public BlockPos getTankToExtract() {
         for (BlockPos pos : FROM_LIST) {
-            if (canExtract(pos)) {
+            if (level.isLoaded(pos) && canExtract(pos)) {
                 return pos;
             }
         }

@@ -64,7 +64,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
 
     public @Nullable BlockPos getBatteryForTake() {
         for (BlockPos pos : FROM_LIST) {
-            if (isPositionValidTake(pos)) {
+            if (level.isLoaded(pos) && isPositionValidTake(pos)) {
                 return pos;
             }
         }
@@ -73,7 +73,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
 
     public @Nullable BlockPos getBatteryForStore() {
         for (BlockPos pos : TO_LIST) {
-            if (isPositionValidStore(pos)) {
+            if (level.isLoaded(pos) && isPositionValidStore(pos)) {
                 return pos;
             }
         }

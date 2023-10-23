@@ -15,6 +15,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -27,7 +28,7 @@ public class LiquidJarBlock extends TickableModBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return shape;
     }
 
@@ -55,7 +56,7 @@ public class LiquidJarBlock extends TickableModBlock {
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (super.use(state, level, pos, player, hand, hit) == InteractionResult.PASS) {
             if (level.getBlockEntity(pos) instanceof LiquidJarTile be && be.interact(player, hand)) {
                 return InteractionResult.sidedSuccess(level.isClientSide());
@@ -66,12 +67,12 @@ public class LiquidJarBlock extends TickableModBlock {
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState state) {
+    public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
         return true;
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+    public int getAnalogOutputSignal(@NotNull BlockState blockState, Level worldIn, @NotNull BlockPos pos) {
         LiquidJarTile tile = (LiquidJarTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getFluidPercentage() <= 0) return 0;
         return (int) (tile.getFluidPercentage() * 15);
@@ -79,7 +80,7 @@ public class LiquidJarBlock extends TickableModBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new LiquidJarTile(pPos, pState);
     }
 

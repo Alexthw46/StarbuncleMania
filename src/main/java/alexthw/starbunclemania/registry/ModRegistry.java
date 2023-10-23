@@ -10,10 +10,15 @@ import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.common.item.cosmetic.*;
 import alexthw.starbunclemania.recipe.FluidSourcelinkRecipe;
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
@@ -21,10 +26,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -64,6 +66,7 @@ public class ModRegistry {
     public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
 
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, StarbuncleMania.MODID);
     public static final TagKey<Fluid> POTION = FluidTags.create(new ResourceLocation("forge", "potion"));
 
     public static void registerRegistries(IEventBus bus) {
@@ -75,6 +78,7 @@ public class ModRegistry {
         ENTITIES.register(bus);
         RECIPES.register(bus);
         R_SERIALIZERS.register(bus);
+        TABS.register(bus);
         bus.addListener(ModRegistry::registerEntityAttributes);
         bus.addListener(ModRegistry::editEntityAttributes);
         if (ModList.get().isLoaded("mekanism")) {
@@ -170,6 +174,16 @@ public class ModRegistry {
         STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(entityCarbuncleEntityType,world), MobCategory.CREATURE);
 
     }
+
+    public static final RegistryObject<CreativeModeTab> SBM_TAB = TABS.register("general", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.starbunclemania"))
+            .icon(ItemsRegistry.STARBUNCLE_CHARM.get()::getDefaultInstance)
+            .displayItems((params, output) -> {
+        for (var entry : ITEMS.getEntries()) {
+            output.accept(entry.get().getDefaultInstance());
+        }
+    }).withTabsBefore(CreativeTabRegistry.BLOCKS.getKey().location())
+            .build());
 
     public static final RegistryObject<FluidType> SOURCE_FLUID_TYPE = FLUID_TYPES.register("source_fluid", SourceFluid::new);
 

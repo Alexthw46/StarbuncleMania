@@ -36,10 +36,10 @@ public class SourceFluid extends FluidType {
     {
         consumer.accept(new IClientFluidTypeExtensions()
         {
-            private static final ResourceLocation STILL = new ResourceLocation(ArsNouveau.MODID,"blocks/potion_still"),
-                    FLOW = new ResourceLocation(ArsNouveau.MODID,"blocks/potion_still"),
-                    OVERLAY = new ResourceLocation(ArsNouveau.MODID, "blocks/sourcestone"),
-                    VIEW_OVERLAY = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/sourcestone.png");
+            private static final ResourceLocation STILL = new ResourceLocation(ArsNouveau.MODID,"block/potion_still"),
+                    FLOW = new ResourceLocation(ArsNouveau.MODID,"block/potion_still"),
+                    OVERLAY = new ResourceLocation(ArsNouveau.MODID, "block/sourcestone"),
+                    VIEW_OVERLAY = new ResourceLocation(ArsNouveau.MODID, "textures/block/sourcestone.png");
 
             @Override
             public ResourceLocation getStillTexture()

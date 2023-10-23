@@ -108,7 +108,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     public BlockPos getTankForStorage(GasStack gasInTank) {
         if (!gasInTank.isEmpty()) {
             for (BlockPos pos : TO_LIST) {
-                if (canStore(pos, gasInTank)) {
+                if (level.isLoaded(pos) && canStore(pos, gasInTank)) {
                     return pos;
                 }
             }
@@ -122,7 +122,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     public BlockPos getTankToExtract() {
         for (BlockPos pos : FROM_LIST) {
-            if (canExtract(pos)) {
+            if (level.isLoaded(pos) && canExtract(pos)) {
                 return pos;
             }
         }

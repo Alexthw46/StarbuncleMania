@@ -59,7 +59,7 @@ public class StarbuncleMania
     private void setup(final FMLCommonSetupEvent ignoredEvent) {
         ArsNouveauRegistry.postInit();
         try {
-            FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation((level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == ForgeMod.LAVA_TYPE.get() && level.getFluidState(currentPos).isSource(), Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, SOURCESTONE))).defaultBlockState()));
+            FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation((level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == ForgeMod.LAVA_TYPE.get(), Objects.requireNonNull(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(ArsNouveau.MODID, SOURCESTONE))).defaultBlockState()));
         }catch (NullPointerException npe){
             System.out.println("Sourcestone not found, skipping interaction.");
         }

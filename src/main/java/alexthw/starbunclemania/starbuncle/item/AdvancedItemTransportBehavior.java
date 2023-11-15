@@ -26,13 +26,22 @@ import java.util.List;
 
 import static net.minecraftforge.common.capabilities.ForgeCapabilities.ITEM_HANDLER;
 
-public class AdvancedItemTransportBehavior extends StarbyTransportBehavior{
+public class AdvancedItemTransportBehavior extends StarbyTransportBehavior {
 
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_adv_item_transport");
     public int side = -1;
+
     public AdvancedItemTransportBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         if (tag.contains("Direction")) side = tag.getInt("Direction");
+    }
+
+    @Override
+    public void onWanded(Player playerEntity) {
+        // reset to default behavior if the accessory is removed
+        if (starbuncle.getCosmeticItem().isEmpty())
+            starbuncle.dynamicBehavior = new StarbyTransportBehavior(starbuncle, new CompoundTag());
+        super.onWanded(playerEntity);
     }
 
     @Override
@@ -70,7 +79,7 @@ public class AdvancedItemTransportBehavior extends StarbyTransportBehavior{
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()){
+        if (stack.getItem() instanceof DirectionScroll && stack.hasTag()) {
             side = stack.getOrCreateTag().getInt("side");
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
             syncTag();
@@ -97,7 +106,7 @@ public class AdvancedItemTransportBehavior extends StarbyTransportBehavior{
     @Override
     public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
-        if (side >= 0){
+        if (side >= 0) {
             tooltip.add(Component.literal("Preferred Side : " + Direction.values()[side].name()));
         }
     }

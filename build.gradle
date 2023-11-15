@@ -29,7 +29,7 @@ apply plugin: 'maven-publish'
 
 
 version = "${mc_version}-${mod_version}"
-group = 'com.hollingsworth.starbunclemania' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = 'alexthw.starbunclemania' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'starbunclemania'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

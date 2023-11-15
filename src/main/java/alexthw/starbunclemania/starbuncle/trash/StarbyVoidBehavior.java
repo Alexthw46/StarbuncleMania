@@ -35,6 +35,14 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
         goals.add(new WrappedGoal(5, new SnatchItem(starbuncle, this)));
     }
 
+    @Override
+    public void onWanded(Player playerEntity) {
+        // reset to default behavior if the accessory is removed
+        if (starbuncle.getCosmeticItem().isEmpty())
+            starbuncle.dynamicBehavior = new StarbyTransportBehavior(starbuncle, new CompoundTag());
+        super.onWanded(playerEntity);
+    }
+
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos != null && playerEntity.level.getBlockState(storedPos).getBlock() instanceof SummonBed) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));
@@ -55,8 +63,8 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
 
     @Override
     public BlockPos getValidStorePos(ItemStack stack) {
-        if (itemScroll != null && itemScroll.getItem() instanceof ItemScroll filter && !(filter instanceof MimicItemScroll)){
-            if (filter.getSortPref(stack, itemScroll,null) != ItemScroll.SortPref.INVALID) {
+        if (itemScroll != null && itemScroll.getItem() instanceof ItemScroll filter && !(filter instanceof MimicItemScroll)) {
+            if (filter.getSortPref(stack, itemScroll, null) != ItemScroll.SortPref.INVALID) {
                 return starbuncle.getOnPos();
             }
             return null;
@@ -76,6 +84,7 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
     protected ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
+
     public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_item_void");
 
 }

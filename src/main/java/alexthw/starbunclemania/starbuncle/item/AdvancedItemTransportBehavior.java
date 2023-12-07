@@ -44,4 +44,12 @@ public class AdvancedItemTransportBehavior extends StarbyTransportBehavior {
         return be.getCapability(ITEM_HANDLER, side).isPresent() && be.getCapability(ITEM_HANDLER, side).resolve().isPresent() ? be.getCapability(ITEM_HANDLER, side).resolve().get() : null;
     }
 
+    @Override
+    public void onWanded(Player playerEntity) {
+        // reset to default behavior if the accessory is removed
+        if (starbuncle.getCosmeticItem().isEmpty())
+            starbuncle.dynamicBehavior = new StarbyTransportBehavior(starbuncle, new CompoundTag());
+        super.onWanded(playerEntity);
+    }
+
 }

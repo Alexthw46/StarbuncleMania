@@ -35,6 +35,14 @@ public class StarbyVoidBehavior extends StarbyTransportBehavior {
         goals.add(new WrappedGoal(5, new SnatchItem(starbuncle, this)));
     }
 
+    @Override
+    public void onWanded(Player playerEntity) {
+        // reset to default behavior if the accessory is removed
+        if (starbuncle.getCosmeticItem().isEmpty())
+            starbuncle.dynamicBehavior = new StarbyTransportBehavior(starbuncle, new CompoundTag());
+        super.onWanded(playerEntity);
+    }
+
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if (storedPos != null && playerEntity.level().getBlockState(storedPos).getBlock() instanceof SummonBed) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.set_bed"));

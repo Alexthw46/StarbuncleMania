@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -77,8 +78,9 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
             }
             if (!level.isClientSide() && level.getGameTime() % 20 == 0 && this.canAcceptSource()) {
                 double sourceFromFluid = getSourceFromFluid(this.getFluid());
-                if (sourceFromFluid > 0 && this.canAcceptSource((int) sourceFromFluid)) {
-                    int drain = this.tank.drain(2000, IFluidHandler.FluidAction.EXECUTE).getAmount();
+                if (sourceFromFluid > 0 && this.canAcceptSource((int) (sourceFromFluid * 500))) {
+                    int maxDrain = Math.min(Mth.ceil((getMaxSource() - getSource()) / sourceFromFluid), 2000);
+                    int drain = this.tank.drain(maxDrain, IFluidHandler.FluidAction.EXECUTE).getAmount();
                     this.addSource((int) (drain * sourceFromFluid));
                 }
             }
@@ -95,7 +97,7 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
                 return cache.get(fluid);
             } else if (Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {
                 double value = Configs.FLUID_TO_SOURCE_MAP.get(fluid);
-                cache.put(fluid,value);
+                cache.put(fluid, value);
                 return value;
             } else if (tank.hasTag() && tank.getFluid().is(ModRegistry.POTION)) {
                 PotionData potion = PotionData.fromTag(tank.getTag());
@@ -114,7 +116,7 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
                 var recipes = level.getRecipeManager().getAllRecipesFor(ModRegistry.FLUID_SOURCELINK_RT.get());
                 var find = recipes.stream().filter(r -> r.fluidType.equals(fluid)).findFirst().orElse(null);
                 double value = 0;
-                if (find != null){
+                if (find != null) {
                     value = find.conversion_ratio;
                 }
                 cache.put(fluid, value);

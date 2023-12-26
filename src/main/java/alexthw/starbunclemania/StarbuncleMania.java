@@ -31,6 +31,7 @@ public class StarbuncleMania
 
     public StarbuncleMania() {
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+        ForgeMod.enableMilkFluid();
         ModRegistry.registerRegistries(modbus);
         ANModConfig serverConfig = new ANModConfig(ModConfig.Type.SERVER, Configs.SERVER_SPEC, ModLoadingContext.get().getActiveContainer(), MODID + "-server");
         ModLoadingContext.get().getActiveContainer().addConfig(serverConfig);

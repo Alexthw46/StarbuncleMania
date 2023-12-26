@@ -16,6 +16,15 @@ import org.jetbrains.annotations.Nullable;
 public class FluidSourcelinkRecipe implements Recipe<Container> {
 
     public ResourceLocation id;
+
+    public ResourceLocation getFluidType() {
+        return fluidType;
+    }
+
+    public double getConversion_ratio() {
+        return conversion_ratio;
+    }
+
     public ResourceLocation fluidType;
     public double conversion_ratio;
 

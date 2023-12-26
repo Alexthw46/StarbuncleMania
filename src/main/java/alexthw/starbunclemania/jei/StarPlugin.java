@@ -12,6 +12,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
 public class StarPlugin implements IModPlugin {
@@ -19,13 +20,8 @@ public class StarPlugin implements IModPlugin {
     public static final RecipeType<FluidSourcelinkRecipe> FLUID_SOURCELINK = RecipeType.create(StarbuncleMania.MODID, "fluid_sourcelink", FluidSourcelinkRecipe.class);
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public @NotNull ResourceLocation getPluginUid() {
         return new ResourceLocation(ArsNouveau.MODID, "extra");
-    }
-
-    @Override
-    public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        //registration.getCraftingCategory().addCategoryExtension(DyeRecipe.class, DyeRecipeCategory::new);
     }
 
     @Override

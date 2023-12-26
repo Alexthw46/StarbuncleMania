@@ -7,6 +7,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.client.jei.JEIConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -20,22 +21,27 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkRecipe> {
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
     public IDrawable background;
     public IDrawable icon;
 
+    static final ResourceLocation ARROW = new ResourceLocation(ModIds.JEI_ID, "textures/jei/gui/gui_vanilla.png");
+
     public FluidLinkRecipeCategory(final IGuiHelper helper) {
         this.background = helper.createBlankDrawable(120, 32);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, ModRegistry.FLUID_SOURCELINK.get().asItem().getDefaultInstance());
         this.cachedArrows = CacheBuilder.newBuilder().maximumSize(25L).build(new CacheLoader<>() {
-            public IDrawableAnimated load(Integer cookTime) {
-                return helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 32).buildAnimated(cookTime, IDrawableAnimated.StartDirection.LEFT, false);
+            public @NotNull IDrawableAnimated load(@NotNull Integer cookTime) {
+                return helper.drawableBuilder(ARROW, 82, 128, 24, 32)
+                        .buildAnimated(cookTime, IDrawableAnimated.StartDirection.LEFT, false);
             }
         });
     }
@@ -46,7 +52,7 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
      * @since 9.5.0
      */
     @Override
-    public RecipeType<FluidSourcelinkRecipe> getRecipeType() {
+    public @NotNull RecipeType<FluidSourcelinkRecipe> getRecipeType() {
         return StarPlugin.FLUID_SOURCELINK;
     }
 
@@ -57,15 +63,15 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
      * @since 7.6.4
      */
     @Override
-    public Component getTitle() {
+    public @NotNull Component getTitle() {
         return Component.literal("Fluid Sourcelink conversion");
     }
 
-    public IDrawable getBackground() {
+    public @NotNull IDrawable getBackground() {
         return this.background;
     }
 
-    public IDrawable getIcon() {
+    public @NotNull IDrawable getIcon() {
         return this.icon;
     }
 
@@ -76,7 +82,7 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
      * @since 9.4.0
      */
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, FluidSourcelinkRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, FluidSourcelinkRecipe recipe, @NotNull IFocusGroup focuses) {
         ResourceLocation fluid_name = recipe.getFluidType();
         try {
             var fluid = ForgeRegistries.FLUIDS.getDelegateOrThrow(fluid_name).get();
@@ -86,11 +92,11 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
     }
 
     @Override
-    public void draw(FluidSourcelinkRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(FluidSourcelinkRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw(matrixStack, 25, 10);
-        Font renderer = Minecraft.getInstance().font;
+        arrow.draw(guiGraphics, 25, 10);
+        Font font = Minecraft.getInstance().font;
         double ratio = recipe.getConversion_ratio() * 1000;
-        renderer.draw(matrixStack, String.format("%.0f Source", ratio), 55, 12, 0x000000);
+        guiGraphics.drawString(font, String.format("%.0f Source", ratio), 55, 12, 0x000000, false);
     }
 }

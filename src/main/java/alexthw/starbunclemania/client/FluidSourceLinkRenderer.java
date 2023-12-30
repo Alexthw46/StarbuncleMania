@@ -1,11 +1,13 @@
 package alexthw.starbunclemania.client;
 
 import alexthw.starbunclemania.common.block.FluidSourcelinkTile;
+import alexthw.starbunclemania.common.block.SourceCondenserTile;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,8 +33,8 @@ public class FluidSourceLinkRenderer extends GeoBlockRenderer<FluidSourcelinkTil
 
 
     @Override
-    public void preRender(PoseStack poseStack, FluidSourcelinkTile tile, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.preRender(poseStack, tile, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    public void actuallyRender(PoseStack poseStack, FluidSourcelinkTile tile, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, tile, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         poseStack.pushPose();
         poseStack.translate(-0.5, 0, -0.5);
         FluidStack fluidHolder = tile.getFluid();

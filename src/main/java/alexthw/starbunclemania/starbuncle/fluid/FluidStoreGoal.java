@@ -56,7 +56,7 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
         int diff = fluidHandler.fill(fill, IFluidHandler.FluidAction.EXECUTE);
         behavior.getFluidStack().shrink(diff);
         behavior.syncTag();
-        if (diff >= 0)
+        if (diff > 0)
             starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_EMPTY, SoundSource.NEUTRAL, 0.2f, 1.3f);
         starbuncle.addGoalDebug(this, new DebugEvent("stored_fluid", "successful at " + targetPos.toString() + ". Trasferred MBs : " + diff));
 

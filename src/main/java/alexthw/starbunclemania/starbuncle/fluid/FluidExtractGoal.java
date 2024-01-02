@@ -20,14 +20,14 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
     @Override
     public boolean canUse() {
         boolean superCan = super.canUse();
-        if(!superCan || behavior.FROM_LIST.isEmpty())
+        if (!superCan || behavior.FROM_LIST.isEmpty())
             return false;
-        if(getDestination() == null){
+        if (getDestination() == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoTakeDestination", "No valid take destination"));
             starbuncle.setBackOff(5 + starbuncle.level.random.nextInt(20));
             return false;
         }
-        if(behavior.isBedPowered()){
+        if (behavior.isBedPowered()) {
             starbuncle.addGoalDebug(this, new DebugEvent("BedPowered", "Bed Powered, cannot take"));
             return false;
         }
@@ -58,29 +58,34 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
     @Override
     public boolean onDestinationReached() {
         IFluidHandler fluidHandlerExtract = behavior.getHandlerFromCap(targetPos);
-        int tankIndexE = 0;
-        if (fluidHandlerExtract != null) {
-            FluidStack toExtract = fluidHandlerExtract.getFluidInTank(tankIndexE);
-            BlockPos pos = behavior.getTankForStorage(toExtract);
-            if (pos == null) return true;
-            IFluidHandler fluidHandlerStore = behavior.getHandlerFromCap(pos);
 
-            if (fluidHandlerStore != null) {
-                int maxRoom = -1;
-                for (int s = 0; s < fluidHandlerStore.getTanks(); s++) {
-                    maxRoom = fluidHandlerStore.fill(toExtract, IFluidHandler.FluidAction.SIMULATE);
-                    if (maxRoom > 0) break;
+        if (fluidHandlerExtract != null) {
+            FluidStack toExtract;
+            for (int tankIndexE = 0; tankIndexE < fluidHandlerExtract.getTanks(); tankIndexE++) {
+                toExtract = fluidHandlerExtract.getFluidInTank(tankIndexE);
+                if (toExtract.isEmpty()) continue; // there is no fluid in this tank, check next tank
+                BlockPos pos = behavior.getTankForStorage(toExtract);
+                if (pos == null) continue; // there is no valid storage tank for this fluid, check next tank
+                IFluidHandler fluidHandlerStore = behavior.getHandlerFromCap(pos);
+
+                if (fluidHandlerStore != null) {
+                    int maxRoom = -1;
+                    for (int s = 0; s < fluidHandlerStore.getTanks(); s++) {
+                        maxRoom = fluidHandlerStore.fill(toExtract, IFluidHandler.FluidAction.SIMULATE);
+                        if (maxRoom > Configs.STARBUCKET_THRESHOLD.get()) break; // we found a tank with enough room
+                    }
+                    if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get()) continue; // there is no tank with enough room, check next tank
+                    int maxTakeAmount = Math.min(maxRoom, behavior.getRatio());
+                    starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
+                    FluidStack extracted = new FluidStack(toExtract, maxTakeAmount);
+                    behavior.setFluidStack(fluidHandlerExtract.drain(extracted, IFluidHandler.FluidAction.EXECUTE));
+                    break;
+                } else {
+                    starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No fluid handler at " + pos));
                 }
-                if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get()) return true;
-                int takeAmount = Math.min(toExtract.getAmount(), Math.min(maxRoom, behavior.getRatio()));
-                starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
-                FluidStack extracted = new FluidStack(toExtract, takeAmount);
-                behavior.setFluidStack(extracted);
-                fluidHandlerExtract.drain(extracted, IFluidHandler.FluidAction.EXECUTE);
-            }else {
-                starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No fluid handler at " + pos));
             }
-        }else {
+
+        } else {
             starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No fluid handler at " + targetPos.toString()));
         }
 

@@ -60,31 +60,34 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
         IFluidHandler fluidHandlerExtract = behavior.getHandlerFromCap(targetPos);
 
         if (fluidHandlerExtract != null) {
-            FluidStack toExtract;
             for (int tankIndexE = 0; tankIndexE < fluidHandlerExtract.getTanks(); tankIndexE++) {
-                toExtract = fluidHandlerExtract.getFluidInTank(tankIndexE);
-                if (toExtract.isEmpty()) continue; // there is no fluid in this tank, check next tank
-                BlockPos pos = behavior.getTankForStorage(toExtract);
+                // make a copy of the fluid stack with the max amount we can extract
+                FluidStack testExtract = new FluidStack(fluidHandlerExtract.getFluidInTank(tankIndexE).getFluid(), behavior.getRatio());
+                if (testExtract.isEmpty() || fluidHandlerExtract.drain(testExtract, IFluidHandler.FluidAction.SIMULATE).isEmpty())
+                    continue; // there is no fluid in this tank, or draining it is not permitted, check next tank
+                BlockPos pos = behavior.getTankForStorage(testExtract);
                 if (pos == null) continue; // there is no valid storage tank for this fluid, check next tank
                 IFluidHandler fluidHandlerStore = behavior.getHandlerFromCap(pos);
 
                 if (fluidHandlerStore != null) {
                     int maxRoom = -1;
                     for (int s = 0; s < fluidHandlerStore.getTanks(); s++) {
-                        maxRoom = fluidHandlerStore.fill(toExtract, IFluidHandler.FluidAction.SIMULATE);
+                        maxRoom = fluidHandlerStore.fill(testExtract, IFluidHandler.FluidAction.SIMULATE);
+                        // maxRoom won't be higher than starby's ratio, so no need of clamping
                         if (maxRoom > Configs.STARBUCKET_THRESHOLD.get()) break; // we found a tank with enough room
                     }
-                    if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get()) continue; // there is no tank with enough room, check next tank
-                    int maxTakeAmount = Math.min(maxRoom, behavior.getRatio());
-                    starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
-                    FluidStack extracted = new FluidStack(toExtract, maxTakeAmount);
-                    behavior.setFluidStack(fluidHandlerExtract.drain(extracted, IFluidHandler.FluidAction.EXECUTE));
-                    break;
+                    if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get())
+                        continue; // there is no tank with enough room, check next tank
+                    FluidStack extracted = fluidHandlerExtract.drain(new FluidStack(testExtract, maxRoom), IFluidHandler.FluidAction.EXECUTE);
+                    if (!extracted.isEmpty()) {
+                        behavior.setFluidStack(extracted);
+                        starbuncle.level.playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);
+                        break; // everything went well, we can end the goal
+                    }
                 } else {
                     starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No fluid handler at " + pos));
                 }
             }
-
         } else {
             starbuncle.addGoalDebug(this, new DebugEvent("NoHandler", "No fluid handler at " + targetPos.toString()));
         }

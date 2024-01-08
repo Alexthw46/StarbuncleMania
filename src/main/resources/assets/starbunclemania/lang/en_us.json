@@ -11,6 +11,10 @@
 	"block.starbunclemania.fluid_jar": "Fluid Containment Jar",
 	"block.starbunclemania.fluid_sourcelink": "Fluid Sourcelink",
 	"block.starbunclemania.source_condenser": "Source Condenser",
+	"block.starbunclemania.smelting_wixie_cauldron": "Wixie's Furnace",
+	"block.starbunclemania.stonecutting_wixie_cauldron": "Wixie's Stonecutter",
+	"block.starbunclemania.cutting_wixie_cauldron": "Wixie's Cutting Board",
+	"block.starbunclemania.cooking_pot_wixie_cauldron": "Wixie's Cooking Pot",
 
 	"item.starbunclemania.direction_scroll": "Direction Scroll",
 	"item.starbunclemania.fluid_scroll_allow": "Fluid Scroll: Allow",

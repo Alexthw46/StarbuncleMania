@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common.block;
+package alexthw.starbunclemania.common.block.fluids;
 
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;

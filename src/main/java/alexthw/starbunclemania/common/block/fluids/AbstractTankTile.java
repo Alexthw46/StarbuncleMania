@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common.block;
+package alexthw.starbunclemania.common.block.fluids;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import net.minecraft.core.BlockPos;
@@ -65,7 +65,7 @@ public class AbstractTankTile extends ModdedTile {
     }
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
         tank.readFromNBT(pTag);
     }

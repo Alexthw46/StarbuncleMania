@@ -4,18 +4,18 @@ import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.client.FluidSourceLinkRenderer;
 import alexthw.starbunclemania.client.SourceCondenserRenderer;
 import alexthw.starbunclemania.common.StarbyMountEntity;
-import alexthw.starbunclemania.common.block.*;
+import alexthw.starbunclemania.common.block.fluids.*;
+import alexthw.starbunclemania.common.block.wixie_stations.*;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.common.item.cosmetic.*;
 import alexthw.starbunclemania.recipe.FluidSourcelinkRecipe;
-import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
+import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
-import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -84,6 +84,9 @@ public class ModRegistry {
         if (ModList.get().isLoaded("mekanism")) {
             MekanismCompat.register(bus);
         }
+        if (ModList.get().isLoaded("farmersdelight")) {
+            FarmerDelightCompat.register();
+        }
     }
 
     public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
@@ -99,8 +102,8 @@ public class ModRegistry {
     public static final RegistryObject<RecipeSerializer<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RS;
 
     static {
-       FLUID_SOURCELINK_RT = RECIPES.register("fluid_sourcelink", () -> RecipeType.simple(prefix("fluid_sourcelink")));
-       FLUID_SOURCELINK_RS = R_SERIALIZERS.register("fluid_sourcelink", FluidSourcelinkRecipe.Serializer::new);
+        FLUID_SOURCELINK_RT = RECIPES.register("fluid_sourcelink", () -> RecipeType.simple(prefix("fluid_sourcelink")));
+        FLUID_SOURCELINK_RS = R_SERIALIZERS.register("fluid_sourcelink", FluidSourcelinkRecipe.Serializer::new);
     }
 
     public static final RegistryObject<Item> DIRECTION_SCROLL;
@@ -124,6 +127,14 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<SourceCondenserTile>> SOURCE_CONDENSER_TILE;
     public static final RegistryObject<Block> FLUID_SOURCELINK;
     public static final RegistryObject<BlockEntityType<FluidSourcelinkTile>> FLUID_SOURCELINK_TILE;
+
+    public static final RegistryObject<Block> SMELTING_WIXIE_CAULDRON;
+    public static final RegistryObject<BlockEntityType<SmeltingWixieCauldronTile>> SMELTING_WIXIE_CAULDRON_TILE;
+    public static final RegistryObject<Block> STONEWORK_WIXIE_CAULDRON;
+    public static final RegistryObject<BlockEntityType<StonecutterWixieCauldronTile>> STONECUTTER_WIXIE_CAULDRON_TILE;
+
+    public static final RegistryObject<Block> FLUID_MIX_WIXIE_CAULDRON;
+    public static final RegistryObject<BlockEntityType<FluidMixWixieCauldronTile>> FLUID_MIX_WIXIE_CAULDRON_TILE;
 
     public static final RegistryObject<EntityType<StarbyMountEntity>> STARBY_MOUNT;
 
@@ -171,18 +182,26 @@ public class ModRegistry {
             }
         });
 
-        STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(entityCarbuncleEntityType,world), MobCategory.CREATURE);
+        STARBY_MOUNT = addEntity("starby_mount", 2, 2, true, false, (entityCarbuncleEntityType, world) -> new StarbyMountEntity(entityCarbuncleEntityType, world), MobCategory.CREATURE);
 
+        SMELTING_WIXIE_CAULDRON = BLOCKS.register("smelting_wixie_cauldron", SmeltingWixieCauldron::new);
+        SMELTING_WIXIE_CAULDRON_TILE = BLOCK_ENTITIES.register("smelting_wixie_cauldron_tile", () -> BlockEntityType.Builder.of(SmeltingWixieCauldronTile::new, SMELTING_WIXIE_CAULDRON.get()).build(null));
+
+        STONEWORK_WIXIE_CAULDRON = BLOCKS.register("stonecutting_wixie_cauldron", StonecutterWixieCauldron::new);
+        STONECUTTER_WIXIE_CAULDRON_TILE = BLOCK_ENTITIES.register("stonecutting_wixie_cauldron_tile", () -> BlockEntityType.Builder.of(StonecutterWixieCauldronTile::new, STONEWORK_WIXIE_CAULDRON.get()).build(null));
+
+        FLUID_MIX_WIXIE_CAULDRON = BLOCKS.register("fluid_mix_wixie_cauldron", FluidMixWixieCauldron::new);
+        FLUID_MIX_WIXIE_CAULDRON_TILE = BLOCK_ENTITIES.register("fluid_mix_wixie_cauldron_tile", () -> BlockEntityType.Builder.of(FluidMixWixieCauldronTile::new, FLUID_MIX_WIXIE_CAULDRON.get()).build(null));
     }
 
     public static final RegistryObject<CreativeModeTab> SBM_TAB = TABS.register("general", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.starbunclemania"))
             .icon(ItemsRegistry.STARBUNCLE_CHARM.get()::getDefaultInstance)
             .displayItems((params, output) -> {
-        for (var entry : ITEMS.getEntries()) {
-            output.accept(entry.get().getDefaultInstance());
-        }
-    }).withTabsBefore(CreativeTabRegistry.BLOCKS.getKey().location())
+                for (var entry : ITEMS.getEntries()) {
+                    output.accept(entry.get().getDefaultInstance());
+                }
+            }).withTabsBefore(CreativeTabRegistry.BLOCKS.getKey().location())
             .build());
 
     public static final RegistryObject<FluidType> SOURCE_FLUID_TYPE = FLUID_TYPES.register("source_fluid", SourceFluid::new);

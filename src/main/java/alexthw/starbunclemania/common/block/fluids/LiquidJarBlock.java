@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common.block;
+package alexthw.starbunclemania.common.block.fluids;
 
 import com.hollingsworth.arsnouveau.common.block.TickableModBlock;
 import net.minecraft.core.BlockPos;

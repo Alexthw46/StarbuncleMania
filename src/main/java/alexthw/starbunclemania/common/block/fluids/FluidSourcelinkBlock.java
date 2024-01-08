@@ -1,4 +1,4 @@
-package alexthw.starbunclemania.common.block;
+package alexthw.starbunclemania.common.block.fluids;
 
 import com.hollingsworth.arsnouveau.common.block.TickableModBlock;
 import net.minecraft.core.BlockPos;
@@ -16,6 +16,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -28,17 +29,17 @@ public class FluidSourcelinkBlock extends TickableModBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
         return new FluidSourcelinkTile(pPos, pState);
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState pState) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+    public @NotNull VoxelShape getShape(@NotNull BlockState pState, @NotNull BlockGetter pLevel, @NotNull BlockPos pPos, @NotNull CollisionContext pContext) {
         return shape;
     }
 
@@ -49,7 +50,7 @@ public class FluidSourcelinkBlock extends TickableModBlock {
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
 
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (super.use(state, level, pos, player, hand, hit) == InteractionResult.PASS) {
             if (level.getBlockEntity(pos) instanceof FluidSourcelinkTile be && be.interact(player, hand)) {
                 return InteractionResult.sidedSuccess(level.isClientSide());

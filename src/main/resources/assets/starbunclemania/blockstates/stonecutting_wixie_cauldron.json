@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "starbunclemania:block/stonecutting_wixie_cauldron",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "starbunclemania:block/stonecutting_wixie_cauldron"
+    },
+    "facing=south": {
+      "model": "starbunclemania:block/stonecutting_wixie_cauldron",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "starbunclemania:block/stonecutting_wixie_cauldron",
+      "y": 270
+    }
+  }
+}

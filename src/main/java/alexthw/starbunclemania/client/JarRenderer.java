@@ -1,6 +1,6 @@
 package alexthw.starbunclemania.client;
 
-import alexthw.starbunclemania.common.block.LiquidJarTile;
+import alexthw.starbunclemania.common.block.fluids.LiquidJarTile;
 import alexthw.starbunclemania.common.item.FluidJarItem;
 import com.hollingsworth.arsnouveau.client.renderer.item.FixedGeoItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;

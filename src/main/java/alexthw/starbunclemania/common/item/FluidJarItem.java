@@ -1,7 +1,7 @@
 package alexthw.starbunclemania.common.item;
 
 import alexthw.starbunclemania.client.JarRenderer;
-import alexthw.starbunclemania.common.block.LiquidJarTile;
+import alexthw.starbunclemania.common.block.fluids.LiquidJarTile;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

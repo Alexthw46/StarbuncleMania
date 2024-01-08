@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
@@ -34,7 +35,7 @@ public class EventHandler {
 
             ICapabilityProvider provider = new ICapabilityProvider() {
                 @Override
-                public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction direction) {
+                public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
                     if (cap == ForgeCapabilities.FLUID_HANDLER) {
                         return holder.cast();
                     }

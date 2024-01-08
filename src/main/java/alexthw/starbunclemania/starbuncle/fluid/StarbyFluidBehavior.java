@@ -2,7 +2,7 @@ package alexthw.starbunclemania.starbuncle.fluid;
 
 import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
-import alexthw.starbunclemania.common.block.LiquidJarTile;
+import alexthw.starbunclemania.common.block.fluids.LiquidJarTile;
 import alexthw.starbunclemania.common.item.FluidScroll;
 import alexthw.starbunclemania.registry.ModRegistry;
 import alexthw.starbunclemania.starbuncle.StarHelper;

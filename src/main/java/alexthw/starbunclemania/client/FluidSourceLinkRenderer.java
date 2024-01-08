@@ -1,7 +1,6 @@
 package alexthw.starbunclemania.client;
 
-import alexthw.starbunclemania.common.block.FluidSourcelinkTile;
-import alexthw.starbunclemania.common.block.SourceCondenserTile;
+import alexthw.starbunclemania.common.block.fluids.FluidSourcelinkTile;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemBlockRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.mojang.blaze3d.vertex.PoseStack;

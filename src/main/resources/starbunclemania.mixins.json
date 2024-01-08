@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "starbunclemania.refmap.json",
   "mixins": [
+    "WixieCharmMixin"
   ],
   "minVersion": "0.8"
 }

@@ -155,7 +155,6 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    //implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curio_version}")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curio_version}")
 
     implementation fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
@@ -176,10 +175,12 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:elemental-561470:4424442") // Ars Elemental
     runtimeOnly fg.deobf("curse.maven:ae2-223794:3995899") // Applied Energistics 2
     runtimeOnly fg.deobf("joefoxe:hexerei:0.3.2-all") // Hexerei
-    implementation fg.deobf("com.simibubi.create:create-1.19.2:0.5.0.f-15:slim"){ transitive = false }
-    runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.19.2:0.6.7-9")
+    runtimeOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.10-7")
      */
 
+    implementation fg.deobf("com.simibubi.create:create-1.20.1:0.5.1.f-26:all") { transitive = false }
+
+    implementation fg.deobf("curse.maven:farmers-delight-398521:4679319")
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:0.2.0-beta.8"))
     implementation("com.github.llamalad7.mixinextras:mixinextras-forge:0.2.0-beta.8")

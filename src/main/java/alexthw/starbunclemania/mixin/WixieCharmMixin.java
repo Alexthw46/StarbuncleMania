@@ -1,6 +1,5 @@
 package alexthw.starbunclemania.mixin;
 
-import alexthw.starbunclemania.common.block.fluids.LiquidJarBlock;
 import alexthw.starbunclemania.registry.FarmerDelightCompat;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.WixieCharm;
@@ -30,9 +29,6 @@ public class WixieCharmMixin {
             cir.setReturnValue(InteractionResult.SUCCESS);
         } else if (blockState.getBlock() instanceof StonecutterBlock) {
             world.setBlockAndUpdate(pos, ModRegistry.STONEWORK_WIXIE_CAULDRON.get().defaultBlockState().setValue(StonecutterBlock.FACING, blockState.getValue(StonecutterBlock.FACING)));
-            cir.setReturnValue(InteractionResult.SUCCESS);
-        } else if (blockState.getBlock() instanceof LiquidJarBlock) {
-            world.setBlockAndUpdate(pos, ModRegistry.FLUID_MIX_WIXIE_CAULDRON.get().defaultBlockState());
             cir.setReturnValue(InteractionResult.SUCCESS);
         } else if (ModList.get().isLoaded("farmersdelight")) {
             FarmerDelightCompat.checkWixieBlock(blockState, world, pos, cir);

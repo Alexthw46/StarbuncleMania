@@ -5,7 +5,10 @@ import alexthw.starbunclemania.client.FluidSourceLinkRenderer;
 import alexthw.starbunclemania.client.SourceCondenserRenderer;
 import alexthw.starbunclemania.common.StarbyMountEntity;
 import alexthw.starbunclemania.common.block.fluids.*;
-import alexthw.starbunclemania.common.block.wixie_stations.*;
+import alexthw.starbunclemania.common.block.wixie_stations.SmeltingWixieCauldron;
+import alexthw.starbunclemania.common.block.wixie_stations.SmeltingWixieCauldronTile;
+import alexthw.starbunclemania.common.block.wixie_stations.StonecutterWixieCauldron;
+import alexthw.starbunclemania.common.block.wixie_stations.StonecutterWixieCauldronTile;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
@@ -133,9 +136,6 @@ public class ModRegistry {
     public static final RegistryObject<Block> STONEWORK_WIXIE_CAULDRON;
     public static final RegistryObject<BlockEntityType<StonecutterWixieCauldronTile>> STONECUTTER_WIXIE_CAULDRON_TILE;
 
-    public static final RegistryObject<Block> FLUID_MIX_WIXIE_CAULDRON;
-    public static final RegistryObject<BlockEntityType<FluidMixWixieCauldronTile>> FLUID_MIX_WIXIE_CAULDRON_TILE;
-
     public static final RegistryObject<EntityType<StarbyMountEntity>> STARBY_MOUNT;
 
     static {
@@ -190,8 +190,6 @@ public class ModRegistry {
         STONEWORK_WIXIE_CAULDRON = BLOCKS.register("stonecutting_wixie_cauldron", StonecutterWixieCauldron::new);
         STONECUTTER_WIXIE_CAULDRON_TILE = BLOCK_ENTITIES.register("stonecutting_wixie_cauldron_tile", () -> BlockEntityType.Builder.of(StonecutterWixieCauldronTile::new, STONEWORK_WIXIE_CAULDRON.get()).build(null));
 
-        FLUID_MIX_WIXIE_CAULDRON = BLOCKS.register("fluid_mix_wixie_cauldron", FluidMixWixieCauldron::new);
-        FLUID_MIX_WIXIE_CAULDRON_TILE = BLOCK_ENTITIES.register("fluid_mix_wixie_cauldron_tile", () -> BlockEntityType.Builder.of(FluidMixWixieCauldronTile::new, FLUID_MIX_WIXIE_CAULDRON.get()).build(null));
     }
 
     public static final RegistryObject<CreativeModeTab> SBM_TAB = TABS.register("general", () -> CreativeModeTab.builder()

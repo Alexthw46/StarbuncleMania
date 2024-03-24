@@ -1,5 +1,6 @@
 package alexthw.starbunclemania.mixin;
 
+import alexthw.starbunclemania.registry.EidolonCompat;
 import alexthw.starbunclemania.registry.FarmerDelightCompat;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.WixieCharm;
@@ -30,9 +31,13 @@ public class WixieCharmMixin {
         } else if (blockState.getBlock() instanceof StonecutterBlock) {
             world.setBlockAndUpdate(pos, ModRegistry.STONEWORK_WIXIE_CAULDRON.get().defaultBlockState().setValue(StonecutterBlock.FACING, blockState.getValue(StonecutterBlock.FACING)));
             cir.setReturnValue(InteractionResult.SUCCESS);
-        } else if (ModList.get().isLoaded("farmersdelight")) {
-            FarmerDelightCompat.checkWixieBlock(blockState, world, pos, cir);
-
+        } else {
+            if (ModList.get().isLoaded("farmersdelight")) {
+                FarmerDelightCompat.checkWixieBlock(blockState, world, pos, cir);
+            }
+            if (ModList.get().isLoaded("eidolon")) {
+                EidolonCompat.checkWixieBlock(blockState, world, pos, cir);
+            }
         }
     }
 

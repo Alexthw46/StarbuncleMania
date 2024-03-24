@@ -90,6 +90,9 @@ public class ModRegistry {
         if (ModList.get().isLoaded("farmersdelight")) {
             FarmerDelightCompat.register();
         }
+        if (ModList.get().isLoaded("eidolon")) {
+            EidolonCompat.register();
+        }
     }
 
     public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {

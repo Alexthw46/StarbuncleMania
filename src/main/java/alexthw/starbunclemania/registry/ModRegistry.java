@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -53,6 +54,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
+import static com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers.register;
 
 @SuppressWarnings({"Convert2MethodRef", "ConstantConditions", "SpellCheckingInspection"})
 public class ModRegistry {
@@ -140,6 +142,9 @@ public class ModRegistry {
     public static final RegistryObject<BlockEntityType<StonecutterWixieCauldronTile>> STONECUTTER_WIXIE_CAULDRON_TILE;
 
     public static final RegistryObject<EntityType<StarbyMountEntity>> STARBY_MOUNT;
+
+    public static final PlayerTrigger WIXIE_1 = register(new PlayerTrigger(new ResourceLocation(StarbuncleMania.MODID, "wixie_cook")));
+    public static final PlayerTrigger WIXIE_2 = register(new PlayerTrigger(new ResourceLocation(StarbuncleMania.MODID, "wixie_stone")));
 
     static {
         STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));

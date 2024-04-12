@@ -1,0 +1,30 @@
+{
+  "parent": "ars_nouveau:wixie_charm",
+  "criteria": {
+    "wixie_cook": {
+      "conditions": {},
+      "trigger": "starbunclemania:wixie_cook"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "starbunclemania.adv.desc.wixie_cook"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:furnace"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "starbunclemania.adv.title.wixie_cook"
+    }
+  },
+  "requirements": [
+    [
+      "wixie_cook"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

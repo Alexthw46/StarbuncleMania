@@ -190,6 +190,11 @@ public class ArsProviders {
             addBasicItem(STARBATTERY.get(), AUTOMATION, new CraftingPage(STARBATTERY.get()));
             addBasicItem(STARSADDLE.get(), AUTOMATION, new ApparatusPage(STARSADDLE.get()));
 
+            addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM.get()).withName("starbunclemania.wixie_jobs")
+                            .withTextPage("starbunclemania.page.wixie_cook")
+                            .withTextPage("starbunclemania.page.wixie_cut")
+                    , getPath(AUTOMATION, "wixie_jobs"));
+
             for (PatchouliPage patchouliPage : pages) {
                 saveStable(cache, patchouliPage.build(), patchouliPage.path());
             }

@@ -9,10 +9,13 @@ import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancements;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class StarAdvancementsProvider extends ForgeAdvancementProvider {
+
 
     public StarAdvancementsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
         super(output, registries, existingFileHelper, List.of(new AEAdvancements()));
@@ -50,6 +54,10 @@ public class StarAdvancementsProvider extends ForgeAdvancementProvider {
             var fluidJar = saveBasicItem(ModRegistry.FLUID_JAR.get(), jar);
             saveBasicItem(ModRegistry.SOURCE_CONDENSER.get(), fluidJar);
             saveBasicItem(ModRegistry.FLUID_SOURCELINK.get(), fluidJar);
+
+            Advancement wixie = dummy("wixie_charm");
+            builder("wixie_cook").display(Blocks.FURNACE, FrameType.TASK, false).addCriterion(new PlayerTrigger.TriggerInstance(ModRegistry.WIXIE_1.getId(), ContextAwarePredicate.ANY)).parent(wixie).save(con);
+            builder("wixie_stoneworks").display(Blocks.STONECUTTER, FrameType.TASK, false).addCriterion(new PlayerTrigger.TriggerInstance(ModRegistry.WIXIE_2.getId(), ContextAwarePredicate.ANY)).parent(wixie).save(con);
 
         }
 

@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -17,6 +18,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -26,6 +28,19 @@ public class FluidScroll extends ModItem implements IScribeable{
 
     public FluidScroll(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
+        if (pUsedHand == InteractionHand.MAIN_HAND && !pLevel.isClientSide) {
+            ItemStack thisStack = pPlayer.getItemInHand(pUsedHand);
+            ItemStack otherStack = pPlayer.getItemInHand(InteractionHand.OFF_HAND);
+            if (!otherStack.isEmpty()) {
+                onScribe(pLevel, pPlayer.blockPosition(), pPlayer, InteractionHand.OFF_HAND, thisStack);
+                return InteractionResultHolder.success(thisStack);
+            }
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
     }
 
     public static boolean checkForFilters(@Nullable BlockPos pos, ItemStack scroll, FluidStack fluid, Level level){

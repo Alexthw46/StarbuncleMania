@@ -5,6 +5,7 @@ import alexthw.starbunclemania.common.block.wixie_stations.CrucibleWixieCauldron
 import alexthw.starbunclemania.common.block.wixie_stations.CrucibleWixieCauldronTile;
 import elucent.eidolon.common.block.CrucibleBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,9 +31,10 @@ public class EidolonCompat {
     }
 
 
-    public static void checkWixieBlock(BlockState blockState, Level world, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir) {
+    public static void checkWixieBlock(BlockState blockState, Level world, BlockPos pos, ServerPlayer player, CallbackInfoReturnable<InteractionResult> cir) {
         if (blockState.getBlock() instanceof CrucibleBlock) {
             world.setBlockAndUpdate(pos, CRUCIBLE_WIXIE_CAULDRON.get().defaultBlockState());
+            ModRegistry.WIXIE_1.trigger(player);
             cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }

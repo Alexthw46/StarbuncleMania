@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-03T16:57:38.9860367	StarbuncleMania Patchouli Datagen
+// 1.20.1	2024-04-13T00:09:04.2397666	StarbuncleMania Patchouli Datagen
 437de353525001a0bb9a32e350616d291b48c570 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/direction_scroll.json
 960c565890c0956910678a85924b17895f0c4ded assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/fluid_jar.json
 7b786cb216c8fe70d95d48e64648660b95386b98 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/star_balloon.json
@@ -6,6 +6,7 @@
 b9c6c8a2a441c2e79aacc3e6285e19dee14c04db assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/star_bin.json
 c20aec2c8decadbfda8759c905fa0269469c24e3 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/star_bucket.json
 f0973ed6d7870689120b1088c9797a225fe1c20b assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/star_saddle.json
+764983eb8ff5c93a3e7b6e9d3b18196a3d28bcf1 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/wixie_jobs.json
 adafee0a6d57396cb490dd7b28d22bbe5ed65d39 assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/automation/wyrm_degree.json
 ab87995f3a39d2341b532d3636c3a9ea9587690e assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/familiars/cosmetic.json
 c0c6d000d0a6a7c1b74983776a4ead1ed287ba5d assets/ars_nouveau/patchouli_books/worn_notebook/en_us/entries/glyphs_2/glyph_pickup_fluid.json

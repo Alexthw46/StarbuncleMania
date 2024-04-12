@@ -5,6 +5,7 @@ import alexthw.starbunclemania.registry.FarmerDelightCompat;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.items.summon_charms.WixieCharm;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -25,18 +26,21 @@ public class WixieCharmMixin {
     @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true, remap = false)
     public void useOnBlock(UseOnContext context, @NotNull Level world, BlockPos pos, CallbackInfoReturnable<InteractionResult> cir) {
         BlockState blockState = world.getBlockState(pos);
+        if (!(context.getPlayer() instanceof ServerPlayer player)) return;
         if (blockState.getBlock() instanceof FurnaceBlock) {
             world.setBlockAndUpdate(pos, ModRegistry.SMELTING_WIXIE_CAULDRON.get().defaultBlockState().setValue(FurnaceBlock.FACING, blockState.getValue(FurnaceBlock.FACING)));
             cir.setReturnValue(InteractionResult.SUCCESS);
+            ModRegistry.WIXIE_1.trigger(player);
         } else if (blockState.getBlock() instanceof StonecutterBlock) {
             world.setBlockAndUpdate(pos, ModRegistry.STONEWORK_WIXIE_CAULDRON.get().defaultBlockState().setValue(StonecutterBlock.FACING, blockState.getValue(StonecutterBlock.FACING)));
+            ModRegistry.WIXIE_2.trigger(player);
             cir.setReturnValue(InteractionResult.SUCCESS);
         } else {
             if (ModList.get().isLoaded("farmersdelight")) {
-                FarmerDelightCompat.checkWixieBlock(blockState, world, pos, cir);
+                FarmerDelightCompat.checkWixieBlock(blockState, world, pos, player, cir);
             }
             if (ModList.get().isLoaded("eidolon")) {
-                EidolonCompat.checkWixieBlock(blockState, world, pos, cir);
+                EidolonCompat.checkWixieBlock(blockState, world, pos, player, cir);
             }
         }
     }

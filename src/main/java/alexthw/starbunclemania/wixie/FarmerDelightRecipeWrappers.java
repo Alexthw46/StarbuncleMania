@@ -25,6 +25,7 @@ public class FarmerDelightRecipeWrappers {
             if (RECIPE_CACHE.containsKey(stack.getItem())) {
                 return RECIPE_CACHE.get(stack.getItem());
             }
+            if (level.getServer() == null) return wrapper;
             for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
                 if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
@@ -49,6 +50,7 @@ public class FarmerDelightRecipeWrappers {
             if (RECIPE_CACHE.containsKey(stack.getItem())) {
                 return RECIPE_CACHE.get(stack.getItem());
             }
+            if (level.getServer() == null) return wrapper;
             for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
                 if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())

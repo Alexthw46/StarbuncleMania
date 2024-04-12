@@ -1,0 +1,15 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:wixie_charm",
+  "name": "starbunclemania.wixie_jobs",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.wixie_cook"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "starbunclemania.page.wixie_cut"
+    }
+  ]
+}

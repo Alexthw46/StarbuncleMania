@@ -58,8 +58,8 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionFirst(storedPos, storedEntity, playerEntity);
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionFirst(storedPos, face, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
             if (be != null && be.getCapability(GAS_HANDLER).isPresent()) {
@@ -71,8 +71,8 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        super.onFinishedConnectionLast(storedPos, storedEntity, playerEntity);
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction face, @Nullable LivingEntity storedEntity, Player playerEntity) {
+        super.onFinishedConnectionLast(storedPos, face, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
             if (be != null && be.getCapability(GAS_HANDLER).isPresent()) {

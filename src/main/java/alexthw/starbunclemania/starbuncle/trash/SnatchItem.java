@@ -2,7 +2,6 @@ package alexthw.starbunclemania.starbuncle.trash;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
-import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -41,7 +40,6 @@ public class SnatchItem extends Goal {
         dest = null;
         stuckTicks = 0;
         starbuncle.goalState = Starbuncle.StarbuncleGoalState.NONE;
-        starbuncle.dynamicBehavior.syncTag();
     }
 
     @Override
@@ -63,13 +61,11 @@ public class SnatchItem extends Goal {
             starbuncle.addGoalDebug(this, new DebugEvent("TooLong", "Stopped finding item, time finding expired"));
             return false;
         }
-        if (!(starbuncle.dynamicBehavior instanceof StarbyVoidBehavior)) return false;
         return !itemStuck && starbuncle.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean canUse() {
-        if (starbuncle.dynamicBehavior instanceof StarbyTransportBehavior) return false;
         if (!starbuncle.getHeldStack().isEmpty())
             starbuncle.setHeldStack(ItemStack.EMPTY);
 

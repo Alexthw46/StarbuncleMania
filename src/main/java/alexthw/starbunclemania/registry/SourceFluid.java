@@ -11,11 +11,11 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -36,10 +36,10 @@ public class SourceFluid extends FluidType {
     {
         consumer.accept(new IClientFluidTypeExtensions()
         {
-            private static final ResourceLocation STILL = new ResourceLocation(ArsNouveau.MODID,"block/potion_still"),
-                    FLOW = new ResourceLocation(ArsNouveau.MODID,"block/potion_still"),
-                    OVERLAY = new ResourceLocation(ArsNouveau.MODID, "block/sourcestone"),
-                    VIEW_OVERLAY = new ResourceLocation(ArsNouveau.MODID, "textures/block/sourcestone.png");
+            private static final ResourceLocation STILL = ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID,"block/potion_still"),
+                    FLOW = ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID,"block/potion_still"),
+                    OVERLAY = ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "block/sourcestone"),
+                    VIEW_OVERLAY = ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "textures/block/sourcestone.png");
 
             @Override
             public ResourceLocation getStillTexture()

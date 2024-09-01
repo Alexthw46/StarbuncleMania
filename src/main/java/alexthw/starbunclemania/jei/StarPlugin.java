@@ -12,6 +12,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
@@ -21,12 +22,12 @@ public class StarPlugin implements IModPlugin {
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return new ResourceLocation(ArsNouveau.MODID, "extra");
+        return ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "extra");
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(FLUID_SOURCELINK, ArsNouveau.proxy.getClientWorld().getRecipeManager().getAllRecipesFor(ModRegistry.FLUID_SOURCELINK_RT.get()));
+        registration.addRecipes(FLUID_SOURCELINK, ArsNouveau.proxy.getClientWorld().getRecipeManager().getAllRecipesFor(ModRegistry.FLUID_SOURCELINK_RT.get()).stream().map(RecipeHolder::value).toList());
     }
 
     @Override

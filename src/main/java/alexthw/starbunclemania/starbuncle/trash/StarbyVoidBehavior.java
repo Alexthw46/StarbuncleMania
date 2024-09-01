@@ -21,12 +21,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class StarbyVoidBehavior extends StarbyListBehavior {
 
@@ -35,20 +35,15 @@ public class StarbyVoidBehavior extends StarbyListBehavior {
     public StarbyVoidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
         if (tag.contains("itemScroll")) {
-            this.itemScroll = ItemStack.of(tag.getCompound("itemScroll"));
+            this.itemScroll = ItemStack.parseOptional(level.registryAccess(), tag.getCompound("itemScroll"));
         }
         goals.add(new WrappedGoal(3, new SnatchItem(starbuncle, this)));
         goals.add(new WrappedGoal(3, new VoidFromStorageGoal(starbuncle, this)));
 
     }
 
-    public @Nullable IItemHandler getItemCapFromTile(BlockEntity blockEntity, @Nullable Direction face) {
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).isPresent()) {
-            var lazy = blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, face).resolve();
-            if (lazy.isPresent())
-                return lazy.get();
-        }
-        return null;
+    public @Nullable IItemHandler getItemCapFromTile(@NotNull BlockPos pos, @Nullable Direction face) {
+        return starbuncle.level().getCapability(Capabilities.ItemHandler.BLOCK, pos, face);
     }
 
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -79,8 +74,7 @@ public class StarbyVoidBehavior extends StarbyListBehavior {
         if (storedPos == null)
             return;
 
-        BlockEntity blockEntity = level.getBlockEntity(storedPos);
-        if (blockEntity != null && blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, side).isPresent()) {
+        if (starbuncle.level().getCapability(Capabilities.ItemHandler.BLOCK, storedPos, side) != null) {
             PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.take"));
             addFromPos(storedPos, side);
         }
@@ -120,7 +114,7 @@ public class StarbyVoidBehavior extends StarbyListBehavior {
 
         if (p == null || !level.isLoaded(p)) return false;
         Direction face = FROM_DIRECTION_MAP.get(p.hashCode());
-        IItemHandler iItemHandler = getItemCapFromTile(level.getBlockEntity(p), face);
+        IItemHandler iItemHandler = getItemCapFromTile(p, face);
 
         if (iItemHandler == null) return false;
         for (int j = 0; j < iItemHandler.getSlots(); j++) {
@@ -132,29 +126,31 @@ public class StarbyVoidBehavior extends StarbyListBehavior {
         return false;
     }
 
+    @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        if (this.itemScroll != null) {
-            tag.put("itemScroll", this.itemScroll.serializeNBT());
+        if (!itemScroll.isEmpty()) {
+            tag.put("itemScroll", itemScroll.save(level.registryAccess()));
         }
-
         return tag;
     }
 
-    public void getTooltip(List<Component> tooltip) {
+
+    @Override
+    public void getTooltip(Consumer<Component> tooltip) {
         super.getTooltip(tooltip);
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.trashing_items", FROM_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.trashing_items", FROM_LIST.size()));
         if (this.itemScroll != null && !this.itemScroll.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.filtering_with", this.itemScroll.getHoverName().getString()));
+            tooltip.accept(Component.translatable("ars_nouveau.filtering_with", this.itemScroll.getHoverName().getString()));
         }
 
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
 
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_item_void");
+    public static final ResourceLocation TRANSPORT_ID = ResourceLocation.fromNamespaceAndPath(StarbuncleMania.MODID, "starby_item_void");
 
 }

@@ -1,10 +1,9 @@
 package alexthw.starbunclemania.wixie;
 
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
-import elucent.eidolon.recipe.CrucibleRecipe;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
@@ -21,13 +20,13 @@ public class EidolonCrucibleWrapper extends MultiRecipeWrapper {
             return RECIPE_CACHE.get(stack.getItem());
         }
         if (level.getServer() == null) return wrapper;
-        for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
+        for (RecipeHolder<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
-            if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
+            if (r.value().getResultItem(level.registryAccess()).getItem() != stack.getItem())
                 continue;
 
-            if (r instanceof CrucibleRecipe)
-                wrapper.addRecipe(r.getIngredients(), r.getResultItem(level.registryAccess()), r);
+//            if (r.value() instanceof CrucibleRecipe crucibleRecipe)
+//                wrapper.addRecipe(crucibleRecipe.getIngredients(), crucibleRecipe.getResultItem(level.registryAccess()), crucibleRecipe);
 
         }
 

@@ -2,18 +2,19 @@ package alexthw.starbunclemania.registry;
 
 import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
-import mekanism.api.chemical.gas.Gas;
-import mekanism.api.chemical.gas.attribute.GasAttributes;
-import mekanism.api.math.FloatingLong;
+
+import mekanism.api.chemical.Chemical;
+import mekanism.api.chemical.attribute.ChemicalAttributes;
 import mekanism.common.base.IChemicalConstant;
-import mekanism.common.registration.impl.GasDeferredRegister;
-import mekanism.common.registration.impl.GasRegistryObject;
-import net.minecraftforge.eventbus.api.IEventBus;
+
+import mekanism.common.registration.impl.ChemicalDeferredRegister;
+import mekanism.common.registration.impl.DeferredChemical;
+import net.neoforged.bus.api.IEventBus;
 
 public class MekanismCompat {
 
-    public static final GasDeferredRegister GASES = new GasDeferredRegister(StarbuncleMania.MODID);
-    public static final GasRegistryObject<Gas> SOURCE_GAS = GASES.register(new IChemicalConstant() {
+    public static final ChemicalDeferredRegister GASES = new ChemicalDeferredRegister(StarbuncleMania.MODID);
+    public static final DeferredChemical<?> SOURCE_GAS = GASES.registerGas(new IChemicalConstant() {
         @Override
         public String getName() {
             return "source_gas";
@@ -38,7 +39,7 @@ public class MekanismCompat {
         public int getLightLevel() {
             return 0;
         }
-    }, new GasAttributes.Fuel(() -> 1, () -> FloatingLong.create(Configs.GAS_SOURCE_BURN_VALUE.get())));
+    }, new ChemicalAttributes.Fuel(() -> 1, () -> Configs.GAS_SOURCE_BURN_VALUE.get()));
 
 
     public static void register(IEventBus bus) {

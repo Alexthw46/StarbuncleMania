@@ -5,28 +5,27 @@ import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.glyph.PickupFluidEffect;
 import alexthw.starbunclemania.glyph.PlaceFluidEffect;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.*;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
@@ -52,7 +51,7 @@ public class ArsProviders {
             Path output = this.generator.getPackOutput().getOutputFolder();
             for (GlyphRecipe recipe : recipes) {
                 Path path = getScribeGlyphPath(output, recipe.output.getItem());
-                saveStable(cache, recipe.asRecipe(), path);
+                saveStable(cache, GlyphRecipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow(), path);
             }
 
         }
@@ -62,7 +61,7 @@ public class ArsProviders {
         }
 
         @Override
-        public String getName() {
+        public @NotNull String getName() {
             return "Starbunclemania Glyph Recipes";
         }
     }
@@ -74,12 +73,12 @@ public class ArsProviders {
         }
 
         @Override
-        public void collectJsons(CachedOutput cache) {
+        public void addEntries() {
 
             recipes.add(builder().withReagent(Items.BOOK)
-                    .withResult(FamiliarRegistry.getFamiliarScriptMap().get(new ResourceLocation(ArsNouveau.MODID, LibEntityNames.FAMILIAR_BOOKWYRM)))
-                            .withPedestalItem(3, Items.IRON_INGOT)
-                            .withPedestalItem(3, ItemTagProvider.SOURCE_GEM_TAG)
+                    .withResult(FamiliarRegistry.getFamiliarScriptMap().get(ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, LibEntityNames.FAMILIAR_BOOKWYRM)))
+                    .withPedestalItem(3, Items.IRON_INGOT)
+                    .withPedestalItem(3, ItemTagProvider.SOURCE_GEM_TAG)
                     .build()
             );
 
@@ -106,14 +105,6 @@ public class ArsProviders {
                     .build()
             );
 
-            Path output = this.generator.getPackOutput().getOutputFolder();
-            for (EnchantingApparatusRecipe g : recipes) {
-                if (g != null) {
-                    Path path = getRecipePath(output, g.getId().getPath());
-                    saveStable(cache, g.asRecipe(), path);
-                }
-            }
-
         }
 
         protected static Path getRecipePath(Path pathIn, String str) {
@@ -134,13 +125,6 @@ public class ArsProviders {
 
         @Override
         public void collectJsons(CachedOutput cache) {
-
-            Path output = generator.getPackOutput().getOutputFolder();
-            for (ImbuementRecipe g : recipes) {
-                Path path = getRecipePath(output, g.getId().getPath());
-                DataProvider.saveStable(cache, g.asRecipe(), path);
-            }
-
         }
 
         protected Path getRecipePath(Path pathIn, String str) {
@@ -148,7 +132,7 @@ public class ArsProviders {
         }
 
         @Override
-        public String getName() {
+        public @NotNull String getName() {
             return "Starbunclemania Imbuement";
         }
 
@@ -176,14 +160,14 @@ public class ArsProviders {
             addPage(new PatchouliBuilder(FAMILIARS, STARHAT.get()).withName("starbunclemania.cosmetic")
                             .withTextPage("starbunclemania.page.star_hat")
                             .withPage(new CraftingPage(STARHAT.get()))
-                    ,getPath(FAMILIARS, "cosmetic"));
+                    , getPath(FAMILIARS, "cosmetic"));
             addBasicItem(PROFHAT.get(), AUTOMATION, new CraftingPage(PROFHAT.get()));
             addPage(new PatchouliBuilder(AUTOMATION, STARBUCKET.get())
                             .withTextPage("starbunclemania.page.star_bucket")
                             .withPage(new ApparatusPage(STARBUCKET.get()))
                             .withTextPage("starbunclemania.page.fluid_scroll")
                             .withPage(new CraftingPage(FLUID_SCROLL_A.get())
-                            .withRecipe2(FLUID_SCROLL_D.get()))
+                                    .withRecipe2(FLUID_SCROLL_D.get()))
                     , getPath(AUTOMATION, "star_bucket"));
             addBasicItem(STARBALLON.get(), AUTOMATION, new ApparatusPage(STARBALLON.get()));
             addBasicItem(STARTRASH.get(), AUTOMATION, new CraftingPage(STARTRASH.get()));

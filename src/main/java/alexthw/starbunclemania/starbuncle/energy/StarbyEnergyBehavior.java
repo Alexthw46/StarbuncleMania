@@ -17,15 +17,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class StarbyEnergyBehavior extends StarbyListBehavior {
 
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(ArsNouveau.MODID, "starby_energy_transport");
+    public static final ResourceLocation TRANSPORT_ID = ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "starby_energy_transport");
 
     public int getEnergy() {
         return energy;
@@ -51,15 +51,14 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         return isBedPowered() || (getBatteryForTake() == null || energy > Configs.STARBATTERY_THRESHOLD.get()) && (energy == 0 || getBatteryForStore() == null);
     }
 
-    public static @Nullable IEnergyStorage getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
-        BlockEntity be = level.getBlockEntity(pos);
-        sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
-        Direction side = sideOrdinal < 0 ? Direction.UP : Direction.values()[sideOrdinal];
-        return be != null && be.getCapability(ForgeCapabilities.ENERGY, side).isPresent() && be.getCapability(ForgeCapabilities.ENERGY, side).resolve().isPresent() ? be.getCapability(ForgeCapabilities.ENERGY, side).resolve().get() : null;
+    public static @Nullable IEnergyStorage getHandlerFromCap(BlockPos pos, Level level, Direction side) {
+        if (side == null) side = Direction.UP;
+        side = StarHelper.checkItemFramesForSide(pos, level, side);
+        return level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, side);
     }
 
     public IEnergyStorage getHandlerFromCap(BlockPos pos, Direction side) {
-        return getHandlerFromCap(pos, level, side == null ? -1 : side.ordinal());
+        return getHandlerFromCap(pos, level, side);
     }
 
     public @Nullable BlockPos getBatteryForTake() {
@@ -104,7 +103,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
         super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos != null) {
             BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && (be.getCapability(ForgeCapabilities.ENERGY, side).isPresent() || getHandlerFromCap(storedPos, side) != null)) {
+            if (level.getCapability(Capabilities.EnergyStorage.BLOCK, storedPos, side) != null || getHandlerFromCap(storedPos, side) != null) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.energy_to"));
@@ -116,8 +115,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
         if (storedPos != null) {
-            BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && (be.getCapability(ForgeCapabilities.ENERGY, side).isPresent() || getHandlerFromCap(storedPos, side) != null)) {
+            if (starbuncle.level().getCapability(Capabilities.EnergyStorage.BLOCK, storedPos, side) != null || getHandlerFromCap(storedPos, side) != null) {
                 addFromPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.energy_from"));
@@ -126,10 +124,10 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void getTooltip(List<Component> tooltip) {
+    public void getTooltip(Consumer<Component> tooltip) {
         super.getTooltip(tooltip);
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_energy", TO_LIST.size()));
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_energy", FROM_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.storing_energy", TO_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking_energy", FROM_LIST.size()));
     }
 
     @Override
@@ -143,7 +141,7 @@ public class StarbyEnergyBehavior extends StarbyListBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
 

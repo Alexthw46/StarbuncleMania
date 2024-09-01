@@ -3,6 +3,7 @@ package alexthw.starbunclemania.datagen;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
@@ -10,22 +11,23 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
 import static alexthw.starbunclemania.registry.ModRegistry.*;
 
 public class ModRecipeProvider extends RecipeProvider {
-    public ModRecipeProvider(DataGenerator pGenerator) {
-        super(pGenerator.getPackOutput());
+    public ModRecipeProvider(DataGenerator pGenerator, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(pGenerator.getPackOutput(), lookupProvider);
     }
 
     @Override
-    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+    protected void buildRecipes(@NotNull RecipeOutput consumer) {
+
         //items
         shaped(STARBATTERY)
                 .define('R', Items.REDSTONE)
@@ -85,18 +87,20 @@ public class ModRecipeProvider extends RecipeProvider {
 
         shapelessBuilder(DIRECTION_SCROLL.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.COMPASS).save(consumer);
         shapelessBuilder(FLUID_SCROLL_A.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).save(consumer);
-        shapelessBuilder(FLUID_SCROLL_D.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).requires(Ingredient.of(Tags.Items.COBBLESTONE)).save(consumer);
+        shapelessBuilder(FLUID_SCROLL_D.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).requires(Ingredient.of(Tags.Items.COBBLESTONES)).save(consumer);
         shapelessBuilder(FLUID_SCROLL_A.get()).requires(FLUID_SCROLL_A.get()).save(consumer, prefix("clear_fluid_allow"));
         shapelessBuilder(FLUID_SCROLL_D.get()).requires(FLUID_SCROLL_D.get()).save(consumer, prefix("clear_fluid_deny"));
 
     }
 
-    public ShapedRecipeBuilder shaped(RegistryObject<Item> result){
+    public ShapedRecipeBuilder shaped(DeferredHolder<Item, Item> result) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result.get()).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK));
     }
-    public ShapedRecipeBuilder shapedB(RegistryObject<Block> result){
+
+    public ShapedRecipeBuilder shapedB(DeferredHolder<Block, Block> result) {
         return ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result.get()).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK));
     }
+
     public ShapelessRecipeBuilder shapelessBuilder(ItemLike result) {
         return shapelessBuilder(result, 1);
     }

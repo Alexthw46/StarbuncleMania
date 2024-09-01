@@ -5,18 +5,18 @@ import alexthw.starbunclemania.registry.EidolonCompat;
 import alexthw.starbunclemania.registry.ModRegistry;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = StarbuncleMania.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT, modid = StarbuncleMania.MODID, bus = EventBusSubscriber.Bus.MOD)
 @OnlyIn(Dist.CLIENT)
 public class ClientHandler {
     @SubscribeEvent
@@ -36,16 +36,16 @@ public class ClientHandler {
     public static void init(final FMLClientSetupEvent evt) {
 
         BlockEntityRenderers.register(ModRegistry.FLUID_JAR_TILE.get(), context -> new JarRenderer());
-        evt.enqueueWork(() -> ItemProperties.register(ModRegistry.DIRECTION_SCROLL.get(), new ResourceLocation(StarbuncleMania.MODID, "side"), (stack, level, entity, seed) -> {
-            CompoundTag tag = stack.getTag();
-            return tag != null ? tag.getInt("side") : -1;
+        evt.enqueueWork(() -> ItemProperties.register(ModRegistry.DIRECTION_SCROLL.get(), ResourceLocation.fromNamespaceAndPath(StarbuncleMania.MODID, "side"), (stack, level, entity, seed) -> {
+            var tag = stack.get(ModRegistry.DIRECTION);
+            return tag != null ? tag.direction().ordinal() : -1;
         }));
 
     }
 
     @SubscribeEvent
     public static void registerColors(final RegisterColorHandlersEvent.Item event){
-        event.register((stack, tintIndex) -> tintIndex == 0 ? stack.getOrCreateTag().getInt("color") : -1,
+        event.register((stack, tintIndex) -> tintIndex == 0 ? stack.get(DataComponents.DYED_COLOR).rgb() : -1,
                 ModRegistry.STARBALLON.get());
     }
 

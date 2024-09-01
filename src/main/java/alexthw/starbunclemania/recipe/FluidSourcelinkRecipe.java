@@ -1,65 +1,34 @@
 package alexthw.starbunclemania.recipe;
 
 import alexthw.starbunclemania.registry.ModRegistry;
-import com.google.gson.JsonObject;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.SpecialSingleInputRecipe;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class FluidSourcelinkRecipe implements Recipe<Container> {
-
-    public ResourceLocation id;
-
-    public ResourceLocation getFluidType() {
-        return fluidType;
-    }
-
-    public double getConversion_ratio() {
-        return conversion_ratio;
-    }
-
-    public ResourceLocation fluidType;
-    public double conversion_ratio;
-
-    public FluidSourcelinkRecipe(ResourceLocation id, ResourceLocation fluid, double conversion_ratio) {
-        this.id = id;
-        this.fluidType = fluid;
-        this.conversion_ratio = conversion_ratio;
-    }
+public record FluidSourcelinkRecipe(ResourceLocation fluidType, double conversion_ratio) implements SpecialSingleInputRecipe {
 
     @Override
-    public boolean matches(@NotNull Container pContainer, @NotNull Level pLevel) {
+    public boolean matches(@NotNull SingleRecipeInput pContainer, @NotNull Level pLevel) {
         return false;
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull Container pContainer, @NotNull RegistryAccess registryAccess) {
+    public @NotNull ItemStack assemble(@NotNull SingleRecipeInput pContainer, @NotNull HolderLookup.Provider registryAccess) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return false;
-    }
-
-
-    @Override
-    public @NotNull ItemStack getResultItem(@NotNull RegistryAccess p_267052_) {
+    public @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider p_267052_) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public @NotNull ResourceLocation getId() {
-        return this.id;
     }
 
     @Override
@@ -72,30 +41,35 @@ public class FluidSourcelinkRecipe implements Recipe<Container> {
         return ModRegistry.FLUID_SOURCELINK_RT.get();
     }
 
-    @Override
-    public boolean isSpecial() {
-        return true;
-    }
-
 
     public static class Serializer implements RecipeSerializer<FluidSourcelinkRecipe> {
 
-        @Override
-        public @NotNull FluidSourcelinkRecipe fromJson(@NotNull ResourceLocation pRecipeId, @NotNull JsonObject json) {
-            double ratio = GsonHelper.getAsDouble(json, "mb_to_source_ratio");
-            ResourceLocation fluid = ResourceLocation.tryParse(GsonHelper.getAsString(json, "fluid"));
-            return new FluidSourcelinkRecipe(pRecipeId, fluid, ratio);
+        public static @NotNull FluidSourcelinkRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
+            return new FluidSourcelinkRecipe(pBuffer.readResourceLocation(), pBuffer.readDouble());
         }
 
-        @Override
-        public @Nullable FluidSourcelinkRecipe fromNetwork(@NotNull ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            return new FluidSourcelinkRecipe(pRecipeId, pBuffer.readResourceLocation(), pBuffer.readDouble());
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, FluidSourcelinkRecipe pRecipe) {
+        public static void toNetwork(RegistryFriendlyByteBuf pBuffer, FluidSourcelinkRecipe pRecipe) {
             pBuffer.writeResourceLocation(pRecipe.fluidType);
             pBuffer.writeDouble(pRecipe.conversion_ratio);
+        }
+
+        public static final MapCodec<FluidSourcelinkRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("fluid").forGetter(FluidSourcelinkRecipe::fluidType),
+                Codec.DOUBLE.fieldOf("mb_to_source_ratio").forGetter(FluidSourcelinkRecipe::conversion_ratio)
+        ).apply(instance, FluidSourcelinkRecipe::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, FluidSourcelinkRecipe> STREAM_CODEC = StreamCodec.of(
+                FluidSourcelinkRecipe.Serializer::toNetwork, FluidSourcelinkRecipe.Serializer::fromNetwork
+        );
+
+        @Override
+        public @NotNull MapCodec<FluidSourcelinkRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, FluidSourcelinkRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

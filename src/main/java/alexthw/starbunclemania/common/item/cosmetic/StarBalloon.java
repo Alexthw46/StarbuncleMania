@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -20,15 +21,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -54,17 +54,13 @@ public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeabl
     }
 
     @Override
-    public void onDye(ItemStack stack, DyeColor dyeColor) {
-        stack.getOrCreateTag().putInt("color", dyeColor.getFireworkColor());
-    }
-
-    @Override
     public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
             final BalloonRenderer renderer = new BalloonRenderer();
+
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+            public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer;
             }
         });
@@ -104,7 +100,7 @@ public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeabl
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar animationData) {
         animationData.add(new AnimationController<>(this, "idle_controller", 1, tAnimationEvent ->
-            tAnimationEvent.setAndContinue(RawAnimation.begin().thenLoop("float"))));
+                tAnimationEvent.setAndContinue(RawAnimation.begin().thenLoop("float"))));
     }
 
     public final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);

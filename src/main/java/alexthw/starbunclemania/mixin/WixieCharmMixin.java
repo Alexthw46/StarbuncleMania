@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FurnaceBlock;
 import net.minecraft.world.level.block.StonecutterBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,10 +30,10 @@ public class WixieCharmMixin {
         if (blockState.getBlock() instanceof FurnaceBlock) {
             world.setBlockAndUpdate(pos, ModRegistry.SMELTING_WIXIE_CAULDRON.get().defaultBlockState().setValue(FurnaceBlock.FACING, blockState.getValue(FurnaceBlock.FACING)));
             cir.setReturnValue(InteractionResult.SUCCESS);
-            ModRegistry.WIXIE_1.trigger(player);
+            ModRegistry.WIXIE_1.get().trigger(player);
         } else if (blockState.getBlock() instanceof StonecutterBlock) {
             world.setBlockAndUpdate(pos, ModRegistry.STONEWORK_WIXIE_CAULDRON.get().defaultBlockState().setValue(StonecutterBlock.FACING, blockState.getValue(StonecutterBlock.FACING)));
-            ModRegistry.WIXIE_2.trigger(player);
+            ModRegistry.WIXIE_2.get().trigger(player);
             cir.setReturnValue(InteractionResult.SUCCESS);
         } else {
             if (ModList.get().isLoaded("farmersdelight")) {

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 import net.minecraft.world.level.Level;
 
@@ -20,13 +21,13 @@ public class StonecutterRecipeWrapper extends MultiRecipeWrapper {
             return RECIPE_CACHE.get(stack.getItem());
         }
         if (level.getServer() == null) return wrapper;
-        for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
+        for (RecipeHolder<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
-            if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
+            if (r.value().getResultItem(level.registryAccess()).getItem() != stack.getItem())
                 continue;
 
-            if (r instanceof StonecutterRecipe)
-                wrapper.addRecipe(r.getIngredients(), r.getResultItem(level.registryAccess()), r);
+            if (r.value() instanceof StonecutterRecipe stonecutterRecipe)
+                wrapper.addRecipe(stonecutterRecipe.getIngredients(), stonecutterRecipe.getResultItem(level.registryAccess()), stonecutterRecipe);
 
         }
 

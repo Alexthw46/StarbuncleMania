@@ -5,6 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
@@ -21,13 +22,13 @@ public class SmeltingRecipeWrapper extends MultiRecipeWrapper {
         }
         if (level.getServer() == null) return wrapper;
 
-        for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
+        for (RecipeHolder<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
-            if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
+            if (r.value().getResultItem(level.registryAccess()).getItem() != stack.getItem())
                 continue;
 
-            if (r instanceof AbstractCookingRecipe)
-                wrapper.addRecipe(r.getIngredients(), r.getResultItem(level.registryAccess()), r);
+            if (r.value() instanceof AbstractCookingRecipe cookingRecipe)
+                wrapper.addRecipe(cookingRecipe.getIngredients(), cookingRecipe.getResultItem(level.registryAccess()), cookingRecipe);
 
         }
 

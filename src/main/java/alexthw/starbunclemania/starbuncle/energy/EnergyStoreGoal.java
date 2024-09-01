@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyStoreGoal extends GoToPosGoal<StarbyEnergyBehavior> {

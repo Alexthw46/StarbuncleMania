@@ -1,9 +1,9 @@
 package alexthw.starbunclemania.glyph;
 
 import com.hollingsworth.arsnouveau.api.item.inv.ExtractedStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
 class WrappedExtractedItemHandler implements IFluidHandler {

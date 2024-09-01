@@ -2,7 +2,6 @@ package alexthw.starbunclemania.client;
 
 import alexthw.starbunclemania.common.block.fluids.LiquidJarTile;
 import alexthw.starbunclemania.common.item.FluidJarItem;
-import com.hollingsworth.arsnouveau.client.renderer.item.FixedGeoItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.GenericModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -16,10 +15,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
 
@@ -27,7 +29,7 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
         super();
     }
 
-    public static class ISTER extends FixedGeoItemRenderer<FluidJarItem> {
+    public static class ISTER extends GeoItemRenderer<FluidJarItem> {
 
         public ISTER() {
             super(new GenericModel<FluidJarItem>("fluid_jar"));
@@ -38,10 +40,10 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
             super.renderByItem(pStack, pTransformType, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
             pPoseStack.pushPose();
             pPoseStack.translate(0, 0.5, 0);
-            if (pStack.getItem() instanceof FluidJarItem) {
-                FluidStack fluid = FluidJarItem.getFluidFromTag(pStack);
+            if (pStack.getCapability(Capabilities.FluidHandler.ITEM) instanceof IFluidHandler fluidHandler) {
+                FluidStack fluid = fluidHandler.getFluidInTank(0);
                 if (!fluid.isEmpty()) {
-                    float percentage = (pStack.getOrCreateTag().contains("Starbuncle")) ? 1 : (float) fluid.getAmount() / LiquidJarTile.capacity;
+                    float percentage = Math.max(0.1F, (float) fluid.getAmount() / LiquidJarTile.capacity);
                     renderFluid(percentage, IClientFluidTypeExtensions.of(fluid.getFluid()).getTintColor(fluid),
                             fluid.getFluid().getFluidType().getLightLevel(), IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(),
                             pPoseStack, pBuffer, pPackedLight, true, LIQUID_DIMENSIONS);
@@ -180,8 +182,8 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
 
     public static void addVert(VertexConsumer builder, PoseStack matrixStackIn, float x, float y, float z, float u, float v, float r, float g,
                                float b, float a, int lu, int lv, float nx, float ny, float nz) {
-        builder.vertex(matrixStackIn.last().pose(), x, y, z).color(r, g, b, a).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(lu, lv)
-                .normal(matrixStackIn.last().normal(), nx, ny, nz).endVertex();
+        builder.addVertex(matrixStackIn.last().pose(), x, y, z).setColor(r, g, b, a).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setUv2(lu, lv)
+                .setNormal(matrixStackIn.last(), nx, ny, nz);
     }
 
 }

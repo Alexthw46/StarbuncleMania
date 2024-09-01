@@ -6,19 +6,16 @@ import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
 
 public class SourceCondenserTile extends AbstractTankTile implements GeoBlockEntity, ITickable {
 
@@ -42,18 +39,16 @@ public class SourceCondenserTile extends AbstractTankTile implements GeoBlockEnt
                 }
             }
             if (!this.tank.isEmpty() && this.tank.getFluidAmount() >= 1000) {
-                BlockEntity be = level.getBlockEntity(this.getBlockPos().below());
-                if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).isPresent()) {
-                    IFluidHandler handler = be.getCapability(FLUID_HANDLER, Direction.UP).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, Direction.UP).resolve().get() : null;
-                    if (handler != null && handler.fill(tester, IFluidHandler.FluidAction.SIMULATE) > 100) {
-                        int drain = handler.fill(tester, IFluidHandler.FluidAction.EXECUTE);
-                        this.tank.drain(drain, IFluidHandler.FluidAction.EXECUTE);
-                    }
+                IFluidHandler handler = level.getCapability(Capabilities.FluidHandler.BLOCK, getBlockPos().below(), Direction.UP);
+                if (handler != null && handler.fill(tester, IFluidHandler.FluidAction.SIMULATE) > 100) {
+                    int drain = handler.fill(tester, IFluidHandler.FluidAction.EXECUTE);
+                    this.tank.drain(drain, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
-            updateBlock();
         }
+        updateBlock();
     }
+
 
     AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 

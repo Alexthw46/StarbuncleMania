@@ -6,11 +6,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
 
@@ -19,7 +19,7 @@ public class StarItemModelProvider extends ItemModelProvider {
         super(generator.getPackOutput(), StarbuncleMania.MODID, existingFileHelper);
     }
 
-    private static final ResourceLocation GENERATED = new ResourceLocation("item/generated");
+    private static final ResourceLocation GENERATED = ResourceLocation.withDefaultNamespace("item/generated");
 
     @Override
     protected void registerModels() {
@@ -43,17 +43,17 @@ public class StarItemModelProvider extends ItemModelProvider {
     }
 
 
-    private void generatedItem(RegistryObject<Item> i) {
+    private void generatedItem(DeferredHolder<Item,Item> i) {
         String name = i.getId().getPath();
         withExistingParent(name, GENERATED).texture("layer0", prefix("item/" + name));
     }
 
-    private void blockGeneratedItem(RegistryObject<Item> i) {
+    private void blockGeneratedItem(DeferredHolder<Item,Item> i) {
         String name = i.getId().getPath();
         withExistingParent(name, GENERATED).texture("layer0", prefix("block/" + name));
     }
 
-    private void blockItem(RegistryObject<Item> i) {
+    private void blockItem(DeferredHolder<Item,Item> i) {
         String name = i.getId().getPath();
         getBuilder(name).parent(new ModelFile.UncheckedModelFile(prefix("block/" + name)));
     }

@@ -1,9 +1,10 @@
 package alexthw.starbunclemania.common.item;
 
+import alexthw.starbunclemania.registry.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,24 +16,6 @@ public class JarStackFluidHandler extends FluidHandlerItemStack {
      * @param capacity  The maximum capacity of this fluid tank.
      */
     public JarStackFluidHandler(@NotNull ItemStack container, int capacity) {
-        super(container, capacity);
-    }
-
-    @Override
-    public @NotNull FluidStack getFluid() {
-        return FluidJarItem.getFluidFromTag(this.container);
-    }
-
-    @Override
-    protected void setFluid(FluidStack fluid) {
-        CompoundTag fluidTag = new CompoundTag();
-
-        fluid.writeToNBT(fluidTag);
-        container.getOrCreateTag().put("BlockEntityTag", fluidTag);
-    }
-
-    @Override
-    protected void setContainerToEmpty() {
-        container.removeTagKey("BlockEntityTag");
+        super(ModRegistry.FLUID_CONTENT,container, capacity);
     }
 }

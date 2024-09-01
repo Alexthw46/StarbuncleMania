@@ -1,12 +1,16 @@
 package alexthw.starbunclemania.common.block.fluids;
 
 import alexthw.starbunclemania.Configs;
+import alexthw.starbunclemania.recipe.FluidSourcelinkRecipe;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.potion.PotionData;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,22 +19,19 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
 
 public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvider {
 
@@ -39,7 +40,6 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
     }
 
     public static int capacity = 6000;
-    private final LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> this.tank);
 
     protected final FluidTank tank = new FluidTank(capacity) {
         protected void onContentsChanged() {
@@ -48,7 +48,7 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
         }
 
         @Override
-        public boolean isFluidValid(FluidStack stack) {
+        public boolean isFluidValid(@NotNull FluidStack stack) {
             return FluidSourcelinkTile.this.getSourceFromFluid(stack) > 0;
         }
     };
@@ -57,7 +57,7 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
         for (int i = 0; i < tank.getTanks(); i++) {
             FluidStack fluid = tank.getFluidInTank(i);
             if (getSourceFromFluid(fluid) > 0) {
-                return this.tank.isEmpty() || this.tank.getFluid().isFluidEqual(fluid);
+                return this.tank.isEmpty() || FluidStack.isSameFluidSameComponents(this.tank.getFluid(), fluid);
             }
         }
         return false;
@@ -68,11 +68,10 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
         super.tick();
         if (level != null) {
             if (this.tank.getSpace() > 0 && level.getGameTime() % 20 == 0) {
-                BlockEntity be = level.getBlockEntity(this.getBlockPos().below());
-                if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER, Direction.UP).isPresent()) {
-                    IFluidHandler handler = be.getCapability(FLUID_HANDLER, Direction.DOWN).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, Direction.DOWN).resolve().get() : null;
-                    if (handler != null && tester(handler)) {
-                        this.tank.fill(handler.drain(Math.min(2000, tank.getSpace()), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+                IFluidHandler fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, getBlockPos().below(), Direction.UP);
+                if (fluidHandler != null) {
+                    if (tester(fluidHandler)) {
+                        this.tank.fill(fluidHandler.drain(Math.min(2000, tank.getSpace()), IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             }
@@ -91,19 +90,19 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
 
     double getSourceFromFluid(FluidStack tank) {
         if (!tank.isEmpty() && level != null) {
-            ResourceLocation fluid = ForgeRegistries.FLUIDS.getKey(tank.getFluid());
-            if (fluid == null) return 0;
+            ResourceLocation fluid = BuiltInRegistries.FLUID.getKey(tank.getFluid());
             if (cache.containsKey(fluid)) {
                 return cache.get(fluid);
             } else if (Configs.FLUID_TO_SOURCE_MAP.containsKey(fluid)) {
                 double value = Configs.FLUID_TO_SOURCE_MAP.get(fluid);
                 cache.put(fluid, value);
                 return value;
-            } else if (tank.hasTag() && tank.getFluid().is(ModRegistry.POTION)) {
-                PotionData potion = PotionData.fromTag(tank.getTag());
+            } else if (tank.has(DataComponents.POTION_CONTENTS)) {
+                PotionContents contents = tank.get(DataComponents.POTION_CONTENTS);
                 double mana = 75;
-                Set<MobEffect> effectTypes = new HashSet<>();
-                for (MobEffectInstance e : potion.fullEffects()) {
+                Set<Holder<MobEffect>> effectTypes = new HashSet<>();
+                assert contents != null;
+                for (MobEffectInstance e : contents.getAllEffects()) {
                     mana += (e.getDuration() / 50.);
                     mana += e.getAmplifier() * 250;
                     mana += 150;
@@ -113,22 +112,17 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
                     mana *= (1.5 * (effectTypes.size() - 1));
                 return mana / 250; //250 mb equals a potion
             } else {
-                var recipes = level.getRecipeManager().getAllRecipesFor(ModRegistry.FLUID_SOURCELINK_RT.get());
-                var find = recipes.stream().filter(r -> r.fluidType.equals(fluid)).findFirst().orElse(null);
+                List<RecipeHolder<FluidSourcelinkRecipe>> recipes = level.getRecipeManager().getAllRecipesFor(ModRegistry.FLUID_SOURCELINK_RT.get());
+                FluidSourcelinkRecipe find = recipes.stream().map(RecipeHolder::value).filter(r -> r.fluidType().equals(fluid)).findFirst().orElse(null);
                 double value = 0;
                 if (find != null) {
-                    value = find.conversion_ratio;
+                    value = find.conversion_ratio();
                 }
                 cache.put(fluid, value);
                 return value;
             }
         }
         return 0;
-    }
-
-    @NotNull
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction facing) {
-        return capability == ForgeCapabilities.FLUID_HANDLER ? this.holder.cast() : super.getCapability(capability, facing);
     }
 
     public boolean interact(Player player, InteractionHand hand) {
@@ -150,24 +144,24 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        super.handleUpdateTag(tag);
+    public void handleUpdateTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider pRegistries) {
+        super.handleUpdateTag(tag, pRegistries);
         if (level != null)
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 8);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(tag, pRegistries);
         if (!tank.isEmpty()) {
-            tank.writeToNBT(tag);
+            tank.writeToNBT(pRegistries, tag);
         }
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        tank.readFromNBT(pTag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(tag, pRegistries);
+        tank.readFromNBT(pRegistries, tag);
     }
 
     @Override

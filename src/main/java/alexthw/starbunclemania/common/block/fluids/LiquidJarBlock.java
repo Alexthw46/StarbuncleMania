@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.common.block.TickableModBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +35,7 @@ public class LiquidJarBlock extends TickableModBlock {
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+    public int getLightEmission(@NotNull BlockState state, BlockGetter level, @NotNull BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof LiquidJarTile tile){
             if (!tile.tank.isEmpty()){
                return tile.tank.getFluid().getFluid().getFluidType().getLightLevel();
@@ -56,15 +58,17 @@ public class LiquidJarBlock extends TickableModBlock {
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        if (super.use(state, level, pos, player, hand, hit) == InteractionResult.PASS) {
+
+    @Override
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
+        if (super.useItemOn(stack, state, level, pos, player, hand, hitResult) == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
             if (level.getBlockEntity(pos) instanceof LiquidJarTile be && be.interact(player, hand)) {
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
             }
         }
-
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
+
 
     @Override
     public boolean hasAnalogOutputSignal(@NotNull BlockState state) {

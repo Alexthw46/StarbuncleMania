@@ -18,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class ProfHat extends Item implements ICosmeticItem {
 
@@ -26,7 +27,7 @@ public class ProfHat extends Item implements ICosmeticItem {
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
+    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
 
         if (pInteractionTarget instanceof IDecoratable deco && canWear(pInteractionTarget)){
             deco.setCosmeticItem(pStack.split(1));

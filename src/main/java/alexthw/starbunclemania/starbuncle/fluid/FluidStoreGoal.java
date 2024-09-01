@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
@@ -52,7 +52,7 @@ public class FluidStoreGoal extends GoToPosGoal<StarbyFluidBehavior> {
             starbuncle.addGoalDebug(this, new DebugEvent("no_room", targetPos.toString()));
             return true;
         }
-        FluidStack fill = new FluidStack(behavior.getFluidStack(), room);
+        FluidStack fill = new FluidStack(behavior.getFluidStack().getFluid(), room);
         int diff = fluidHandler.fill(fill, IFluidHandler.FluidAction.EXECUTE);
         behavior.getFluidStack().shrink(diff);
         behavior.syncTag();

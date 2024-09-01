@@ -4,27 +4,27 @@ import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.google.common.collect.ImmutableMap;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancementBuilder;
 import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancements;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.*;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeAdvancementProvider;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class StarAdvancementsProvider extends ForgeAdvancementProvider {
+public class StarAdvancementsProvider extends AdvancementProvider {
 
 
     public StarAdvancementsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries, ExistingFileHelper existingFileHelper) {
@@ -33,39 +33,39 @@ public class StarAdvancementsProvider extends ForgeAdvancementProvider {
 
     public static class AEAdvancements extends ANAdvancements {
 
-        static Consumer<Advancement> advancementConsumer;
+        static Consumer<AdvancementHolder> advancementConsumer;
 
-        static Advancement dummy(String name) {
-            return new Advancement(new ResourceLocation(ArsNouveau.MODID, name), null, null, AdvancementRewards.EMPTY, ImmutableMap.of(), null, false);
+        static AdvancementHolder dummy(String name) {
+            return new AdvancementHolder(ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, name), new Advancement( Optional.empty(), Optional.empty(), AdvancementRewards.EMPTY, Map.of(), new AdvancementRequirements(List.of()) , false));
         }
 
 
         @Override
-        public void generate(HolderLookup.Provider registries, Consumer<Advancement> con, ExistingFileHelper existingFileHelper) {
+        public void generate(HolderLookup.Provider registries, @NotNull Consumer<AdvancementHolder> con, @NotNull ExistingFileHelper existingFileHelper) {
             advancementConsumer = con;
-            Advancement starbyCharm = dummy("starby_charm");
+            AdvancementHolder starbyCharm = dummy("starby_charm");
             saveBasicItem(ModRegistry.STARBUCKET.get(), starbyCharm);
             saveBasicItem(ModRegistry.STARBALLON.get(), starbyCharm);
             saveBasicItem(ModRegistry.STARBATTERY.get(), starbyCharm);
             saveBasicItem(ModRegistry.STARTRASH.get(), starbyCharm);
             saveBasicItem(ModRegistry.PROFHAT.get(), starbyCharm);
 
-            Advancement jar = dummy("source_jar");
+            AdvancementHolder jar = dummy("source_jar");
             var fluidJar = saveBasicItem(ModRegistry.FLUID_JAR.get(), jar);
             saveBasicItem(ModRegistry.SOURCE_CONDENSER.get(), fluidJar);
             saveBasicItem(ModRegistry.FLUID_SOURCELINK.get(), fluidJar);
 
-            Advancement wixie = dummy("wixie_charm");
-            builder("wixie_cook").display(Blocks.FURNACE, FrameType.TASK, false).addCriterion(new PlayerTrigger.TriggerInstance(ModRegistry.WIXIE_1.getId(), ContextAwarePredicate.ANY)).parent(wixie).save(con);
-            builder("wixie_stoneworks").display(Blocks.STONECUTTER, FrameType.TASK, false).addCriterion(new PlayerTrigger.TriggerInstance(ModRegistry.WIXIE_2.getId(), ContextAwarePredicate.ANY)).parent(wixie).save(con);
+            AdvancementHolder wixie = dummy("wixie_charm");
+            builder("wixie_cook").display(Blocks.FURNACE, AdvancementType.TASK, false).addCriterion(ANCriteriaTriggers.createCriterion(ModRegistry.WIXIE_1)).parent(wixie).save(con);
+            builder("wixie_stoneworks").display(Blocks.STONECUTTER, AdvancementType.TASK, false).addCriterion(ANCriteriaTriggers.createCriterion(ModRegistry.WIXIE_2)).parent(wixie).save(con);
 
         }
 
-        public Advancement saveBasicItem(ItemLike item, Advancement parent) {
-            return buildBasicItem(item, ForgeRegistries.ITEMS.getKey(item.asItem()).getPath(), FrameType.TASK, parent).save(advancementConsumer);
+        public AdvancementHolder saveBasicItem(ItemLike item, AdvancementHolder parent) {
+            return buildBasicItem(item, BuiltInRegistries.ITEM.getKey(item.asItem()).getPath(), AdvancementType.TASK, parent).save(advancementConsumer);
         }
 
-        public ANAdvancementBuilder buildBasicItem(ItemLike item, String id, FrameType frame, Advancement parent) {
+        public ANAdvancementBuilder buildBasicItem(ItemLike item, String id, AdvancementType frame, AdvancementHolder parent) {
             return builder(id).display(item, frame).requireItem(item).parent(parent);
         }
 

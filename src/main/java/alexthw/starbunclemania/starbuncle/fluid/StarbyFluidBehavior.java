@@ -21,20 +21,20 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
-import static net.minecraftforge.common.capabilities.ForgeCapabilities.FLUID_HANDLER;
+import static net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK;
 
 
 public class StarbyFluidBehavior extends StarbyListBehavior {
 
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_fluid_transport");
+    public static final ResourceLocation TRANSPORT_ID = ResourceLocation.fromNamespaceAndPath(StarbuncleMania.MODID, "starby_fluid_transport");
 
     private @NotNull FluidStack fluidStack = FluidStack.EMPTY;
 
@@ -42,10 +42,11 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
 
     public StarbyFluidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if (tag.contains("FluidName")) fluidStack = FluidStack.loadFluidStackFromNBT(tag);
+        if (tag.contains("FluidName"))
+            fluidStack = FluidStack.parseOptional(entity.level().registryAccess(), tag);
 
         if (tag.contains("fluidScroll"))
-            this.fluidScroll = ItemStack.of(tag.getCompound("fluidScroll"));
+            this.fluidScroll = ItemStack.parseOptional(entity.level().registryAccess(), tag.getCompound("fluidScroll"));
         goals.add(new WrappedGoal(3, new FluidStoreGoal(entity, this)));
         goals.add(new WrappedGoal(3, new FluidExtractGoal(entity, this)));
     }
@@ -68,8 +69,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionFirst(storedPos, side, storedEntity, playerEntity);
         if (storedPos != null) {
-            BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(FLUID_HANDLER, side).isPresent()) {
+            if (level.getCapability(BLOCK, storedPos, side) != null) {
                 addToPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.fluid_to"));
@@ -81,8 +81,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable Direction side, @Nullable LivingEntity storedEntity, Player playerEntity) {
         super.onFinishedConnectionLast(storedPos, side, storedEntity, playerEntity);
         if (storedPos != null) {
-            BlockEntity be = level.getBlockEntity(storedPos);
-            if (be != null && be.getCapability(FLUID_HANDLER, side).isPresent()) {
+            if (level.getCapability(BLOCK, storedPos, side) != null) {
                 addFromPos(storedPos);
                 syncTag();
                 PortUtil.sendMessage(playerEntity, Component.translatable("ars_nouveau.starbuncle.fluid_from"));
@@ -93,7 +92,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() instanceof FluidScroll && stack.hasTag()) {
+        if (stack.getItem() instanceof FluidScroll && !stack.isComponentsPatchEmpty()) {
             fluidScroll = stack;
             PortUtil.sendMessage(player, Component.translatable("ars_nouveau.filter_set"));
             syncTag();
@@ -102,15 +101,15 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     }
 
     @Override
-    public void getTooltip(List<Component> tooltip) {
+    public void getTooltip(Consumer<Component> tooltip) {
         super.getTooltip(tooltip);
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.storing_fluid", TO_LIST.size()));
-        tooltip.add(Component.translatable("ars_nouveau.starbuncle.taking_fluid", FROM_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.storing_fluid", TO_LIST.size()));
+        tooltip.accept(Component.translatable("ars_nouveau.starbuncle.taking_fluid", FROM_LIST.size()));
         if (!fluidStack.isEmpty()) {
             LiquidJarTile.displayFluidTooltip(tooltip, getFluidStack());
         }
         if (fluidScroll != null && !fluidScroll.isEmpty()) {
-            tooltip.add(Component.translatable("ars_nouveau.filtering_with", fluidScroll.getHoverName().getString()));
+            tooltip.accept(Component.translatable("ars_nouveau.filtering_with", fluidScroll.getHoverName().getString()));
         }
     }
 
@@ -119,7 +118,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
 
@@ -153,15 +152,14 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
      *
      * @return null if the blockEntity in the position doesn't have Fluid capability, the IFluidHandler otherwise
      */
-    public static @Nullable IFluidHandler getHandlerFromCap(BlockPos pos, Level level, int sideOrdinal) {
-        BlockEntity be = level.getBlockEntity(pos);
-        sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal, be);
-        Direction side = sideOrdinal < 0 ? null : Direction.values()[sideOrdinal];
-        return be != null && be.getCapability(FLUID_HANDLER, side).isPresent() && be.getCapability(FLUID_HANDLER, side).resolve().isPresent() ? be.getCapability(FLUID_HANDLER, side).resolve().get() : null;
+    public static @Nullable IFluidHandler getHandlerFromCap(BlockPos pos, Level level, Direction sideOrdinal) {
+        if (sideOrdinal == null) sideOrdinal = Direction.UP;
+        sideOrdinal = StarHelper.checkItemFramesForSide(pos, level, sideOrdinal);
+        return level.getCapability(BLOCK, pos, sideOrdinal);
     }
 
     public IFluidHandler getHandlerFromCap(BlockPos pos, Direction side) {
-        return getHandlerFromCap(pos, level, side == null ? -1 : side.ordinal());
+        return getHandlerFromCap(pos, level, side);
     }
 
     public boolean canStore(BlockPos pos, @NotNull FluidStack fluidStack) {
@@ -194,10 +192,10 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         if (!getFluidStack().isEmpty()) {
-            getFluidStack().writeToNBT(tag);
+            getFluidStack().save(starbuncle.registryAccess(), tag);
         }
         if (fluidScroll != null) {
-            tag.put("itemScroll", fluidScroll.serializeNBT());
+            tag.put("itemScroll", fluidScroll.save(starbuncle.registryAccess()));
         }
         return super.toTag(tag);
     }
@@ -205,11 +203,10 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     @Override
     public ItemStack getStackForRender() {
         ItemStack instance = ModRegistry.FLUID_JAR.get().asItem().getDefaultInstance();
-        CompoundTag tag = instance.getOrCreateTag();
         if (!getFluidStack().isEmpty()) {
-            tag.put("BlockEntityTag", getFluidStack().writeToNBT(new CompoundTag()));
+            instance.getCapability(Capabilities.FluidHandler.ITEM).fill(getFluidStack(), IFluidHandler.FluidAction.EXECUTE);
         }
-        tag.putBoolean("Starbuncle", true);
+//        tag.putBoolean("Starbuncle", true);
         return instance;
     }
 

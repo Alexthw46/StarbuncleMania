@@ -2,8 +2,7 @@ package alexthw.starbunclemania.wixie;
 
 import com.hollingsworth.arsnouveau.api.recipe.CraftingManager;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-
+import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class FluidCraftManager extends CraftingManager {
 
         FluidStack stackToRemove = FluidStack.EMPTY;
         for (FluidStack stack : neededFluids) {
-            if (stack.isFluidEqual(fluidStack)) {
+            if (FluidStack.isSameFluidSameComponents(stack, fluidStack)) {
                 stackToRemove = stack;
                 break;
             }

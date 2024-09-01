@@ -1,50 +1,56 @@
 package alexthw.starbunclemania;
 
+import alexthw.starbunclemania.common.block.fluids.AbstractTankTile;
+import alexthw.starbunclemania.common.item.JarStackFluidHandler;
+import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.fml.common.Mod;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static alexthw.starbunclemania.StarbuncleMania.prefix;
-
-@Mod.EventBusSubscriber(modid = StarbuncleMania.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = StarbuncleMania.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class EventHandler {
 
 
-
     @SubscribeEvent
-    public static void registerCaps(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof MobJarTile tile){
-            FluidTank tank = new FluidTank(16000) {
-                protected void onContentsChanged() {
-                    tile.updateBlock();
+    public static void registerCaps(RegisterCapabilitiesEvent event) {
+
+        event.registerBlock(Capabilities.FluidHandler.BLOCK, (level, pos, state, be, context) -> new FluidTank(1600) {
+            @Override
+            protected void onContentsChanged() {
+                if (level.getBlockEntity(pos) instanceof MobJarTile tile) {
                     tile.setChanged();
+                    tile.updateBlock();
                 }
-            };
-            LazyOptional<IFluidHandler> holder = LazyOptional.of(() -> tank);
+            }
+        }, BlockRegistry.MOB_JAR.get());
 
-            ICapabilityProvider provider = new ICapabilityProvider() {
-                @Override
-                public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction direction) {
-                    if (cap == ForgeCapabilities.FLUID_HANDLER) {
-                        return holder.cast();
-                    }
-                    return LazyOptional.empty();
+        event.registerBlock(Capabilities.FluidHandler.BLOCK, (level, pos, state, be, context) -> new FluidTank(1600) {
+            @Override
+            protected void onContentsChanged() {
+                if (level.getBlockEntity(pos) instanceof AbstractTankTile tile) {
+                    tile.setChanged();
+                    tile.updateBlock();
                 }
-            };
+            }
 
-            event.addCapability(prefix("extra_fluid_handler"), provider);
-        }
+            @Override
+            public boolean isFluidValid(@NotNull FluidStack stack) {
+                if (level.getBlockEntity(pos) instanceof AbstractTankTile tile) {
+                    return tile.isFluidValid(stack);
+                }
+                return super.isFluidValid(stack);
+            }
+        }, ModRegistry.FLUID_JAR.get(), ModRegistry.FLUID_SOURCELINK.get(), ModRegistry.SOURCE_CONDENSER.get());
+
+
+        event.registerItem(Capabilities.FluidHandler.ITEM, (s, c) -> new JarStackFluidHandler(s, 1600),
+                ModRegistry.FLUID_JAR.get().asItem());
 
     }
 }

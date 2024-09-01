@@ -1,5 +1,7 @@
 package alexthw.starbunclemania.common.item;
 
+import alexthw.starbunclemania.common.data.DirectionData;
+import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.Direction;
@@ -27,7 +29,7 @@ public class DirectionScroll extends ModItem {
             } else if (pPlayer.getXRot() < -60) {
                 side = Direction.UP;
             }
-            stack.getOrCreateTag().putInt("side", side.ordinal());
+            stack.set(ModRegistry.DIRECTION, new DirectionData(side));
             PortUtil.sendMessage(pPlayer, Component.literal("Direction set to " + side.name()));
         }
 

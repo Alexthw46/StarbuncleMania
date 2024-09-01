@@ -11,21 +11,22 @@ import alexthw.starbunclemania.starbuncle.item.AdvancedItemTransportBehavior;
 import alexthw.starbunclemania.starbuncle.sword.StarbyFighterBehavior;
 import alexthw.starbunclemania.starbuncle.trash.StarbyVoidBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
-import com.hollingsworth.arsnouveau.api.mob_jar.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.BehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.registry.GlyphRegistry;
+import com.hollingsworth.arsnouveau.api.registry.JarBehaviorRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.LightLayer;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class ArsNouveauRegistry {
 
     public static final List<AbstractSpellPart> registeredSpells = new ArrayList<>(); //this will come handy for datagen
 
-    public static void register(){
+    public static void register() {
         register(PlaceFluidEffect.INSTANCE);
         register(PickupFluidEffect.INSTANCE);
 
@@ -48,7 +49,7 @@ public class ArsNouveauRegistry {
         BehaviorRegistry.register(StarbyHealerBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyHealerBehavior((Starbuncle) entity, tag));
     }
 
-    public static void postInit(){
+    public static void postInit() {
         LightManager.register(ModRegistry.STARBY_MOUNT.get(), (p -> {
             if (p.level().getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6) {
                 return 10;
@@ -58,39 +59,39 @@ public class ArsNouveauRegistry {
         registerJarBehaviors();
     }
 
-    public static void register(AbstractSpellPart spellPart){
+    public static void register(AbstractSpellPart spellPart) {
         GlyphRegistry.registerSpell(spellPart);
         registeredSpells.add(spellPart);
     }
 
-    public static void registerJarBehaviors(){
-        JarBehaviorRegistry.register(EntityType.COW, new JarBehavior<>(){
+    public static void registerJarBehaviors() {
+        JarBehaviorRegistry.register(EntityType.COW, new JarBehavior<>() {
             @Override
             public void tick(MobJarTile tile) {
                 super.tick(tile);
                 var level = tile.getLevel();
-                if (level instanceof ServerLevel && level.getGameTime() % 20 == 0){
-                   var cap = tile.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
-                   if (cap != null){
-                          var fluid = cap.getFluidInTank(0);
-                          if (fluid.isEmpty() || (fluid.getFluid().isSame(ForgeMod.MILK.get()) && fluid.getAmount() < cap.getTankCapacity(0))){
-                              cap.fill(new FluidStack(ForgeMod.MILK.get(), 1000), IFluidHandler.FluidAction.EXECUTE);
-                          }
-                   }
+                if (level instanceof ServerLevel && level.getGameTime() % 20 == 0) {
+                    IFluidHandler cap = level.getCapability(Capabilities.FluidHandler.BLOCK, tile.getBlockPos(), (Direction) null);
+                    if (cap != null) {
+                        var fluid = cap.getFluidInTank(0);
+                        if (fluid.isEmpty() || (fluid.getFluid().isSame(NeoForgeMod.MILK.get()) && fluid.getAmount() < cap.getTankCapacity(0))) {
+                            cap.fill(new FluidStack(NeoForgeMod.MILK.get(), 1000), IFluidHandler.FluidAction.EXECUTE);
+                        }
+                    }
                 }
             }
         });
-        JarBehaviorRegistry.register(EntityType.MOOSHROOM, new JarBehavior<>(){
+        JarBehaviorRegistry.register(EntityType.MOOSHROOM, new JarBehavior<>() {
             @Override
             public void tick(MobJarTile tile) {
                 super.tick(tile);
                 var level = tile.getLevel();
-                if (level instanceof ServerLevel && level.getGameTime() % 20 == 0){
-                    var cap = tile.getCapability(ForgeCapabilities.FLUID_HANDLER).orElse(null);
-                    if (cap != null){
+                if (level instanceof ServerLevel && level.getGameTime() % 20 == 0) {
+                    IFluidHandler cap = level.getCapability(Capabilities.FluidHandler.BLOCK, tile.getBlockPos(), (Direction) null);
+                    if (cap != null) {
                         var fluid = cap.getFluidInTank(0);
-                        if (fluid.isEmpty() || (fluid.getFluid().isSame(ForgeMod.MILK.get()) && fluid.getAmount() < cap.getTankCapacity(0))){
-                            cap.fill(new FluidStack(ForgeMod.MILK.get(), 1000), IFluidHandler.FluidAction.EXECUTE);
+                        if (fluid.isEmpty() || (fluid.getFluid().isSame(NeoForgeMod.MILK.get()) && fluid.getAmount() < cap.getTankCapacity(0))) {
+                            cap.fill(new FluidStack(NeoForgeMod.MILK.get(), 1000), IFluidHandler.FluidAction.EXECUTE);
                         }
                     }
                 }

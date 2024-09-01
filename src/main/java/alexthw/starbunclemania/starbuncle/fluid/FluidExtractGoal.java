@@ -7,8 +7,8 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
@@ -78,7 +78,7 @@ public class FluidExtractGoal extends GoToPosGoal<StarbyFluidBehavior> {
                     }
                     if (maxRoom <= Configs.STARBUCKET_THRESHOLD.get())
                         continue; // there is no tank with enough room, check next tank
-                    FluidStack extracted = fluidHandlerExtract.drain(new FluidStack(testExtract, maxRoom), IFluidHandler.FluidAction.EXECUTE);
+                    FluidStack extracted = fluidHandlerExtract.drain(new FluidStack(testExtract.getFluid(), maxRoom), IFluidHandler.FluidAction.EXECUTE);
                     if (!extracted.isEmpty()) {
                         behavior.setFluidStack(extracted);
                         starbuncle.level().playSound(null, targetPos, SoundEvents.BUCKET_FILL, SoundSource.NEUTRAL, 0.2f, 1.3f);

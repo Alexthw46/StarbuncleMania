@@ -24,19 +24,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlockContainer;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -71,11 +70,11 @@ public class PlaceFluidEffect extends AbstractEffect {
             if (!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                 continue;
             pos1 = spellStats.getBuffCount(AugmentSensitive.INSTANCE) > 0 ? pos1 : pos1.relative(rayTraceResult.getDirection());
-            if (world.getBlockEntity(pos1) != null && world.getBlockEntity(pos1).getCapability(ForgeCapabilities.FLUID_HANDLER, rayTraceResult.getDirection()).isPresent()) {
-                var cap = StarbyFluidBehavior.getHandlerFromCap(pos1, world, rayTraceResult.getDirection().ordinal());
+            if (world.getCapability(Capabilities.FluidHandler.BLOCK, pos1, rayTraceResult.getDirection()) != null) {
+                var cap = StarbyFluidBehavior.getHandlerFromCap(pos1, world, rayTraceResult.getDirection());
                 this.placeInTank(cap, tanks);
-            } else if (!MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))) {
-                this.place(pos1, world, shooter, tanks, spellContext, resolver, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
+            } else if (!NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer)).isCanceled()) {
+                this.place(pos1, (ServerLevel) world, shooter, tanks, spellContext, resolver, new BlockHitResult(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), rayTraceResult.getDirection(), pos1, false));
             }
         }
 
@@ -96,26 +95,26 @@ public class PlaceFluidEffect extends AbstractEffect {
             int room = Math.min(1000, cap.fill(fluid, IFluidHandler.FluidAction.SIMULATE));
 
             if (room > 0) {
-                int actualFill = cap.fill(new FluidStack(fluid, room), IFluidHandler.FluidAction.EXECUTE);
+                int actualFill = cap.fill(new FluidStack(fluid.getFluidHolder(), room), IFluidHandler.FluidAction.EXECUTE);
                 tank.drain(actualFill, IFluidHandler.FluidAction.EXECUTE);
                 if (tank instanceof WrappedExtractedItemHandler wrap) wrap.updateContainer();
             }
         }
     }
 
-    private void place(BlockPos pPos, Level world, LivingEntity shooter, List<IFluidHandler> tanks, SpellContext spellContext, SpellResolver resolver, BlockHitResult resolveResult) {
+    private void place(BlockPos pPos, ServerLevel world, LivingEntity shooter, List<IFluidHandler> tanks, SpellContext spellContext, SpellResolver resolver, BlockHitResult resolveResult) {
         BlockState state = world.getBlockState(pPos);
         boolean isReplaceable = state.canBeReplaced();
         for (IFluidHandler tank : tanks) {
             if (tank.getFluidInTank(0).isEmpty()) continue;
             //a bucket is 1000 millibuckets
-            FluidStack tester = new FluidStack(tank.getFluidInTank(0), 1000);
-            if (tester.getFluid() instanceof FlowingFluid ff && tank.drain(tester, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000 && (state.isAir() || isReplaceable || state.getBlock() instanceof LiquidBlockContainer container && container.canPlaceLiquid(world, pPos, state, ff))) {
+            FluidStack tester = new FluidStack(tank.getFluidInTank(0).getFluidHolder(), 1000);
+            if (tester.getFluid() instanceof FlowingFluid ff && tank.drain(tester, IFluidHandler.FluidAction.SIMULATE).getAmount() == 1000 && (state.isAir() || isReplaceable || state.getBlock() instanceof LiquidBlockContainer container && container.canPlaceLiquid(getPlayer(shooter, world), world, pPos, state, ff))) {
                 if (state.getFluidState().isSource() && state.getFluidState().getFluidType() == ff.getFluidType())
                     break;
                 //adapted code from BucketItem
                 //nether water effect
-                if (world.dimensionType().ultraWarm() && tester.getFluid().is(FluidTags.WATER)) {
+                if (world.dimensionType().ultraWarm() && tester.is(FluidTags.WATER)) {
                     int i = pPos.getX();
                     int j = pPos.getY();
                     int k = pPos.getZ();
@@ -123,7 +122,7 @@ public class PlaceFluidEffect extends AbstractEffect {
                     for (int l = 0; l < 8; ++l) {
                         world.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0D, 0.0D, 0.0D);
                     }
-                } else if (state.getBlock() instanceof LiquidBlockContainer container && container.canPlaceLiquid(world, pPos, state, ff)) {
+                } else if (state.getBlock() instanceof LiquidBlockContainer container && container.canPlaceLiquid(getPlayer(shooter, world), world, pPos, state, ff)) {
                     container.placeLiquid(world, pPos, state, ff.defaultFluidState());
                 } else {
                     if (!world.isClientSide && state.canBeReplaced() && !state.liquid()) {
@@ -150,9 +149,8 @@ public class PlaceFluidEffect extends AbstractEffect {
             BlockPos tilePos = tile.getTile().getBlockPos();
             for (Direction side : Direction.values()) {
                 BlockPos pos = tilePos.relative(side);
-                BlockEntity be = world.getBlockEntity(pos);
-                if (be != null && be.getCapability(ForgeCapabilities.FLUID_HANDLER).isPresent()) {
-                    IFluidHandler handler = StarbyFluidBehavior.getHandlerFromCap(pos, world, side.ordinal());
+                if (world.getCapability(Capabilities.FluidHandler.BLOCK, pos, side) != null) {
+                    IFluidHandler handler = StarbyFluidBehavior.getHandlerFromCap(pos, world, side);
                     if (handler != null && !handler.getFluidInTank(0).isEmpty() && handler.getFluidInTank(0).getAmount() >= 1000) {
                         handlers.add(handler);
                     }
@@ -165,14 +163,14 @@ public class PlaceFluidEffect extends AbstractEffect {
 
     public static void getTankItems(SpellContext spellContext, List<IFluidHandler> handlers) {
         InventoryManager manager = spellContext.getCaster().getInvManager();
-        Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && i.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+        Predicate<ItemStack> predicate = (i) -> !i.isEmpty() && i.getCapability(Capabilities.FluidHandler.ITEM) != null;
         FilterableItemHandler highestHandler = manager.highestPrefInventory(manager.getInventory(), predicate, InteractType.EXTRACT);
 
         if (highestHandler != null) {
             for (SlotReference slot : findItems(highestHandler, predicate, InteractType.EXTRACT)) {
                 ExtractedStack extractItem = ExtractedStack.from(slot, 1);
                 if (!extractItem.isEmpty()) {
-                    handlers.add(new WrappedExtractedItemHandler(extractItem.stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve().get(), extractItem));
+                    handlers.add(new WrappedExtractedItemHandler(extractItem.stack.getCapability(Capabilities.FluidHandler.ITEM), extractItem));
                 }
             }
         }

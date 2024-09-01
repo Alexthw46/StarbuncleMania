@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 import vectorwing.farmersdelight.common.crafting.CuttingBoardRecipe;
@@ -26,13 +27,13 @@ public class FarmerDelightRecipeWrappers {
                 return RECIPE_CACHE.get(stack.getItem());
             }
             if (level.getServer() == null) return wrapper;
-            for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
+            for (RecipeHolder<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
-                if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
+                if (r.value().getResultItem(level.registryAccess()).getItem() != stack.getItem())
                     continue;
 
-                if (r instanceof CuttingBoardRecipe)
-                    wrapper.addRecipe(r.getIngredients(), r.getResultItem(level.registryAccess()), r);
+                if (r.value() instanceof CuttingBoardRecipe cuttingBoardRecipe)
+                    wrapper.addRecipe(cuttingBoardRecipe.getIngredients(), cuttingBoardRecipe.getResultItem(level.registryAccess()), cuttingBoardRecipe);
 
             }
 
@@ -51,15 +52,15 @@ public class FarmerDelightRecipeWrappers {
                 return RECIPE_CACHE.get(stack.getItem());
             }
             if (level.getServer() == null) return wrapper;
-            for (Recipe<?> r : level.getServer().getRecipeManager().getRecipes()) {
+            for (RecipeHolder<?> r : level.getServer().getRecipeManager().getRecipes()) {
 
-                if (r.getResultItem(level.registryAccess()).getItem() != stack.getItem())
+                if (r.value().getResultItem(level.registryAccess()).getItem() != stack.getItem())
                     continue;
 
-                if (r instanceof CookingPotRecipe) {
-                    ArrayList<Ingredient> extended_ingredients = new ArrayList<>(r.getIngredients());
+                if (r.value() instanceof CookingPotRecipe cookingPotRecipe) {
+                    ArrayList<Ingredient> extended_ingredients = new ArrayList<>(cookingPotRecipe.getIngredients());
                     extended_ingredients.add(Ingredient.of(Items.BOWL));
-                    wrapper.addRecipe(extended_ingredients, r.getResultItem(level.registryAccess()), r);
+                    wrapper.addRecipe(extended_ingredients, cookingPotRecipe.getResultItem(level.registryAccess()), cookingPotRecipe);
                 }
 
             }

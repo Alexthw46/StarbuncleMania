@@ -11,7 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class VoidFromStorageGoal extends GoToPosGoal<StarbyVoidBehavior> {
@@ -67,7 +67,7 @@ public class VoidFromStorageGoal extends GoToPosGoal<StarbyVoidBehavior> {
             starbuncle.addGoalDebug(this, new DebugEvent("TakePosBroken", "Take Tile Broken"));
             return true;
         }
-        IItemHandler iItemHandler = behavior.getItemCapFromTile(tileEntity, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
+        IItemHandler iItemHandler = behavior.getItemCapFromTile(targetPos, behavior.FROM_DIRECTION_MAP.get(targetPos.hashCode()));
         if (iItemHandler == null) {
             starbuncle.addGoalDebug(this, new DebugEvent("NoItemHandler", "No item handler at " + targetPos.toString()));
             return true;

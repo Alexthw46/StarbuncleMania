@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vectorwing.farmersdelight.common.block.CookingPotBlock;
 import vectorwing.farmersdelight.common.block.CuttingBoardBlock;
@@ -19,10 +19,10 @@ import vectorwing.farmersdelight.common.block.CuttingBoardBlock;
 public class FarmerDelightCompat {
 
 
-    public static RegistryObject<Block> CUTTING_WIXIE_CAULDRON, COOKING_POT_WIXIE_CAULDRON;
+    public static DeferredHolder<Block,Block> CUTTING_WIXIE_CAULDRON, COOKING_POT_WIXIE_CAULDRON;
 
-    public static RegistryObject<BlockEntityType<CuttingWixieCauldronTile>> CUTTING_WIXIE_CAULDRON_TILE;
-    public static RegistryObject<BlockEntityType<FarmerPotWixieCauldronTile>> COOKING_POT_WIXIE_CAULDRON_TILE;
+    public static DeferredHolder<BlockEntityType<?>,BlockEntityType<CuttingWixieCauldronTile>> CUTTING_WIXIE_CAULDRON_TILE;
+    public static DeferredHolder<BlockEntityType<?>,BlockEntityType<FarmerPotWixieCauldronTile>> COOKING_POT_WIXIE_CAULDRON_TILE;
 
 
     public static void register() {
@@ -38,11 +38,11 @@ public class FarmerDelightCompat {
     public static void checkWixieBlock(BlockState blockState, Level world, BlockPos pos, ServerPlayer player, CallbackInfoReturnable<InteractionResult> cir) {
         if (blockState.getBlock() instanceof CuttingBoardBlock) {
             world.setBlockAndUpdate(pos, CUTTING_WIXIE_CAULDRON.get().defaultBlockState().setValue(CuttingBoardBlock.FACING, blockState.getValue(CuttingBoardBlock.FACING)));
-            ModRegistry.WIXIE_2.trigger(player);
+            ModRegistry.WIXIE_2.get().trigger(player);
             cir.setReturnValue(InteractionResult.SUCCESS);
         } else if (blockState.getBlock() instanceof CookingPotBlock) {
             world.setBlockAndUpdate(pos, COOKING_POT_WIXIE_CAULDRON.get().defaultBlockState().setValue(CookingPotBlock.FACING, blockState.getValue(CookingPotBlock.FACING)).setValue(CookingPotBlock.SUPPORT, blockState.getValue(CookingPotBlock.SUPPORT)));
-            ModRegistry.WIXIE_1.trigger(player);
+            ModRegistry.WIXIE_1.get().trigger(player);
             cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }

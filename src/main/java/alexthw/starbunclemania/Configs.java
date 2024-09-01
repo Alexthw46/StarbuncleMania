@@ -1,11 +1,12 @@
 package alexthw.starbunclemania;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,34 +15,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = StarbuncleMania.MODID)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = StarbuncleMania.MODID)
 public class Configs {
     public static final Common COMMON;
-    public static final ForgeConfigSpec COMMON_SPEC;
+    public static final ModConfigSpec COMMON_SPEC;
     public static final Server SERVER;
-    public static final ForgeConfigSpec SERVER_SPEC;
+    public static final ModConfigSpec SERVER_SPEC;
     public static Map<ResourceLocation, Double> FLUID_TO_SOURCE_MAP = new HashMap<>();
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> FLUID_TO_SOURCE_CONFIG;
-    public static ForgeConfigSpec.IntValue SOURCE_TO_FLUID;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> FLUID_TO_SOURCE_CONFIG;
+    public static ModConfigSpec.IntValue SOURCE_TO_FLUID;
 
-    public static ForgeConfigSpec.IntValue STARBUCKET_RATIO;
-    public static ForgeConfigSpec.IntValue STARBUCKET_THRESHOLD;
-    public static ForgeConfigSpec.IntValue STARBALLOON_RATIO;
-    public static ForgeConfigSpec.IntValue STARBALLOON_THRESHOLD;
-    public static ForgeConfigSpec.IntValue STARBATTERY_RATIO;
-    public static ForgeConfigSpec.IntValue STARBATTERY_THRESHOLD;
+    public static ModConfigSpec.IntValue STARBUCKET_RATIO;
+    public static ModConfigSpec.IntValue STARBUCKET_THRESHOLD;
+    public static ModConfigSpec.IntValue STARBALLOON_RATIO;
+    public static ModConfigSpec.IntValue STARBALLOON_THRESHOLD;
+    public static ModConfigSpec.IntValue STARBATTERY_RATIO;
+    public static ModConfigSpec.IntValue STARBATTERY_THRESHOLD;
 
 
-    public static ForgeConfigSpec.LongValue GAS_SOURCE_BURN_VALUE;
+    public static ModConfigSpec.LongValue GAS_SOURCE_BURN_VALUE;
 
 
     static {
 
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
 
-        final Pair<Server, ForgeConfigSpec> specClientPair = new ForgeConfigSpec.Builder().configure(Server::new);
+        final Pair<Server, ModConfigSpec> specClientPair = new ModConfigSpec.Builder().configure(Server::new);
         SERVER_SPEC = specClientPair.getRight();
         SERVER = specClientPair.getLeft();
 
@@ -65,7 +66,7 @@ public class Configs {
         FLUID_TO_SOURCE_MAP = new HashMap<>();
         // Copy values from FLUID_TO_SOURCE_CONFIG to FLUID_TO_SOURCE_MAP
         for (Map.Entry<String, Double> entry : parseMapConfig(FLUID_TO_SOURCE_CONFIG).entrySet()) {
-            FLUID_TO_SOURCE_MAP.put(new ResourceLocation(entry.getKey()), entry.getValue());
+            FLUID_TO_SOURCE_MAP.put(ResourceLocation.parse(entry.getKey()), entry.getValue());
         }
     }
 
@@ -75,14 +76,14 @@ public class Configs {
 
     public static class Common {
 
-        public Common(ForgeConfigSpec.Builder builder) {
+        public Common(ModConfigSpec.Builder builder) {
 
         }
     }
 
     public static class Server {
 
-        public Server(ForgeConfigSpec.Builder builder) {
+        public Server(ModConfigSpec.Builder builder) {
             builder.push("General Configs");
             FLUID_TO_SOURCE_CONFIG = builder.comment("Value of milli-bucket of fluid converted in source by the sourcelink", "Example entry: \"minecraft:lava=1.6\"")
                     .defineList("fluid_to_source", writeConfig(getDefaultLiquidSource()), Configs::validateMap);
@@ -118,7 +119,7 @@ public class Configs {
         return false;
     }
 
-    public static Map<String, Double> parseMapConfig(ForgeConfigSpec.ConfigValue<List<? extends String>> configValue) {
+    public static Map<String, Double> parseMapConfig(ModConfigSpec.ConfigValue<List<? extends String>> configValue) {
         return configValue.get().stream()
                 .map(STRING_FLOAT_MAP::matcher)
                 .filter(Matcher::matches)

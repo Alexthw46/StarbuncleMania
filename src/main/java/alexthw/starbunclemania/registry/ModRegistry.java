@@ -9,6 +9,8 @@ import alexthw.starbunclemania.common.block.wixie_stations.SmeltingWixieCauldron
 import alexthw.starbunclemania.common.block.wixie_stations.SmeltingWixieCauldronTile;
 import alexthw.starbunclemania.common.block.wixie_stations.StonecutterWixieCauldron;
 import alexthw.starbunclemania.common.block.wixie_stations.StonecutterWixieCauldronTile;
+import alexthw.starbunclemania.common.data.DirectionData;
+import alexthw.starbunclemania.common.data.FluidScrollData;
 import alexthw.starbunclemania.common.item.DirectionScroll;
 import alexthw.starbunclemania.common.item.FluidJarItem;
 import alexthw.starbunclemania.common.item.FluidScroll;
@@ -19,8 +21,11 @@ import com.hollingsworth.arsnouveau.common.items.RendererBlockItem;
 import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ModEntities;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -40,39 +45,43 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
+import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.function.Supplier;
 
 import static alexthw.starbunclemania.StarbuncleMania.prefix;
-import static com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers.register;
 
 @SuppressWarnings({"Convert2MethodRef", "ConstantConditions", "SpellCheckingInspection"})
 public class ModRegistry {
 
-    private static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, StarbuncleMania.MODID);
-    private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, StarbuncleMania.MODID);
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StarbuncleMania.MODID);
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StarbuncleMania.MODID);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StarbuncleMania.MODID);
-
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, StarbuncleMania.MODID);
+    private static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.FLUID_TYPES, StarbuncleMania.MODID);
+    private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(BuiltInRegistries.FLUID, StarbuncleMania.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(StarbuncleMania.MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.createBlocks(StarbuncleMania.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, StarbuncleMania.MODID);
+    public static final DeferredRegister<DataComponentType<?>> D_COMPONENTS = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, StarbuncleMania.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, StarbuncleMania.MODID);
+    public static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, StarbuncleMania.MODID);
 
     // Maybe switch source conversion to recipes, currently in configs
-    public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, StarbuncleMania.MODID);
-    public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, StarbuncleMania.MODID);
+    public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, StarbuncleMania.MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, StarbuncleMania.MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, StarbuncleMania.MODID);
-    public static final TagKey<Fluid> POTION = FluidTags.create(new ResourceLocation("forge", "potion"));
+    public static final TagKey<Fluid> POTION = FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "potion"));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DirectionData>> DIRECTION = D_COMPONENTS.register("direction", () -> DataComponentType.<DirectionData>builder().persistent(DirectionData.CODEC).networkSynchronized(DirectionData.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidScrollData>> FLUID_SCROLL = D_COMPONENTS.register("fluid_scroll", () -> DataComponentType.<FluidScrollData>builder().persistent(FluidScrollData.CODEC).networkSynchronized(FluidScrollData.STREAM_CODEC).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID_CONTENT = D_COMPONENTS.register("fluid_content", () -> DataComponentType.<SimpleFluidContent>builder().persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC).build());
 
     public static void registerRegistries(IEventBus bus) {
         BLOCKS.register(bus);
@@ -84,6 +93,8 @@ public class ModRegistry {
         RECIPES.register(bus);
         R_SERIALIZERS.register(bus);
         TABS.register(bus);
+        D_COMPONENTS.register(bus);
+        TRIGGERS.register(bus);
         bus.addListener(ModRegistry::registerEntityAttributes);
         bus.addListener(ModRegistry::editEntityAttributes);
         if (ModList.get().isLoaded("mekanism")) {
@@ -106,45 +117,45 @@ public class ModRegistry {
         event.add(ModEntities.STARBUNCLE_TYPE.get(), Attributes.FOLLOW_RANGE, 5);
     }
 
-    public static final RegistryObject<RecipeType<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RT;
-    public static final RegistryObject<RecipeSerializer<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RS;
+    public static final DeferredHolder<RecipeType<?>, RecipeType<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RT;
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FluidSourcelinkRecipe>> FLUID_SOURCELINK_RS;
 
     static {
         FLUID_SOURCELINK_RT = RECIPES.register("fluid_sourcelink", () -> RecipeType.simple(prefix("fluid_sourcelink")));
         FLUID_SOURCELINK_RS = R_SERIALIZERS.register("fluid_sourcelink", FluidSourcelinkRecipe.Serializer::new);
     }
 
-    public static final RegistryObject<Item> DIRECTION_SCROLL;
-    public static final RegistryObject<Item> FLUID_SCROLL_A;
-    public static final RegistryObject<Item> FLUID_SCROLL_D;
+    public static final DeferredHolder<Item, Item> DIRECTION_SCROLL;
+    public static final DeferredHolder<Item, Item> FLUID_SCROLL_A;
+    public static final DeferredHolder<Item, Item> FLUID_SCROLL_D;
 
-    public static final RegistryObject<Item> STARHAT;
-    public static final RegistryObject<Item> PROFHAT;
-    public static final RegistryObject<Item> STARBATTERY;
-    public static final RegistryObject<Item> STARBUCKET;
-    public static final RegistryObject<Item> STARBALLON;
-    public static final RegistryObject<Item> STARTRASH;
-    public static final RegistryObject<Item> STARSWORD;
-    public static final RegistryObject<Item> STARWAND;
-    public static final RegistryObject<Item> STARSADDLE;
+    public static final DeferredHolder<Item, Item> STARHAT;
+    public static final DeferredHolder<Item, Item> PROFHAT;
+    public static final DeferredHolder<Item, Item> STARBATTERY;
+    public static final DeferredHolder<Item, Item> STARBUCKET;
+    public static final DeferredHolder<Item, Item> STARBALLON;
+    public static final DeferredHolder<Item, Item> STARTRASH;
+    public static final DeferredHolder<Item, Item> STARSWORD;
+    public static final DeferredHolder<Item, Item> STARWAND;
+    public static final DeferredHolder<Item, Item> STARSADDLE;
 
 
-    public static final RegistryObject<Block> FLUID_JAR;
-    public static final RegistryObject<BlockEntityType<LiquidJarTile>> FLUID_JAR_TILE;
-    public static final RegistryObject<Block> SOURCE_CONDENSER;
-    public static final RegistryObject<BlockEntityType<SourceCondenserTile>> SOURCE_CONDENSER_TILE;
-    public static final RegistryObject<Block> FLUID_SOURCELINK;
-    public static final RegistryObject<BlockEntityType<FluidSourcelinkTile>> FLUID_SOURCELINK_TILE;
+    public static final DeferredHolder<Block, Block> FLUID_JAR;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LiquidJarTile>> FLUID_JAR_TILE;
+    public static final DeferredHolder<Block, Block> SOURCE_CONDENSER;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SourceCondenserTile>> SOURCE_CONDENSER_TILE;
+    public static final DeferredHolder<Block, Block> FLUID_SOURCELINK;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidSourcelinkTile>> FLUID_SOURCELINK_TILE;
 
-    public static final RegistryObject<Block> SMELTING_WIXIE_CAULDRON;
-    public static final RegistryObject<BlockEntityType<SmeltingWixieCauldronTile>> SMELTING_WIXIE_CAULDRON_TILE;
-    public static final RegistryObject<Block> STONEWORK_WIXIE_CAULDRON;
-    public static final RegistryObject<BlockEntityType<StonecutterWixieCauldronTile>> STONECUTTER_WIXIE_CAULDRON_TILE;
+    public static final DeferredHolder<Block, Block> SMELTING_WIXIE_CAULDRON;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SmeltingWixieCauldronTile>> SMELTING_WIXIE_CAULDRON_TILE;
+    public static final DeferredHolder<Block, Block> STONEWORK_WIXIE_CAULDRON;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StonecutterWixieCauldronTile>> STONECUTTER_WIXIE_CAULDRON_TILE;
 
-    public static final RegistryObject<EntityType<StarbyMountEntity>> STARBY_MOUNT;
+    public static final DeferredHolder<EntityType<?>, EntityType<StarbyMountEntity>> STARBY_MOUNT;
 
-    public static final PlayerTrigger WIXIE_1 = register(new PlayerTrigger(new ResourceLocation(StarbuncleMania.MODID, "wixie_cook")));
-    public static final PlayerTrigger WIXIE_2 = register(new PlayerTrigger(new ResourceLocation(StarbuncleMania.MODID, "wixie_stone")));
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> WIXIE_1 = TRIGGERS.register("wixie_cook", () -> new PlayerTrigger());
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> WIXIE_2 = TRIGGERS.register("wixie_stone", () -> new PlayerTrigger());
 
     static {
         STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));
@@ -161,7 +172,10 @@ public class ModRegistry {
         FLUID_SCROLL_D = ITEMS.register("fluid_scroll_deny", () -> new FluidScroll(basicItemProperties()) {
             @Override
             public boolean isDenied(ItemStack fluidScroll, FluidStack fluidInTank) {
-                FluidData filter = new FluidData(fluidScroll);
+                FluidScrollData filter = fluidScroll.get(FLUID_SCROLL);
+                if (filter == null) {
+                    return false;
+                }
                 return filter.containsStack(fluidInTank);
             }
         });
@@ -200,7 +214,7 @@ public class ModRegistry {
 
     }
 
-    public static final RegistryObject<CreativeModeTab> SBM_TAB = TABS.register("general", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SBM_TAB = TABS.register("general", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.starbunclemania"))
             .icon(ItemsRegistry.STARBUNCLE_CHARM.get()::getDefaultInstance)
             .displayItems((params, output) -> {
@@ -210,30 +224,30 @@ public class ModRegistry {
             }).withTabsBefore(CreativeTabRegistry.BLOCKS.getKey().location())
             .build());
 
-    public static final RegistryObject<FluidType> SOURCE_FLUID_TYPE = FLUID_TYPES.register("source_fluid", SourceFluid::new);
+    public static final DeferredHolder<FluidType, FluidType> SOURCE_FLUID_TYPE = FLUID_TYPES.register("source_fluid", SourceFluid::new);
 
-    public static final RegistryObject<FlowingFluid> SOURCE_FLUID = FLUIDS.register("source_fluid", () ->
-            new ForgeFlowingFluid.Source(fluidProperties()));
-    public static final RegistryObject<Fluid> SOURCE_FLUID_FLOWING = FLUIDS.register("source_fluid_flowing", () ->
-            new ForgeFlowingFluid.Flowing(fluidProperties()));
-    public static final RegistryObject<LiquidBlock> SOURCE_FLUID_BLOCK = BLOCKS.register("source_fluid_block", () ->
-            new LiquidBlock(SOURCE_FLUID, BlockBehaviour.Properties.copy(Blocks.WATER).noCollission().strength(100.0F).noLootTable()));
-    public static final RegistryObject<Item> SOURCE_FLUID_BUCKET = ITEMS.register("source_fluid_bucket", () ->
-            new BucketItem(SOURCE_FLUID, basicItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Fluid, Fluid> SOURCE_FLUID = FLUIDS.register("source_fluid", () ->
+            new BaseFlowingFluid.Source(fluidProperties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_FLUID_FLOWING = FLUIDS.register("source_fluid_flowing", () ->
+            new BaseFlowingFluid.Flowing(fluidProperties()));
+    public static final DeferredHolder<Block, LiquidBlock> SOURCE_FLUID_BLOCK = BLOCKS.register("source_fluid_block", () ->
+            new LiquidBlock(SOURCE_FLUID_FLOWING.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noCollission().strength(100.0F).noLootTable()));
+    public static final DeferredHolder<Item, Item> SOURCE_FLUID_BUCKET = ITEMS.register("source_fluid_bucket", () ->
+            new BucketItem(SOURCE_FLUID.get(), basicItemProperties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     static Item.Properties basicItemProperties() {
         return new Item.Properties();
     }
 
-    private static ForgeFlowingFluid.Properties fluidProperties() {
-        return new ForgeFlowingFluid.Properties(SOURCE_FLUID_TYPE, SOURCE_FLUID, SOURCE_FLUID_FLOWING)
+    private static BaseFlowingFluid.Properties fluidProperties() {
+        return new BaseFlowingFluid.Properties(SOURCE_FLUID_TYPE, SOURCE_FLUID, SOURCE_FLUID_FLOWING)
                 .block(SOURCE_FLUID_BLOCK)
                 .bucket(SOURCE_FLUID_BUCKET);
     }
 
 
     @SuppressWarnings("SameParameterValue")
-    static <T extends Entity> RegistryObject<EntityType<T>> addEntity(String name, float width, float height, boolean fire, boolean noSave, EntityType.EntityFactory<T> factory, MobCategory kind) {
+    static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> addEntity(String name, float width, float height, boolean fire, boolean noSave, EntityType.EntityFactory<T> factory, MobCategory kind) {
         return ENTITIES.register(name, () -> {
             EntityType.Builder<T> builder = EntityType.Builder.of(factory, kind)
                     .setTrackingRange(32)

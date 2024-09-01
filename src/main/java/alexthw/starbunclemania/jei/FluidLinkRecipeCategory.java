@@ -5,16 +5,14 @@ import alexthw.starbunclemania.registry.ModRegistry;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.hollingsworth.arsnouveau.client.jei.JEIConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -22,10 +20,10 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkRecipe> {
@@ -33,7 +31,7 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
     public IDrawable background;
     public IDrawable icon;
 
-    static final ResourceLocation ARROW = new ResourceLocation(ModIds.JEI_ID, "textures/jei/gui/gui_vanilla.png");
+    static final ResourceLocation ARROW = ResourceLocation.fromNamespaceAndPath(ModIds.JEI_ID, "textures/jei/gui/gui_vanilla.png");
 
     public FluidLinkRecipeCategory(final IGuiHelper helper) {
         this.background = helper.createBlankDrawable(120, 32);
@@ -83,10 +81,10 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
      */
     @Override
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, FluidSourcelinkRecipe recipe, @NotNull IFocusGroup focuses) {
-        ResourceLocation fluid_name = recipe.getFluidType();
+        ResourceLocation fluid_name = recipe.fluidType();
         try {
-            var fluid = ForgeRegistries.FLUIDS.getDelegateOrThrow(fluid_name).get();
-            builder.addSlot(RecipeIngredientRole.INPUT, 6,5).setFluidRenderer(1000, false, 16, 24).addIngredient(ForgeTypes.FLUID_STACK, new FluidStack(fluid, 1000));
+            var fluid = BuiltInRegistries.FLUID.get(fluid_name);
+            builder.addSlot(RecipeIngredientRole.INPUT, 6,5).setFluidRenderer(1000, false, 16, 24).addIngredient(NeoForgeTypes.FLUID_STACK, new FluidStack(fluid, 1000));
         }catch (Exception ignored) {
         }
     }
@@ -96,7 +94,7 @@ public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkR
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw(guiGraphics, 25, 10);
         Font font = Minecraft.getInstance().font;
-        double ratio = recipe.getConversion_ratio() * 1000;
+        double ratio = recipe.conversion_ratio() * 1000;
         guiGraphics.drawString(font, String.format("%.0f Source", ratio), 55, 12, 0x000000, false);
     }
 }

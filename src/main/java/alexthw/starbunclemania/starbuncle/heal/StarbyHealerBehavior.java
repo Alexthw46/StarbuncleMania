@@ -33,8 +33,8 @@ public class StarbyHealerBehavior extends StarbyBehavior {
     }
 
     @Override
-    protected ResourceLocation getRegistryName() {
+    public ResourceLocation getRegistryName() {
         return TRANSPORT_ID;
     }
-    public static final ResourceLocation TRANSPORT_ID = new ResourceLocation(StarbuncleMania.MODID, "starby_healer");
+    public static final ResourceLocation TRANSPORT_ID = ResourceLocation.fromNamespaceAndPath(StarbuncleMania.MODID, "starby_healer");
 }

@@ -4,6 +4,7 @@ import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.api.entity.ChangeableBehavior;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StarbyTransportBehavior;
+import com.hollingsworth.arsnouveau.common.items.data.StarbuncleCharmData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -18,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +36,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
         this.setTamed(true);
     }
 
-    public StarbyMountEntity(Level world, StarbuncleData data) {
+    public StarbyMountEntity(Level world, StarbuncleCharmData.Mutable data) {
         this(world);
         this.data = data;
         restoreFromTag();
@@ -100,7 +101,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
                     this.setDeltaMovement(vec3.x, d1, vec3.z);
                     this.setIsJumping(true);
                     this.hasImpulse = true;
-                    ForgeHooks.onLivingJump(this);
+                    CommonHooks.onLivingJump(this);
                     if (forward > 0.0F) {
                         float f2 = Mth.sin(this.getYRot() * ((float) Math.PI / 180F));
                         float f3 = Mth.cos(this.getYRot() * ((float) Math.PI / 180F));
@@ -132,7 +133,7 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     @Override
     public void onWanded(Player playerEntity) {
         Starbuncle carbuncle = new Starbuncle(playerEntity.level(), true);
-        Starbuncle.StarbuncleData data = this.data;
+        StarbuncleCharmData.Mutable data = this.data;
         carbuncle.setPos(getX() + 0.5, getY() + 1, getZ() + 0.5);
         carbuncle.data = data;
         carbuncle.restoreFromTag();
@@ -144,21 +145,13 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-    }
-
-    @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-    }
-
-    @Override
     public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
         super.positionRider(passenger, callback);
         if (passenger instanceof Mob mob && this.getControllingPassenger() == passenger && mob.zza > 0) {
             this.yBodyRot = mob.yBodyRot;
         }
         if (this.hasPassenger(passenger) && passenger instanceof Player) {
-            double d0 = this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset();
+            var d0 = this.getY() + this.getPassengerRidingPosition(passenger).y() + passenger.getVehicleAttachmentPoint(this).y();
             float f1 = Mth.sin(this.yBodyRot * (0.017453292f));
             float f = Mth.cos(this.yBodyRot * (0.017453292f));
             callback.accept(passenger, getX() + f1 * 0.8, d0, this.getZ() - f * 0.8);

@@ -15,7 +15,7 @@ import software.bernie.geckolib.util.Color;
 public class BalloonRenderer extends GeoItemRenderer<StarBalloon> {
 
     public BalloonRenderer() {
-        super(new GenericModel<StarBalloon>("star_balloon", "entity"));
+        super(new GenericModel<>("star_balloon", "entity"));
     }
 
     @Override

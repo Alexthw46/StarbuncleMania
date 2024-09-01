@@ -1,0 +1,25 @@
+{
+  "parent": "ars_nouveau:wixie_charm",
+  "criteria": {
+    "wixie_cook": {
+      "trigger": "starbunclemania:wixie_cook"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "starbunclemania.adv.desc.wixie_cook"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:furnace"
+    },
+    "title": {
+      "translate": "starbunclemania.adv.title.wixie_cook"
+    }
+  },
+  "requirements": [
+    [
+      "wixie_cook"
+    ]
+  ]
+}

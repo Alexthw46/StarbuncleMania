@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class AbstractTankTile extends ModdedTile {
 
-    public int capacity = 16000;
+    public final int capacity = 16000;
 
-    protected final FluidTank tank = new FluidTank(capacity) {
+    public final FluidTank tank = new FluidTank(capacity) {
         protected void onContentsChanged() {
             AbstractTankTile.this.updateBlock();
             AbstractTankTile.this.setChanged();
@@ -27,10 +27,6 @@ public class AbstractTankTile extends ModdedTile {
 
     public AbstractTankTile(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state);
-    }
-
-    public boolean isFluidValid(FluidStack stack) {
-        return true;
     }
 
     public boolean interact(Player player, InteractionHand hand) {

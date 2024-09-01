@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

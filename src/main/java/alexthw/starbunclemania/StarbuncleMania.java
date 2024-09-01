@@ -12,7 +12,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 
@@ -45,7 +44,7 @@ public class StarbuncleMania
     private void setup(final FMLCommonSetupEvent ignoredEvent) {
         ArsNouveauRegistry.postInit();
         try {
-            FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation((level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == NeoForgeMod.LAVA_TYPE, Objects.requireNonNull(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, LibBlockNames.SOURCESTONE))).defaultBlockState()));
+            FluidInteractionRegistry.addInteraction(SOURCE_FLUID_TYPE.get(), new FluidInteractionRegistry.InteractionInformation((level, currentPos, relativePos, currentState) -> level.getFluidState(relativePos).getFluidType() == NeoForgeMod.LAVA_TYPE.value(), Objects.requireNonNull(BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, LibBlockNames.SOURCESTONE))).defaultBlockState()));
         }catch (NullPointerException npe){
             System.out.println("Sourcestone not found, skipping interaction.");
         }

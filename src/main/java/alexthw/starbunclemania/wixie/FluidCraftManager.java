@@ -17,7 +17,7 @@ public class FluidCraftManager extends CraftingManager {
 
 
     public FluidStack getNextFluid() {
-        return !this.neededFluids.isEmpty() ? this.neededFluids.get(0) : FluidStack.EMPTY;
+        return !this.neededFluids.isEmpty() ? this.neededFluids.getFirst() : FluidStack.EMPTY;
     }
 
     public FluidStack getNeededFluid() {

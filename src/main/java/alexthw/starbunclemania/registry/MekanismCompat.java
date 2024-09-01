@@ -3,7 +3,6 @@ package alexthw.starbunclemania.registry;
 import alexthw.starbunclemania.Configs;
 import alexthw.starbunclemania.StarbuncleMania;
 
-import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.attribute.ChemicalAttributes;
 import mekanism.common.base.IChemicalConstant;
 

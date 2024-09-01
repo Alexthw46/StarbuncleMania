@@ -28,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class FluidLinkRecipeCategory implements IRecipeCategory<FluidSourcelinkRecipe> {
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
-    public IDrawable background;
-    public IDrawable icon;
+    public final IDrawable background;
+    public final IDrawable icon;
 
     static final ResourceLocation ARROW = ResourceLocation.fromNamespaceAndPath(ModIds.JEI_ID, "textures/jei/gui/gui_vanilla.png");
 

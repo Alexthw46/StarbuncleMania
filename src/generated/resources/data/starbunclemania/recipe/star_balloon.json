@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:air_essence"
+    },
+    {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    {
+      "item": "ars_nouveau:magebloom_fiber"
+    }
+  ],
+  "reagent": {
+    "tag": "minecraft:wool"
+  },
+  "result": {
+    "count": 1,
+    "id": "starbunclemania:star_balloon"
+  },
+  "sourceCost": 0
+}

@@ -3,7 +3,6 @@ package alexthw.starbunclemania.wixie;
 import com.hollingsworth.arsnouveau.api.recipe.MultiRecipeWrapper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 import net.minecraft.world.level.Level;

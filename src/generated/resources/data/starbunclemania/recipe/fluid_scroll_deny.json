@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:blank_parchment"
+    },
+    {
+      "item": "ars_nouveau:water_essence"
+    },
+    {
+      "tag": "c:cobblestones"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "starbunclemania:fluid_scroll_deny"
+  }
+}

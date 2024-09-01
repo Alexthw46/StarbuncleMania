@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:starby_charm",
+  "criteria": {
+    "has_star_battery": {
+      "conditions": {
+        "items": [
+          {
+            "items": "starbunclemania:star_battery"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "starbunclemania.adv.desc.star_battery"
+    },
+    "icon": {
+      "count": 1,
+      "id": "starbunclemania:star_battery"
+    },
+    "title": {
+      "translate": "starbunclemania.adv.title.star_battery"
+    }
+  },
+  "requirements": [
+    [
+      "has_star_battery"
+    ]
+  ]
+}

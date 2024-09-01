@@ -28,7 +28,6 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -39,9 +38,9 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
         super(ModRegistry.FLUID_SOURCELINK_TILE.get(), pos, state);
     }
 
-    public static int capacity = 6000;
+    public static final int capacity = 6000;
 
-    protected final FluidTank tank = new FluidTank(capacity) {
+    public final FluidTank tank = new FluidTank(capacity) {
         protected void onContentsChanged() {
             FluidSourcelinkTile.this.updateBlock();
             FluidSourcelinkTile.this.setChanged();
@@ -86,7 +85,7 @@ public class FluidSourcelinkTile extends SourcelinkTile implements ITooltipProvi
         }
     }
 
-    static Map<ResourceLocation, Double> cache = new HashMap<>();
+    static final Map<ResourceLocation, Double> cache = new HashMap<>();
 
     double getSourceFromFluid(FluidStack tank) {
         if (!tank.isEmpty() && level != null) {

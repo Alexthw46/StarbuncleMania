@@ -32,7 +32,7 @@ public class JarRenderer implements BlockEntityRenderer<LiquidJarTile> {
     public static class ISTER extends GeoItemRenderer<FluidJarItem> {
 
         public ISTER() {
-            super(new GenericModel<FluidJarItem>("fluid_jar"));
+            super(new GenericModel<>("fluid_jar"));
         }
 
         @Override

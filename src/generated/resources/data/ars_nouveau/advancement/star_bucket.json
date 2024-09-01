@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:starby_charm",
+  "criteria": {
+    "has_star_bucket": {
+      "conditions": {
+        "items": [
+          {
+            "items": "starbunclemania:star_bucket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "starbunclemania.adv.desc.star_bucket"
+    },
+    "icon": {
+      "count": 1,
+      "id": "starbunclemania:star_bucket"
+    },
+    "title": {
+      "translate": "starbunclemania.adv.title.star_bucket"
+    }
+  },
+  "requirements": [
+    [
+      "has_star_bucket"
+    ]
+  ]
+}

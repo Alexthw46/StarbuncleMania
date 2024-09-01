@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:black_carpet"
+    },
+    "W": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "pattern": [
+    "CCC",
+    " W ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "starbunclemania:wyrm_degree"
+  }
+}

@@ -153,7 +153,7 @@ dependencies {
 
     implementation "com.hollingsworth.ars_nouveau:ars_nouveau-${minecraft_version}:${ars_version}"
 
-    implementation "software.bernie.geckolib:geckolib-neoforge-1.21:${geckolib_version}"
+    implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
     implementation "vazkii.patchouli:Patchouli:1.21-${patchouli_version}"
 
     compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
@@ -164,7 +164,7 @@ dependencies {
 
     implementation "curse.maven:ars-elemental-561470:5678042"
 
-    compileOnly "mekanism:Mekanism:${mekanism_version}"// core
+    implementation "mekanism:Mekanism:${mekanism_version}"// core
 //    implementation ("com.simibubi.create:create-1.20.1:0.5.1.f-26:all") { transitive = false }
 //    implementation ("curse.maven:eidolon-repraised-870250:5207777")
 

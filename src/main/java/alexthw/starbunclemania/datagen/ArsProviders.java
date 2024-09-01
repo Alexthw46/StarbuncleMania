@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.api.registry.FamiliarRegistry;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.datagen.*;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
@@ -57,7 +58,7 @@ public class ArsProviders {
         }
 
         protected static Path getScribeGlyphPath(Path pathIn, Item glyph) {
-            return pathIn.resolve("data/" + root + "/recipes/" + getRegistryName(glyph).getPath() + ".json");
+            return pathIn.resolve("data/" + root + "/recipe/" + getRegistryName(glyph).getPath() + ".json");
         }
 
         @Override
@@ -70,6 +71,15 @@ public class ArsProviders {
 
         public EnchantingAppProvider(DataGenerator generatorIn) {
             super(generatorIn);
+        }
+
+        @Override
+        public void collectJsons(CachedOutput pOutput) {
+            addEntries();
+            for (ApparatusRecipeBuilder.RecipeWrapper<? extends EnchantingApparatusRecipe> wrapper : recipes) {
+                Path path = getRecipePath(output, wrapper.id().getPath());
+                saveStable(pOutput, wrapper.serialize(), path);
+            }
         }
 
         @Override
@@ -108,7 +118,7 @@ public class ArsProviders {
         }
 
         protected static Path getRecipePath(Path pathIn, String str) {
-            return pathIn.resolve("data/" + root + "/recipes/" + str + ".json");
+            return pathIn.resolve("data/" + root + "/recipe/" + str + ".json");
         }
 
         @Override
@@ -128,7 +138,7 @@ public class ArsProviders {
         }
 
         protected Path getRecipePath(Path pathIn, String str) {
-            return pathIn.resolve("data/" + root + "/recipes/" + str + ".json");
+            return pathIn.resolve("data/" + root + "/recipe/" + str + ".json");
         }
 
         @Override

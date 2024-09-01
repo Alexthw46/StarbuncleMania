@@ -3,7 +3,6 @@ package alexthw.starbunclemania.common.block.fluids;
 import com.hollingsworth.arsnouveau.common.block.TickableModBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

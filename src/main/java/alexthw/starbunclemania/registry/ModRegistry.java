@@ -78,7 +78,7 @@ public class ModRegistry {
     public static final DeferredRegister<RecipeSerializer<?>> R_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, StarbuncleMania.MODID);
 
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, StarbuncleMania.MODID);
-    public static final TagKey<Fluid> POTION = FluidTags.create(ResourceLocation.fromNamespaceAndPath("forge", "potion"));
+    public static final TagKey<Fluid> POTION = FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", "potion"));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DirectionData>> DIRECTION = D_COMPONENTS.register("direction", () -> DataComponentType.<DirectionData>builder().persistent(DirectionData.CODEC).networkSynchronized(DirectionData.STREAM_CODEC).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<FluidScrollData>> FLUID_SCROLL = D_COMPONENTS.register("fluid_scroll", () -> DataComponentType.<FluidScrollData>builder().persistent(FluidScrollData.CODEC).networkSynchronized(FluidScrollData.STREAM_CODEC).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID_CONTENT = D_COMPONENTS.register("fluid_content", () -> DataComponentType.<SimpleFluidContent>builder().persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC).build());

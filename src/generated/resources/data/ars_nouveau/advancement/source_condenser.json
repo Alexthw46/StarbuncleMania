@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:fluid_jar",
+  "criteria": {
+    "has_source_condenser": {
+      "conditions": {
+        "items": [
+          {
+            "items": "starbunclemania:source_condenser"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "starbunclemania.adv.desc.source_condenser"
+    },
+    "icon": {
+      "count": 1,
+      "id": "starbunclemania:source_condenser"
+    },
+    "title": {
+      "translate": "starbunclemania.adv.title.source_condenser"
+    }
+  },
+  "requirements": [
+    [
+      "has_source_condenser"
+    ]
+  ]
+}

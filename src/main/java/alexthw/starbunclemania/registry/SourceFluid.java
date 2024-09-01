@@ -42,13 +42,13 @@ public class SourceFluid extends FluidType {
                     VIEW_OVERLAY = ResourceLocation.fromNamespaceAndPath(ArsNouveau.MODID, "textures/block/sourcestone.png");
 
             @Override
-            public ResourceLocation getStillTexture()
+            public @NotNull ResourceLocation getStillTexture()
             {
                 return STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture()
+            public @NotNull ResourceLocation getFlowingTexture()
             {
                 return FLOW;
             }
@@ -60,7 +60,7 @@ public class SourceFluid extends FluidType {
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc)
+            public ResourceLocation getRenderOverlayTexture(@NotNull Minecraft mc)
             {
                 return VIEW_OVERLAY;
             }
@@ -72,14 +72,14 @@ public class SourceFluid extends FluidType {
             }
 
             @Override
-            public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor)
+            public @NotNull Vector3f modifyFogColor(@NotNull Camera camera, float partialTick, @NotNull ClientLevel level, int renderDistance, float darkenWorldAmount, @NotNull Vector3f fluidFogColor)
             {
                 int color = this.getTintColor();
                 return new Vector3f((color >> 16 & 0xFF) / 255F, (color >> 8 & 0xFF) / 255F, (color & 0xFF) / 255F);
             }
 
             @Override
-            public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, FogShape shape)
+            public void modifyFogRender(@NotNull Camera camera, FogRenderer.@NotNull FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, @NotNull FogShape shape)
             {
                 nearDistance = -8F;
                 farDistance = 24F;

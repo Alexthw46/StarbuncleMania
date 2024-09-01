@@ -11,23 +11,9 @@
               "source": "block_entity"
             },
             {
-              "function": "minecraft:copy_nbt",
-              "ops": [
-                {
-                  "op": "replace",
-                  "source": "FluidName",
-                  "target": "BlockEntityTag.FluidName"
-                },
-                {
-                  "op": "replace",
-                  "source": "Amount",
-                  "target": "BlockEntityTag.Amount"
-                },
-                {
-                  "op": "replace",
-                  "source": "Tag",
-                  "target": "BlockEntityTag.Tag"
-                }
+              "function": "minecraft:copy_components",
+              "include": [
+                "starbunclemania:fluid_content"
               ],
               "source": "block_entity"
             }

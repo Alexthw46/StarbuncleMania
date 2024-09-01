@@ -2,7 +2,7 @@ package alexthw.starbunclemania.datagen;
 
 import alexthw.starbunclemania.StarbuncleMania;
 import alexthw.starbunclemania.registry.ModRegistry;
-import com.google.common.collect.ImmutableMap;
+
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.datagen.advancement.ANAdvancementBuilder;
@@ -61,12 +61,12 @@ public class StarAdvancementsProvider extends AdvancementProvider {
 
         }
 
-        public AdvancementHolder saveBasicItem(ItemLike item, AdvancementHolder parent) {
-            return buildBasicItem(item, BuiltInRegistries.ITEM.getKey(item.asItem()).getPath(), AdvancementType.TASK, parent).save(advancementConsumer);
+        public ANAdvancementBuilder buildBasicItem(ItemLike item, AdvancementHolder parent){
+            return builder(BuiltInRegistries.ITEM.getKey(item.asItem()).getPath()).normalItemRequirement(item).parent(parent);
         }
 
-        public ANAdvancementBuilder buildBasicItem(ItemLike item, String id, AdvancementType frame, AdvancementHolder parent) {
-            return builder(id).display(item, frame).requireItem(item).parent(parent);
+        public AdvancementHolder saveBasicItem(ItemLike item, AdvancementHolder parent){
+            return buildBasicItem(item, parent).save(advancementConsumer);
         }
 
         public ANAdvancementBuilder builder(String key) {

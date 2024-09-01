@@ -1,0 +1,32 @@
+{
+  "parent": "ars_nouveau:fluid_jar",
+  "criteria": {
+    "has_fluid_sourcelink": {
+      "conditions": {
+        "items": [
+          {
+            "items": "starbunclemania:fluid_sourcelink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "starbunclemania.adv.desc.fluid_sourcelink"
+    },
+    "icon": {
+      "count": 1,
+      "id": "starbunclemania:fluid_sourcelink"
+    },
+    "title": {
+      "translate": "starbunclemania.adv.title.fluid_sourcelink"
+    }
+  },
+  "requirements": [
+    [
+      "has_fluid_sourcelink"
+    ]
+  ]
+}

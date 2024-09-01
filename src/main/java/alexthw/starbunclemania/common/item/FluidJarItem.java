@@ -4,10 +4,8 @@ import alexthw.starbunclemania.client.JarRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
-
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -21,26 +19,19 @@ public class FluidJarItem extends BlockItem implements GeoItem {
     }
 
     @Override
-    public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
-        super.initializeClient(consumer);
-        consumer.accept(new IClientItemExtensions() {
-            final JarRenderer.ISTER renderer = new JarRenderer.ISTER();
-            @Override
-            public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer;
-            }
-        });
-    }
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(
+                new GeoRenderProvider() {
+                    final JarRenderer.ISTER renderer = new JarRenderer.ISTER();
 
-//    public static FluidStack getFluidFromTag(ItemStack stack){
-//        if(!stack.hasTag())
-//            return FluidStack.EMPTY;
-//        CompoundTag blockTag = stack.getOrCreateTag().getCompound("BlockEntityTag");
-//        if (!blockTag.isEmpty()){
-//            return FluidStack.loadFluidStackFromNBT(blockTag);
-//        }
-//        return FluidStack.EMPTY;
-//    }
+                    public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                        return this.renderer;
+                    }
+
+                }
+        );
+
+    }
 
     final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 

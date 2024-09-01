@@ -50,7 +50,7 @@ public class SourceCondenserTile extends AbstractTankTile implements GeoBlockEnt
     }
 
 
-    AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
+    final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {

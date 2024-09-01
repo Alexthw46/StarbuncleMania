@@ -1,0 +1,25 @@
+{
+  "parent": "ars_nouveau:wixie_charm",
+  "criteria": {
+    "wixie_stoneworks": {
+      "trigger": "starbunclemania:wixie_stone"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "starbunclemania.adv.desc.wixie_stoneworks"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:stonecutter"
+    },
+    "title": {
+      "translate": "starbunclemania.adv.title.wixie_stoneworks"
+    }
+  },
+  "requirements": [
+    [
+      "wixie_stoneworks"
+    ]
+  ]
+}

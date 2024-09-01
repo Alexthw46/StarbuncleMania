@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "ars_nouveau:magebloom_fiber"
+    },
+    "W": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "pattern": [
+    " F ",
+    "FWF",
+    " F "
+  ],
+  "result": {
+    "count": 1,
+    "id": "starbunclemania:star_hat"
+  }
+}

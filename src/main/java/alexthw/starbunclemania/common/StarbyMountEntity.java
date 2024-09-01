@@ -15,7 +15,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -24,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumping {
-
 
     private float playerJumpPendingScale;
     private boolean isJumping;
@@ -43,11 +41,6 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
     public StarbyMountEntity(EntityType<StarbyMountEntity> entityType, Level world) {
         super(entityType, world);
         this.setTamed(true);
-    }
-
-    @Override
-    public void setCosmeticItem(ItemStack stack) {
-        this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), stack));
     }
 
     @Override
@@ -149,11 +142,20 @@ public class StarbyMountEntity extends Starbuncle implements PlayerRideableJumpi
             this.yBodyRot = mob.yBodyRot;
         }
         if (this.hasPassenger(passenger) && passenger instanceof Player) {
-            var d0 = this.getY() + this.getPassengerRidingPosition(passenger).y() + passenger.getVehicleAttachmentPoint(this).y();
             float f1 = Mth.sin(this.yBodyRot * (0.017453292f));
             float f = Mth.cos(this.yBodyRot * (0.017453292f));
-            callback.accept(passenger, getX() + f1 * 0.8, d0, this.getZ() - f * 0.8);
+            Vec3 vec3 = this.getPassengerRidingPosition(passenger);
+            Vec3 vec31 = passenger.getVehicleAttachmentPoint(this);
+            callback.accept(passenger, vec3.x - vec31.x + f1 * 0.8, vec3.y - vec31.y, vec3.z - vec31.z - f * 0.8);
         }
+    }
+
+    @Override
+    protected double getDefaultGravity() {
+        if (getCosmeticItem().getItem() == ModRegistry.STARBALLON.get()) {
+            return super.getDefaultGravity() * 0.5D;
+        }
+        return super.getDefaultGravity();
     }
 
     @Override

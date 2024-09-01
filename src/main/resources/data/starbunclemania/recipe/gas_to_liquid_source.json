@@ -14,12 +14,12 @@
     "amount": 1,
     "fluid": "starbunclemania:source_fluid"
   },
-  "gasInput": {
+  "chemicalInput": {
     "amount": 1,
-    "gas": "starbunclemania:source_gas"
+    "chemical": "starbunclemania:source_gas"
   },
-  "gasOutput": {
+  "chemicalOutput": {
     "amount": 1,
-    "gas": "starbunclemania:source_gas"
+    "chemical": "starbunclemania:source_gas"
   }
 }

@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 
 public class StarbyVoidBehavior extends StarbyListBehavior {
 
-    public ItemStack itemScroll;
+    public ItemStack itemScroll = ItemStack.EMPTY;
 
     public StarbyVoidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);

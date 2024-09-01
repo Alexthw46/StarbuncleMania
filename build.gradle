@@ -156,11 +156,11 @@ dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
     implementation "vazkii.patchouli:Patchouli:1.21-${patchouli_version}"
 
-    compileOnly "mezz.jei:jei-1.21-neoforge-api:${jei_version}"
-    implementation "mezz.jei:jei-1.21-neoforge:${jei_version}"
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+    implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
     implementation 'com.github.glitchfiend:TerraBlender-neoforge:1.21-4.0.0.0'
     implementation "curse.maven:jade-324717:5444008"
-    implementation 'top.theillusivec4.curios:curios-neoforge:9.0.4+1.21'
+    implementation 'top.theillusivec4.curios:curios-neoforge:9.0.7+1.21'
 
     implementation "curse.maven:ars-elemental-561470:5678042"
 
@@ -168,7 +168,7 @@ dependencies {
 //    implementation ("com.simibubi.create:create-1.20.1:0.5.1.f-26:all") { transitive = false }
 //    implementation ("curse.maven:eidolon-repraised-870250:5207777")
 
-    compileOnly "curse.maven:farmers-delight-398521:5566383"
+    implementation "curse.maven:farmers-delight-398521:5566383"
 
 }
 

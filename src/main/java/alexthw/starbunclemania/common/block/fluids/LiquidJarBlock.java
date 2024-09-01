@@ -16,7 +16,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,10 +35,16 @@ public class LiquidJarBlock extends TickableModBlock {
     }
 
     @Override
+    public boolean hasDynamicLightEmission(@NotNull BlockState state) {
+        return true;
+    }
+
+    @Override
     public int getLightEmission(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        if (level instanceof Level world && world.getCapability(Capabilities.FluidHandler.BLOCK, pos, null) instanceof FluidTank tank){
-            if (!tank.isEmpty()){
-               return tank.getFluid().getFluid().getFluidType().getLightLevel();
+        if (level.getBlockEntity(pos) instanceof LiquidJarTile be) {
+            FluidTank tank = be.tank;
+            if (!tank.isEmpty()) {
+                return Math.round(tank.getFluid().getFluid().getFluidType().getLightLevel() * be.getFluidPercentage());
             }
         }
         return super.getLightEmission(state, level, pos);

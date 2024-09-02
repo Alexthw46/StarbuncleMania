@@ -4,6 +4,8 @@ import alexthw.starbunclemania.common.StarbyMountEntity;
 import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +29,7 @@ public class StarbySaddle extends ModItem implements ICosmeticItem {
             pPlayer.level().addFreshEntity(mount);
             starbuncle.discard();
             pStack.shrink(1);
+            PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.saddle_behavior_set"));
             return InteractionResult.SUCCESS;
         }
         return super.interactLivingEntity(pStack, pPlayer, entity, pUsedHand);

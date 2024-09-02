@@ -8,6 +8,8 @@ import alexthw.starbunclemania.starbuncle.fluid.StarbyFluidBehavior;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
 import alexthw.starbunclemania.starbuncle.heal.StarbyHealerBehavior;
 import alexthw.starbunclemania.starbuncle.item.AdvancedItemTransportBehavior;
+import alexthw.starbunclemania.starbuncle.miner.StarbyMinerBehavior;
+import alexthw.starbunclemania.starbuncle.placer.StarbyPlacerBehavior;
 import alexthw.starbunclemania.starbuncle.sword.StarbyFighterBehavior;
 import alexthw.starbunclemania.starbuncle.trash.StarbyVoidBehavior;
 import com.hollingsworth.arsnouveau.api.mob_jar.JarBehavior;
@@ -47,6 +49,8 @@ public class ArsNouveauRegistry {
         BehaviorRegistry.register(StarbyVoidBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyVoidBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyFighterBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyFighterBehavior((Starbuncle) entity, tag));
         BehaviorRegistry.register(StarbyHealerBehavior.TRANSPORT_ID, (entity, tag) -> new StarbyHealerBehavior((Starbuncle) entity, tag));
+        BehaviorRegistry.register(StarbyMinerBehavior.MINER_ID, (entity, tag) -> new StarbyMinerBehavior((Starbuncle) entity, tag));
+        BehaviorRegistry.register(StarbyPlacerBehavior.MINER_ID, (entity, tag) -> new StarbyPlacerBehavior((Starbuncle) entity, tag));
     }
 
     public static void postInit() {

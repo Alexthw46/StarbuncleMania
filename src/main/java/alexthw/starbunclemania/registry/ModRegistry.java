@@ -138,7 +138,8 @@ public class ModRegistry {
     public static final DeferredHolder<Item, Item> STARSWORD;
     public static final DeferredHolder<Item, Item> STARWAND;
     public static final DeferredHolder<Item, Item> STARSADDLE;
-
+    public static final DeferredHolder<Item, Item> STARMINE;
+    public static final DeferredHolder<Item, Item> STARBUILD;
 
     public static final DeferredHolder<Block, Block> FLUID_JAR;
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<LiquidJarTile>> FLUID_JAR_TILE;
@@ -166,6 +167,8 @@ public class ModRegistry {
         STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties()));
         STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
         STARWAND = ITEMS.register("star_wand", () -> new StarWand(new Item.Properties()));
+        STARMINE = ITEMS.register("star_miner", () -> new MinerHat(basicItemProperties()));
+        STARBUILD = ITEMS.register("star_build", () -> new ArchitectHat(basicItemProperties()));
 
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
         FLUID_SCROLL_A = ITEMS.register("fluid_scroll_allow", () -> new FluidScroll(basicItemProperties()));

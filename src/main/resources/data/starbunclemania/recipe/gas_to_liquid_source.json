@@ -6,20 +6,20 @@
     }
   ],
   "type": "mekanism:rotary",
-  "fluidInput": {
+  "fluid_input": {
     "amount": 1,
     "fluid": "starbunclemania:source_fluid"
   },
-  "fluidOutput": {
+  "fluid_output": {
     "amount": 1,
-    "fluid": "starbunclemania:source_fluid"
+    "id": "starbunclemania:source_fluid"
   },
-  "chemicalInput": {
+  "chemical_input": {
     "amount": 1,
     "chemical": "starbunclemania:source_gas"
   },
-  "chemicalOutput": {
+  "chemical_output": {
     "amount": 1,
-    "chemical": "starbunclemania:source_gas"
+    "id": "starbunclemania:source_gas"
   }
 }

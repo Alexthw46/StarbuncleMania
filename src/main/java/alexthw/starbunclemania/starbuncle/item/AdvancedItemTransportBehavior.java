@@ -31,7 +31,7 @@ public class AdvancedItemTransportBehavior extends StarbyTransportBehavior {
     public IItemHandler getItemCapFromTile(BlockPos pos, Direction side) {
         if (pos == null) return null;
         side = StarHelper.checkItemFramesForSide(pos, level, side);
-        return level.getCapability(Capabilities.ItemHandler.BLOCK,pos, side);
+        return level.getCapability(Capabilities.ItemHandler.BLOCK, pos, side);
     }
 
     @Override

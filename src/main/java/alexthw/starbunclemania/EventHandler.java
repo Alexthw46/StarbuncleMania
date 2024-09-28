@@ -1,5 +1,6 @@
 package alexthw.starbunclemania;
 
+import alexthw.starbunclemania.common.block.fluids.LiquidJarTile;
 import alexthw.starbunclemania.registry.ModRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.MobJarTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -36,7 +37,7 @@ public class EventHandler {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModRegistry.SOURCE_CONDENSER_TILE.get(), (be, side) -> be.tank
         );
 
-        event.registerItem(Capabilities.FluidHandler.ITEM, (s, c) -> new FluidHandlerItemStack(ModRegistry.FLUID_CONTENT,s, 1600),
+        event.registerItem(Capabilities.FluidHandler.ITEM, (s, c) -> new FluidHandlerItemStack(ModRegistry.FLUID_CONTENT,s, LiquidJarTile.capacity),
                 ModRegistry.FLUID_JAR.get().asItem());
 
     }

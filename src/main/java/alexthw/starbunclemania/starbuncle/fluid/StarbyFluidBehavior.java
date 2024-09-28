@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,8 +43,8 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
 
     public StarbyFluidBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if (tag.contains("FluidName"))
-            fluidStack = FluidStack.parseOptional(entity.level().registryAccess(), tag);
+        if (tag.contains("fluid"))
+            fluidStack = FluidStack.parseOptional(entity.level().registryAccess(), tag.getCompound("fluid"));
 
         if (tag.contains("fluidScroll"))
             this.fluidScroll = ItemStack.parseOptional(entity.level().registryAccess(), tag.getCompound("fluidScroll"));
@@ -192,7 +193,7 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         if (!getFluidStack().isEmpty()) {
-            getFluidStack().save(starbuncle.registryAccess(), tag);
+            tag.put("fluid", getFluidStack().save(starbuncle.registryAccess()));
         }
         if (fluidScroll != null) {
             tag.put("itemScroll", fluidScroll.save(starbuncle.registryAccess()));
@@ -203,10 +204,10 @@ public class StarbyFluidBehavior extends StarbyListBehavior {
     @Override
     public ItemStack getStackForRender() {
         ItemStack instance = ModRegistry.FLUID_JAR.get().asItem().getDefaultInstance();
-        if (!getFluidStack().isEmpty()) {
-            instance.getCapability(Capabilities.FluidHandler.ITEM).fill(getFluidStack(), IFluidHandler.FluidAction.EXECUTE);
+        if (!getFluidStack().isEmpty() && instance.getCapability(Capabilities.FluidHandler.ITEM) instanceof IFluidHandlerItem fluidHandler) {
+            float fakePercentage = (float) getFluidStack().getAmount() / getRatio();
+            fluidHandler.fill(fluidStack.copyWithAmount((int) (fluidHandler.getTankCapacity(0) * fakePercentage)), IFluidHandler.FluidAction.EXECUTE);
         }
-//        tag.putBoolean("Starbuncle", true);
         return instance;
     }
 

@@ -34,7 +34,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
 
     public StarbyGasBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
-        if (tag.contains("gasName")) gasStack = ChemicalStack.parseOptional(level.registryAccess(), tag);
+        if (tag.contains("gas")) gasStack = ChemicalStack.parseOptional(level.registryAccess(), tag.getCompound("gas"));
         goals.add(new WrappedGoal(3, new GasStoreGoal(entity, this)));
         goals.add(new WrappedGoal(3, new GasExtractGoal(entity, this)));
     }
@@ -167,7 +167,7 @@ public class StarbyGasBehavior extends StarbyListBehavior {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         if (!getGasStack().isEmpty()) {
-            getGasStack().save(level.registryAccess(), tag);
+            tag.put("gas", getGasStack().save(level.registryAccess()));
         }
         return super.toTag(tag);
     }

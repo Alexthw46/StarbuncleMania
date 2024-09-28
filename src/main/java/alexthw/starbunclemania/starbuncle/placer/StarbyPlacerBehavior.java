@@ -1,16 +1,20 @@
 package alexthw.starbunclemania.starbuncle.placer;
 
 import alexthw.starbunclemania.StarbuncleMania;
+import alexthw.starbunclemania.starbuncle.AuthorizedBehavior;
 import alexthw.starbunclemania.starbuncle.StarbyItemBehavior;
 import alexthw.starbunclemania.starbuncle.TakeItemGoal;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToBedGoal;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,20 +24,37 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
 import java.util.function.Consumer;
 
-public class StarbyPlacerBehavior extends StarbyItemBehavior {
+public class StarbyPlacerBehavior extends StarbyItemBehavior implements AuthorizedBehavior {
 
     public static final ResourceLocation MINER_ID = ResourceLocation.fromNamespaceAndPath(StarbuncleMania.MODID, "starby_block_placer");
+    UUID ownerUUID;
 
     public StarbyPlacerBehavior(Starbuncle entity, CompoundTag tag) {
         super(entity, tag);
+        if (tag.contains("ownerUUID")) {
+            ownerUUID = tag.getUUID("ownerUUID");
+        }
         goals.add(new WrappedGoal(1, new GoToBedGoal(entity, this)));
         goals.add(new WrappedGoal(3, new PlaceBlockGoal<>(entity, this)));
         goals.add(new WrappedGoal(5, new TakeItemGoal<>(entity, this)));
+    }
+
+    @Override
+    public CompoundTag toTag(CompoundTag tag) {
+        if (ownerUUID != null) {
+            tag.putUUID("ownerUUID", ownerUUID);
+        }
+        return super.toTag(tag);
     }
 
     @Override
@@ -44,6 +65,16 @@ public class StarbyPlacerBehavior extends StarbyItemBehavior {
         if (!itemScroll.isEmpty()) {
             tooltip.accept(Component.translatable("ars_nouveau.filtering_with", itemScroll.getHoverName().getString()));
         }
+    }
+
+    @Override
+    public void setOwnerUUID(UUID ownerUUID) {
+        this.ownerUUID = ownerUUID;
+    }
+
+    @Override
+    public @NotNull UUID getOwnerUUID() {
+        return ownerUUID == null ? ANFakePlayer.getPlayer((ServerLevel) starbuncle.level()).getUUID() : ownerUUID;
     }
 
     @Override
@@ -128,7 +159,9 @@ public class StarbyPlacerBehavior extends StarbyItemBehavior {
     }
 
     public boolean canPlaceBlock(BlockPos targetPos) {
-        return CommonHooks.canEntityDestroy(this.starbuncle.level(), targetPos, this.starbuncle);
+        Entity placerEntity = ownerUUID != null && starbuncle.level() instanceof ServerLevel serverLevel ? FakePlayerFactory.get(serverLevel, new GameProfile(getOwnerUUID(), "")) : starbuncle;
+        var event = NeoForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(level.dimension(), level, targetPos), level.getBlockState(targetPos), placerEntity));
+        return (!event.isCanceled());
     }
 
 }

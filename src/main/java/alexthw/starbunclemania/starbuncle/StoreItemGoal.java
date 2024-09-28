@@ -17,7 +17,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 public class StoreItemGoal<T extends StarbyItemBehavior> extends GoToPosGoal<T> {
 
     public StoreItemGoal(Starbuncle starbuncle, T behavior) {
-        super(starbuncle, behavior, () -> !starbuncle.getHeldStack().isEmpty());
+        super(starbuncle, behavior, () -> !behavior.isBedPowered() && !starbuncle.getHeldStack().isEmpty());
     }
 
     @Override

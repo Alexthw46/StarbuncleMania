@@ -4,12 +4,13 @@ import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.debug.DebugEvent;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.GoToPosGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MineBlockGoal<T extends StarbyMinerBehavior> extends GoToPosGoal<T> {
 
     public MineBlockGoal(Starbuncle starbuncle, T behavior) {
-        super(starbuncle, behavior, () -> starbuncle.getHeldStack().isEmpty());
+        super(starbuncle, behavior, () -> !behavior.isBedPowered() && starbuncle.getHeldStack().isEmpty());
     }
 
     @Override
@@ -47,10 +48,11 @@ public class MineBlockGoal<T extends StarbyMinerBehavior> extends GoToPosGoal<T>
                 return;
             }
             destroyTimer++;
-            float percentage = destroyTimer / (blockState.getBlock().defaultDestroyTime() * 2);
+            float percentage = destroyTimer / (behavior.getToolToUse().getDestroySpeed(blockState));
             if (percentage > 1) {
                 destroyTimer = -1;
-                starbuncle.level().destroyBlock(miningPos, true, starbuncle);
+                if (starbuncle.level().destroyBlock(miningPos, false, starbuncle))
+                    Block.dropResources(blockState, starbuncle.level(), miningPos, blockState.hasBlockEntity() ? starbuncle.level().getBlockEntity(miningPos) : null, starbuncle, behavior.getToolToUse());
                 miningPos = null;
                 return;
             }

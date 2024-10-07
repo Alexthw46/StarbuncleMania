@@ -26,6 +26,7 @@ public class StarbuncleMania {
     public static final String MODID = "starbunclemania";
 
     public StarbuncleMania(ModContainer modContainer, IEventBus modbus) {
+        //ArsNouveau.isDebug = false;
         NeoForgeMod.enableMilkFluid();
         ModRegistry.registerRegistries(modbus);
         modContainer.registerConfig(ModConfig.Type.SERVER, Configs.SERVER_SPEC);

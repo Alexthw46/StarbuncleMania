@@ -85,6 +85,22 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(BlockRegistry.RELAY)
                 .save(consumer);
 
+        shaped(STARMINE)
+                .pattern("III")
+                .pattern("ILI")
+                .pattern("GGG")
+                .define('I', Items.IRON_INGOT)
+                .define('L', Items.LEATHER_HELMET)
+                .define('G', Items.GOLD_NUGGET)
+                .save(consumer);
+
+        shaped(STARBUILD)
+                .pattern("GGG")
+                .pattern("GDG")
+                .define('G', Items.GOLD_NUGGET)
+                .define('D', Items.DISPENSER)
+                .save(consumer);
+
         shapelessBuilder(DIRECTION_SCROLL.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(Items.COMPASS).save(consumer);
         shapelessBuilder(FLUID_SCROLL_A.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).save(consumer);
         shapelessBuilder(FLUID_SCROLL_D.get()).requires(ItemsRegistry.BLANK_PARCHMENT).requires(ItemsRegistry.WATER_ESSENCE).requires(Ingredient.of(Tags.Items.COBBLESTONES)).save(consumer);

@@ -3,24 +3,25 @@ package alexthw.starbunclemania.common.item.cosmetic;
 import alexthw.starbunclemania.client.BalloonRenderer;
 import alexthw.starbunclemania.starbuncle.gas.StarbyGasBehavior;
 import com.hollingsworth.arsnouveau.api.entity.IDecoratable;
-import com.hollingsworth.arsnouveau.api.item.ICosmeticItem;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.IDyeable;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarDrygmy;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWixie;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -31,24 +32,23 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeable {
+public class StarBalloon extends AbstractCosmeticItem implements GeoItem, IDyeable {
 
-    public StarBalloon(Properties pProperties) {
-        super(pProperties);
+    public StarBalloon(Properties pProperties, String s) {
+        super(pProperties, s);
     }
 
     @Override
-    public @NotNull InteractionResult interactLivingEntity(@NotNull ItemStack pStack, @NotNull Player pPlayer, @NotNull LivingEntity pInteractionTarget, @NotNull InteractionHand pUsedHand) {
-        if (pInteractionTarget instanceof IDecoratable starbuncle && canWear(pInteractionTarget)) {
-            starbuncle.setCosmeticItem(pStack.split(1));
-            if (pInteractionTarget instanceof Starbuncle starby && !pPlayer.isShiftKeyDown() && ModList.get().isLoaded("mekanism")) {
-                starby.setBehavior(new StarbyGasBehavior(starby, new CompoundTag()));
-                PortUtil.sendMessage(pPlayer, Component.translatable("ars_nouveau.starbuncle.gas_behavior_set"));
-            }
-            return InteractionResult.SUCCESS;
-        }
+    public void onDye(ItemStack stack, DyeColor dyeColor) {
+        stack.set(DataComponents.DYED_COLOR, new DyedItemColor(dyeColor.getTextureDiffuseColor(),false));
+    }
 
-        return super.interactLivingEntity(pStack, pPlayer, pInteractionTarget, pUsedHand);
+    @Override
+    public void changeBehavior(ItemStack stack, Player player, IDecoratable deco) {
+        if (deco instanceof Starbuncle starby && ModList.get().isLoaded("mekanism")) {
+            starby.setBehavior(new StarbyGasBehavior(starby, new CompoundTag()));
+            PortUtil.sendMessage(player, Component.translatable("ars_nouveau.starbuncle.gas_behavior_set"));
+        }
     }
 
     @Override
@@ -67,13 +67,23 @@ public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeabl
     static final Vec3 Scaling = new Vec3(1, 1, 1);
 
     @Override
-    public Vec3 getTranslations() {
-        return Translation;
+    public Vec3 getTranslations(LivingEntity entity) {
+        return switch (entity) {
+            case FamiliarWixie ignored -> Vec3.ZERO;
+            case FamiliarDrygmy ignored -> Vec3.ZERO;
+            case FamiliarBookwyrm ignored -> Vec3.ZERO;
+            default -> Translation;
+        };
     }
 
     @Override
-    public Vec3 getScaling() {
-        return Scaling;
+    public Vec3 getScaling(LivingEntity entity) {
+        return switch (entity) {
+            case FamiliarWixie ignored -> defaultScaling;
+            case FamiliarDrygmy ignored -> defaultScaling;
+            case FamiliarBookwyrm ignored -> defaultScaling;
+            case null, default -> Scaling;
+        };
     }
 
     @Override
@@ -82,7 +92,7 @@ public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeabl
     }
 
     @Override
-    public String getBone() {
+    public String getBone(LivingEntity entity) {
         return "body";
     }
 
@@ -91,7 +101,7 @@ public class StarBalloon extends Item implements ICosmeticItem, GeoItem, IDyeabl
      */
     @Override
     public boolean canWear(LivingEntity entity) {
-        return entity instanceof Starbuncle || entity instanceof FamiliarStarbuncle;
+        return entity instanceof Starbuncle || entity instanceof FamiliarEntity;
     }
 
     @Override

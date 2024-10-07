@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-01T13:02:51.8600613	Recipes
+// 1.21.1	2024-10-04T21:35:08.1567035	Recipes
 0c06b8a7f82847729e3c92bedbea75ee770920ff data/starbunclemania/advancement/recipes/misc/clear_fluid_allow.json
 088bfa77b3f85a263b3e63e7250c9b596d35d685 data/starbunclemania/advancement/recipes/misc/clear_fluid_deny.json
 92ee5322918357135433a3dea4f6bd1d28665fb0 data/starbunclemania/advancement/recipes/misc/direction_scroll.json
@@ -9,7 +9,9 @@ d4e380f8da5d8d22d8e0bb5e014bc39ef2142fc9 data/starbunclemania/advancement/recipe
 b74f19fc5f2adae0f7e1ffa0d6e32031b3cffd24 data/starbunclemania/advancement/recipes/misc/source_condenser.json
 3aba958c8c07856f730febae1cfb9791bba90f5d data/starbunclemania/advancement/recipes/misc/star_battery.json
 c9355366ddb117dab5cbb347fd9b3f2fa398128a data/starbunclemania/advancement/recipes/misc/star_bin.json
+8393e3ac9b05be63c758b87ebd53409680d8e097 data/starbunclemania/advancement/recipes/misc/star_build.json
 f73b03a9f1db43b7bee2cd8609446aaaf17e5617 data/starbunclemania/advancement/recipes/misc/star_hat.json
+62bda921114e6f667d2fcda6d747c4826b3180f9 data/starbunclemania/advancement/recipes/misc/star_miner.json
 6c8a71c50d6b74ce225b0be5f53a88170a683e31 data/starbunclemania/advancement/recipes/misc/wyrm_degree.json
 95ab574d3e0581d31c3654a8d8995ddad53b6614 data/starbunclemania/recipe/clear_fluid_allow.json
 f73a15f54cea053e91da172bbde18c6de5cf21be data/starbunclemania/recipe/clear_fluid_deny.json
@@ -21,5 +23,7 @@ be04c9b62defcf8bacc5613662dba3ad2caddedf data/starbunclemania/recipe/fluid_sourc
 cd388e53b0351d2817685e0e0b2028c152082e98 data/starbunclemania/recipe/source_condenser.json
 e477c008b193c50c7d8f5f7acb146576be8c5afb data/starbunclemania/recipe/star_battery.json
 988887284ebcb0348b87b5bce4ac6e19b7fc56a4 data/starbunclemania/recipe/star_bin.json
+06bb2c9d1c8084df52e548943dfc4b357e8de6cd data/starbunclemania/recipe/star_build.json
 eef43671b5b21cf871175d8f9c97cadea80bf3a9 data/starbunclemania/recipe/star_hat.json
+ef0e6139161a3aa26d589f1809667cb5f22c7dac data/starbunclemania/recipe/star_miner.json
 191e748dcb99562e9385153c0deb05ef177f4188 data/starbunclemania/recipe/wyrm_degree.json

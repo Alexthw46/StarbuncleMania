@@ -159,16 +159,17 @@ public class ModRegistry {
     public static final DeferredHolder<CriterionTrigger<?>, PlayerTrigger> WIXIE_2 = TRIGGERS.register("wixie_stone", () -> new PlayerTrigger());
 
     static {
-        STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties()));
-        PROFHAT = ITEMS.register("wyrm_degree", () -> new ProfHat(basicItemProperties()));
-        STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties()));
-        STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties()));
-        STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties()));
-        STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties()));
+
+        STARHAT = ITEMS.register("star_hat", () -> new ExampleCosmetic(basicItemProperties(), "starbunclemania.simple_cosmetic.tooltip"));
+        PROFHAT = ITEMS.register("wyrm_degree", () -> new ProfHat(basicItemProperties(), "starbunclemania.degree_hat.tooltip"));
+        STARBATTERY = ITEMS.register("star_battery", () -> new StarbAABattery(basicItemProperties(),"starbunclemania.battery.tooltip"));
+        STARBUCKET = ITEMS.register("star_bucket", () -> new StarBucket(basicItemProperties(),"starbunclemania.bucket.tooltip"));
+        STARBALLON = ITEMS.register("star_balloon", () -> new StarBalloon(basicItemProperties(), "starbunclemania.balloon.tooltip"));
+        STARTRASH = ITEMS.register("star_bin", () -> new StarBin(basicItemProperties(),"starbunclemania.trash_bin.tooltip"));
         STARSWORD = ITEMS.register("star_sword", () -> new StarSword(basicItemProperties()));
         STARWAND = ITEMS.register("star_wand", () -> new StarWand(new Item.Properties()));
-        STARMINE = ITEMS.register("star_miner", () -> new MinerHat(basicItemProperties()));
-        STARBUILD = ITEMS.register("star_build", () -> new ArchitectHat(basicItemProperties()));
+        STARMINE = ITEMS.register("star_miner", () -> new MinerHat(basicItemProperties(), "starbunclemania.miner_hat.tooltip"));
+        STARBUILD = ITEMS.register("star_build", () -> new ArchitectHat(basicItemProperties(), "starbunclemania.builder_hat.tooltip"));
 
         DIRECTION_SCROLL = ITEMS.register("direction_scroll", () -> new DirectionScroll(basicItemProperties()));
         FLUID_SCROLL_A = ITEMS.register("fluid_scroll_allow", () -> new FluidScroll(basicItemProperties()));

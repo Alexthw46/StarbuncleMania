@@ -8,7 +8,7 @@ plugins {
 
 
 base {
-    version =mod_version
+    version = mod_version
     group = 'com.alexthw.starbunclemania' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
     archivesName = project.mod_id + '-' + project.minecraft_version
 }
@@ -178,14 +178,14 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "StarbuncleMania",
-                "Specification-Vendor": "alexthw",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"alexthw",
+                "Specification-Title"     : "StarbuncleMania",
+                "Specification-Vendor"    : "alexthw",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "alexthw",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "starbunclemania.mixins.json"
+                "MixinConfigs"            : "starbunclemania.mixins.json"
         ])
     }
 }
